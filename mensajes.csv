@@ -1,0 +1,31 @@
+DNI Cliente;Remitente;Mensaje;Fecha y Hora
+10000001A;cliente;Hola, tengo una duda sobre mi seguro de coche.;2024-10-23 11:00:00
+10000001A;empleado;Claro, ¿en qué puedo ayudarte con tu seguro de coche?;2024-10-23 11:01:00
+10000001A;cliente;¿Podrías decirme cuándo vence mi póliza?;2024-10-23 11:02:00
+10000001A;empleado;Tu póliza vence el 23 de noviembre de 2024.;2024-10-23 11:03:00
+10000001A;cliente;Gracias, también quisiera saber cómo cambiar mi dirección.;2024-10-23 11:04:00
+10000001A;empleado;Puedes cambiar tu dirección en el área de cliente de nuestro sitio web o llamando a atención al cliente.;2024-10-23 11:05:00
+10000002B;cliente;Quisiera hacer un cambio en la cobertura de mi seguro de vivienda.;2024-10-23 11:00:00
+10000002B;empleado;Perfecto, puedo ayudarte. ¿Qué tipo de cambio deseas realizar?;2024-10-23 11:01:00
+10000002B;cliente;Quiero aumentar la cobertura por daños por agua.;2024-10-23 11:02:00
+10000002B;empleado;Muy bien, hemos añadido el cambio a tu póliza. Te enviaremos los detalles por correo electrónico.;2024-10-23 11:03:00
+10000003C;cliente;Necesito cancelar mi seguro de vida, ¿qué debo hacer?;2024-10-23 11:00:00
+10000003C;empleado;Para cancelar el seguro de vida, debes enviar una solicitud por escrito con tus datos a nuestro correo.;2024-10-23 11:01:00
+10000003C;cliente;Gracias, ¿podrías enviarme un formulario o plantilla?;2024-10-23 11:02:00
+10000003C;empleado;Claro, te lo enviaré a tu correo electrónico de inmediato.;2024-10-23 11:03:00
+10000004D;cliente;Hola, quiero saber el costo actual de mi seguro de vivienda.;2024-10-23 11:00:00
+10000004D;empleado;Tu seguro de vivienda tiene un costo mensual de 190 euros.;2024-10-23 11:01:00
+10000004D;cliente;Perfecto, ¿y hasta cuándo tengo contratado el seguro?;2024-10-23 11:02:00
+10000004D;empleado;Tu seguro está vigente hasta el 28 de octubre de 2025.;2024-10-23 11:03:00
+10000005E;cliente;Me gustaría saber cómo puedo obtener una copia de mi póliza.;2024-10-23 11:00:00
+10000005E;empleado;Puedes descargarla desde tu cuenta en el área de cliente o pedir que te la enviemos por correo electrónico.;2024-10-23 11:01:00
+10000005E;cliente;¿Podrías enviármela por correo, por favor?;2024-10-23 11:02:00
+10000005E;empleado;Claro, te la enviaremos en unos minutos.;2024-10-23 11:03:00
+10000006F;cliente;Quiero actualizar mis datos de contacto en mi póliza.;2024-10-23 11:00:00
+10000006F;empleado;Claro, ¿qué información deseas actualizar?;2024-10-23 11:01:00
+10000006F;cliente;Quiero cambiar mi número de teléfono.;2024-10-23 11:02:00
+10000006F;empleado;Perfecto, ya hemos actualizado tu número de teléfono.;2024-10-23 11:03:00
+10000007G;cliente;¿Cómo puedo realizar un reclamo por daños en mi vivienda?;2024-10-23 11:00:00
+10000007G;empleado;Para realizar un reclamo, debes ingresar al área de cliente o llamar a nuestro número de atención.;2024-10-23 11:01:00
+10000007G;cliente;Gracias, ¿podría iniciar el reclamo por aquí?;2024-10-23 11:02:00
+10000007G;empleado;Lo siento, por esta vía no es posible. Debes realizarlo desde el área de cliente.;2024-10-23 11:03:00

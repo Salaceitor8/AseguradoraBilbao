@@ -1,0 +1,230 @@
+package main;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
+public class VentanaAltaCliente extends JFrame {
+
+    private DefaultListModel<String> modeloListaClientes;
+    private List<String[]> listaOriginalClientes;
+    private final String archivoCSVClientes;
+
+    public VentanaAltaCliente(DefaultListModel<String> modeloListaClientes, List<String[]> listaOriginalClientes, String archivoCSVClientes) {
+        this.modeloListaClientes = modeloListaClientes;
+        this.listaOriginalClientes = listaOriginalClientes;
+        this.archivoCSVClientes = archivoCSVClientes;
+
+        // Configuración básica de la ventana
+        setTitle("Dar de Alta Cliente");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Solo cerrar esta ventana
+        setLocationRelativeTo(null); // Centrar la ventana
+
+        // Crear el panel principal
+        JPanel panelAltaCliente = new JPanel(new GridBagLayout());
+        panelAltaCliente.setBackground(new Color(0, 51, 102)); // Azul oscuro
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        Font fuenteGeneral = new Font("Arial", Font.PLAIN, 14);
+        Color colorTexto = Color.WHITE;
+
+        // Crear campos
+        JTextField campoNombre = new JTextField(15);
+        JTextField campoApellidos = new JTextField(15);
+        JTextField campoDNI = new JTextField(10);
+        JTextField campoTelefono = new JTextField(10);
+        JTextField campoEmail = new JTextField(15);
+
+        // Añadir los KeyListeners para mover el cursor con ENTER
+        setNavigationWithEnter(campoNombre, campoApellidos);
+        setNavigationWithEnter(campoApellidos, campoDNI);
+        setNavigationWithEnter(campoDNI, campoTelefono);
+        setNavigationWithEnter(campoTelefono, campoEmail);
+
+        // Etiqueta y campo de nombre
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        JLabel etiquetaNombre = new JLabel("Nombre:");
+        etiquetaNombre.setForeground(colorTexto);
+        etiquetaNombre.setFont(fuenteGeneral);
+        panelAltaCliente.add(etiquetaNombre, gbc);
+
+        gbc.gridx = 1;
+        panelAltaCliente.add(campoNombre, gbc);
+
+        // Etiqueta y campo de apellidos
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        JLabel etiquetaApellidos = new JLabel("Apellidos:");
+        etiquetaApellidos.setForeground(colorTexto);
+        etiquetaApellidos.setFont(fuenteGeneral);
+        panelAltaCliente.add(etiquetaApellidos, gbc);
+
+        gbc.gridx = 1;
+        panelAltaCliente.add(campoApellidos, gbc);
+
+        // Etiqueta y campo de DNI
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        JLabel etiquetaDNI = new JLabel("DNI:");
+        etiquetaDNI.setForeground(colorTexto);
+        etiquetaDNI.setFont(fuenteGeneral);
+        panelAltaCliente.add(etiquetaDNI, gbc);
+
+        gbc.gridx = 1;
+        panelAltaCliente.add(campoDNI, gbc);
+
+        // Etiqueta y campo de teléfono
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        JLabel etiquetaTelefono = new JLabel("Teléfono:");
+        etiquetaTelefono.setForeground(colorTexto);
+        etiquetaTelefono.setFont(fuenteGeneral);
+        panelAltaCliente.add(etiquetaTelefono, gbc);
+
+        gbc.gridx = 1;
+        panelAltaCliente.add(campoTelefono, gbc);
+
+        // Etiqueta y campo de email
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        JLabel etiquetaEmail = new JLabel("Email:");
+        etiquetaEmail.setForeground(colorTexto);
+        etiquetaEmail.setFont(fuenteGeneral);
+        panelAltaCliente.add(etiquetaEmail, gbc);
+
+        gbc.gridx = 1;
+        panelAltaCliente.add(campoEmail, gbc);
+
+        // Botón para guardar cliente
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        JButton btnGuardarCliente = new JButton("Guardar Cliente");
+        btnGuardarCliente.setBackground(new Color(51, 153, 255)); // Azul claro
+        btnGuardarCliente.setForeground(Color.WHITE);
+        panelAltaCliente.add(btnGuardarCliente, gbc);
+
+        // Añadir un KeyListener al campo email para simular clic en "Guardar" con ENTER
+        campoEmail.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnGuardarCliente.doClick(); // Simula el clic en el botón "Guardar"
+                }
+            }
+        });
+
+        // Acción del botón Guardar Cliente
+        btnGuardarCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombre = campoNombre.getText();
+                String apellidos = campoApellidos.getText();
+                String dni = campoDNI.getText();
+                String telefono = campoTelefono.getText();
+                String email = campoEmail.getText();
+
+                // Validaciones básicas
+                if (nombre.isEmpty() || apellidos.isEmpty() || dni.isEmpty() || telefono.isEmpty() || email.isEmpty()) {
+                    JOptionPane.showMessageDialog(panelAltaCliente, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verificar que los apellidos tienen exactamente dos palabras
+                if (apellidos.split("\\s+").length != 2) {
+                    JOptionPane.showMessageDialog(panelAltaCliente, "El campo Apellidos debe contener exactamente dos apellidos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verificar el formato del DNI (8 números seguidos de una letra)
+                if (!dni.matches("[0-9]{8}[A-Za-z]")) {
+                    JOptionPane.showMessageDialog(panelAltaCliente, "El DNI debe tener 8 números seguidos de una letra.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verificar que el teléfono tiene 9 dígitos
+                if (!telefono.matches("[0-9]{9}")) {
+                    JOptionPane.showMessageDialog(panelAltaCliente, "El teléfono debe tener 9 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verificar formato del email
+                if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
+                    JOptionPane.showMessageDialog(panelAltaCliente, "El formato del email no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Crear mensaje de confirmación con los datos del cliente
+                String mensajeConfirmacion = String.format(
+                    "Por favor, confirma los datos del cliente:\n\n" +
+                    "Nombre: %s\nApellidos: %s\nDNI: %s\nTeléfono: %s\nEmail: %s\n\n¿Son estos datos correctos?",
+                    nombre, apellidos, dni, telefono, email
+                );
+
+                // Mostrar cuadro de diálogo de confirmación
+                int confirmacion = JOptionPane.showConfirmDialog(
+                    panelAltaCliente, mensajeConfirmacion, "Confirmación de Datos", JOptionPane.YES_NO_OPTION
+                );
+
+                // Si el usuario confirma los datos
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    // Crear un nuevo cliente y añadirlo a la lista
+                    String[] nuevoCliente = {nombre," "+apellidos, " "+dni, " "+telefono, " "+email};
+                    listaOriginalClientes.add(nuevoCliente);
+                    String clienteEnLista = nombre + " " + apellidos + " - DNI: " + dni;
+                    modeloListaClientes.addElement(clienteEnLista);
+
+                    // Actualizar el archivo CSV
+                    actualizarClientesCSV(archivoCSVClientes);
+
+                    // Mostrar mensaje de confirmación de guardado
+                    JOptionPane.showMessageDialog(panelAltaCliente, "Cliente guardado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Cerrar la ventana
+                    dispose();
+                }
+            }
+        });
+
+        // Añadir el panel a la ventana
+        add(panelAltaCliente);
+
+        // Hacer visible la ventana
+        setVisible(true);
+    }
+
+    // Método auxiliar para mover el cursor con ENTER
+    private void setNavigationWithEnter(JTextField actualCampo, JTextField siguienteCampo) {
+        actualCampo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    siguienteCampo.requestFocus(); // Cambiar el foco al siguiente campo
+                }
+            }
+        });
+    }
+
+    // Método para actualizar el archivo CSV con los clientes actualizados
+    private void actualizarClientesCSV(String archivoCSV) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoCSV))) {
+            for (String[] cliente : listaOriginalClientes) {
+                bw.write(String.join(",", cliente));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar el archivo CSV: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
