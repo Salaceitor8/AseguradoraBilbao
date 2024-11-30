@@ -86,7 +86,7 @@ public class InicioSesion extends JFrame{
     	JPanel panel = new JPanel(new BorderLayout());
     	panel.setBackground(COLOR_PRINCIPAL);
 
-        JLabel etiquetaTitulo = new JLabel("Seleccione su tipo de usuario", SwingConstants.CENTER);
+        JLabel etiquetaTitulo = new JLabel("Haz click en su tipo de usuario", SwingConstants.CENTER);
         etiquetaTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         etiquetaTitulo.setForeground(COLOR_CONTRASTE);
         panel.add(etiquetaTitulo, BorderLayout.NORTH);
@@ -100,6 +100,7 @@ public class InicioSesion extends JFrame{
         Image empleado = (new ImageIcon("fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoEmpleado = new ImageIcon(empleado);
         btnEmpleado.setIcon(iconoEmpleado);
+        btnEmpleado.setBorderPainted(false);
         btnEmpleado.addActionListener(e -> {
             esEmpleado = true;
             cardLayout.show(panelCentral, "Login");
@@ -112,6 +113,7 @@ public class InicioSesion extends JFrame{
         Image cliente = (new ImageIcon("fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoCliente = new ImageIcon(cliente);
         btnCliente.setIcon(iconoCliente);
+        btnCliente.setBorderPainted(false);
         btnCliente.addActionListener(e -> {
             esEmpleado = false;
             cardLayout.show(panelCentral, "Login");
