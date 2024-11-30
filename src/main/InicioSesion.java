@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -76,7 +78,6 @@ public class InicioSesion extends JFrame{
         // Cargar seguros de clientes
         
         segurosPorCliente = cargarSeguros("seguros.csv");
-        System.out.println(segurosPorCliente);
 
         
     }
@@ -96,14 +97,21 @@ public class InicioSesion extends JFrame{
         JButton btnEmpleado = new JButton("Soy un empleado");
         btnEmpleado.setBackground(COLOR_PRINCIPAL);
         btnEmpleado.setForeground(COLOR_CONTRASTE);
+        Image empleado = (new ImageIcon("fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        ImageIcon iconoEmpleado = new ImageIcon(empleado);
+        btnEmpleado.setIcon(iconoEmpleado);
         btnEmpleado.addActionListener(e -> {
             esEmpleado = true;
             cardLayout.show(panelCentral, "Login");
         });
+        
 
         JButton btnCliente = new JButton("Soy un cliente");
         btnCliente.setBackground(COLOR_PRINCIPAL);
         btnCliente.setForeground(COLOR_CONTRASTE);
+        Image cliente = (new ImageIcon("fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        ImageIcon iconoCliente = new ImageIcon(cliente);
+        btnCliente.setIcon(iconoCliente);
         btnCliente.addActionListener(e -> {
             esEmpleado = false;
             cardLayout.show(panelCentral, "Login");
