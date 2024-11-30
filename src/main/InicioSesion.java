@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -126,6 +128,18 @@ public class InicioSesion extends JFrame{
         JLabel etiquetaContraseña = new JLabel("Contraseña:");
         etiquetaContraseña.setForeground(COLOR_CONTRASTE);
         campoContraseña = new JPasswordField();
+        
+        campoUsuario.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					campoContraseña.requestFocus();
+				}
+			}
+        	
+		});
+        
 
         JButton btnIniciarSesion = new JButton("Iniciar Sesión");
         btnIniciarSesion.setBackground(new Color(51, 153, 255));
@@ -136,6 +150,16 @@ public class InicioSesion extends JFrame{
                 iniciarSesion();
             }
         });
+        campoContraseña.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					btnIniciarSesion.doClick();
+				}
+			}
+        	
+		});
 
         JButton btnRegresar = new JButton("Regresar");
         btnRegresar.setBackground(Color.RED);
