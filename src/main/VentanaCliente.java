@@ -2,16 +2,21 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.List;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class VentanaCliente extends JFrame{
@@ -55,8 +60,61 @@ public class VentanaCliente extends JFrame{
         tablaSeguros.setSelectionBackground(new Color(51, 153, 255)); // Azul claro
         JScrollPane scrollTabla = new JScrollPane(tablaSeguros);
         panelCentro.add(scrollTabla, BorderLayout.CENTER);
+
+        // Llenar tabla con datos de seguros
+        for (Object[] seguro : segurosCliente) {
+            modeloTablaSeguros.addRow(seguro);
+        }
+
+        add(panelCentro, BorderLayout.CENTER);
+
+        // ESTE (Botones de acción)
+        JPanel panelOpciones = new JPanel();
+        panelOpciones.setLayout(new BoxLayout(panelOpciones, BoxLayout.Y_AXIS));
+        panelOpciones.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panelOpciones.setBackground(Color.WHITE);
+
+        btnActualizarDatos = new JButton("Actualizar Datos");
+        btnReportarSiniestro = new JButton("Reportar Siniestro");
+        btnChatAtencion = new JButton("Atención al Cliente");
+
+        // Estilo de los botones
+        JButton[] botones = {btnActualizarDatos, btnReportarSiniestro, btnChatAtencion};
+        for (JButton boton : botones) {
+            boton.setFont(new Font("Arial", Font.PLAIN, 14));
+            boton.setBackground(new Color(0, 102, 204)); // Azul
+            boton.setForeground(Color.WHITE);
+            boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            boton.setMaximumSize(new Dimension(200, 40));
+            boton.setFocusPainted(false);
+            panelOpciones.add(boton);
+            panelOpciones.add(Box.createVerticalStrut(10)); // Espacio entre botones
+        }
+
+        add(panelOpciones, BorderLayout.EAST);
+
+        // SUR (Resumen financiero)
+        JPanel panelResumen = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelResumen.setBackground(Color.LIGHT_GRAY);
+        lblCostoTotal = new JLabel("Costo Total: 0 €");
+        lblCostoTotal.setFont(new Font("Arial", Font.BOLD, 16));
+        panelResumen.add(lblCostoTotal);
+        add(panelResumen, BorderLayout.SOUTH);
+
+        // Actualizar el costo total
+        actualizarCostoTotal(segurosCliente);
+
+        setVisible(true);
 	}
-	
+	private void actualizarCostoTotal(List<Object[]> segurosCliente) {
+        double totalCosto = 0;
+        for (Object[] seguro : segurosCliente) {
+            if ("Activo".equals(seguro[3])) {
+                totalCosto += (double) seguro[2]; // Asumimos que el costo anual está en la posición 2
+            }
+        }
+        lblCostoTotal.setText("Costo Total: " + totalCosto + " €");
+    }
 	
 
 }
