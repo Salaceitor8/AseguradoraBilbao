@@ -118,6 +118,7 @@ public class InicioSesion extends JFrame{
         btnEmpleado.setBorderPainted(false);
         btnEmpleado.addActionListener(e -> {
             esEmpleado = true;
+            limpiarCampos();
             cardLayout.show(panelCentral, "Login");
         });
         
@@ -142,6 +143,7 @@ public class InicioSesion extends JFrame{
         btnCliente.setBorderPainted(false);
         btnCliente.addActionListener(e -> {
             esEmpleado = false;
+            limpiarCampos();
             cardLayout.show(panelCentral, "Login");
         });
 
@@ -296,6 +298,12 @@ public class InicioSesion extends JFrame{
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         return segurosPorCliente;
+    }
+    
+ // Método para limpiar los campos de texto
+    private void limpiarCampos() {
+        campoUsuario.setText("");
+        campoContraseña.setText("");
     }
     
     public static void main(String[] args) {
