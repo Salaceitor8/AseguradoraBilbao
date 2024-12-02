@@ -47,9 +47,13 @@ public class InicioSesion extends JFrame{
     
     private final Map<String, String> clientes = new HashMap<>();
     private boolean esEmpleado; // Para determinar si es empleado o cliente
+    final Color COLOR_NORMAL = COLOR_PRINCIPAL;
+    final Color COLOR_RESALTADO = new Color(51, 102, 204); // Azul más claro
 
     
     public InicioSesion() {
+    	final Color COLOR_NORMAL = COLOR_PRINCIPAL;
+        final Color COLOR_RESALTADO = new Color(51, 102, 204); // Azul más claro
         setTitle("Inicio de Sesión - Aseguradoras Bilbaaaao");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,6 +100,17 @@ public class InicioSesion extends JFrame{
 
         JButton btnEmpleado = new JButton("Soy un empleado");
         btnEmpleado.setBackground(COLOR_PRINCIPAL);
+        btnEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnEmpleado.setBackground(COLOR_RESALTADO);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnEmpleado.setBackground(COLOR_NORMAL);
+            }
+        });
         btnEmpleado.setForeground(COLOR_CONTRASTE);
         Image empleado = (new ImageIcon("fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoEmpleado = new ImageIcon(empleado);
@@ -110,6 +125,17 @@ public class InicioSesion extends JFrame{
         JButton btnCliente = new JButton("Soy un cliente");
         btnCliente.setBackground(COLOR_PRINCIPAL);
         btnCliente.setForeground(COLOR_CONTRASTE);
+        btnCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnCliente.setBackground(COLOR_RESALTADO);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnCliente.setBackground(COLOR_NORMAL);
+            }
+        });
         Image cliente = (new ImageIcon("fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoCliente = new ImageIcon(cliente);
         btnCliente.setIcon(iconoCliente);
