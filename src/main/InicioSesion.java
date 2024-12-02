@@ -158,6 +158,8 @@ public class InicioSesion extends JFrame{
         JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panel.setBackground(COLOR_PRINCIPAL);
+        
+        
 
         JLabel etiquetaUsuario = new JLabel("Usuario:");
         etiquetaUsuario.setForeground(COLOR_CONTRASTE);
@@ -198,11 +200,36 @@ public class InicioSesion extends JFrame{
 			}
         	
 		});
+        
 
         JButton btnRegresar = new JButton("Regresar");
         btnRegresar.setBackground(Color.RED);
         btnRegresar.setForeground(COLOR_CONTRASTE);
         btnRegresar.addActionListener(e -> cardLayout.show(panelCentral, "Seleccion"));
+        
+        campoContraseña.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					btnRegresar.doClick();
+				}
+			}
+        	
+        	
+		});
+        campoUsuario.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					btnRegresar.doClick();
+				}
+			}
+        	
+        	
+		});
+        
 
         panel.add(etiquetaUsuario);
         panel.add(campoUsuario);
