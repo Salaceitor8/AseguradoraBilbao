@@ -2,6 +2,9 @@ package main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
+
 import domain.Seguro;
 import domain.TipoSeguro;
 import java.awt.*;
@@ -13,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class VentanaAltaSeguro extends JFrame {
 
     private JComboBox<TipoSeguro> comboTipoSeguro;
-    private JTextField campoFechaContratacion;
+    private JDateChooser campoFechaContratacion;
     private JTextField campoCostoAnual;
     private JComboBox<String> comboEstado;
     private JButton btnGuardar, btnCancelar;
@@ -59,15 +62,14 @@ public class VentanaAltaSeguro extends JFrame {
         panelPrincipal.add(comboTipoSeguro, gbc);
 
         // Etiqueta y campo para la fecha de contratación
-        JLabel etiquetaFecha = new JLabel("Fecha de Contratación (dd/MM/yyyyS):");
+        JLabel etiquetaFecha = new JLabel("Fecha de Contratación (dd/MM/yyyy):");
         etiquetaFecha.setForeground(colorContraste);
         gbc.gridx = 0;
         gbc.gridy = 1;
         panelPrincipal.add(etiquetaFecha, gbc);
 
-        campoFechaContratacion = new JTextField(10);
-        campoFechaContratacion.setText(LocalDate.now().format(formatter).toString()); // Fecha actual por defecto
-        campoFechaContratacion.setEditable(false); // No editable porque es la fecha actual
+        campoFechaContratacion = new JDateChooser();
+        campoFechaContratacion.setDateFormatString("dd/MM/yyyy");
         gbc.gridx = 1;
         panelPrincipal.add(campoFechaContratacion, gbc);
 

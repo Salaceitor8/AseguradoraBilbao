@@ -25,7 +25,7 @@ public class InicioSesion extends JFrame {
     final Color COLOR_RESALTADO = new Color(51, 102, 204); // Azul más claro
 
     public InicioSesion() {
-        baseDeDatos = new Bdd("aseguradora.db"); // Conecta a la base de datos SQLite
+        baseDeDatos = new Bdd("resources/db/aseguradora.db"); // Conecta a la base de datos SQLite
 
         setTitle("Inicio de Sesión - Aseguradoras Bilbaaaao");
         setSize(400, 300);
