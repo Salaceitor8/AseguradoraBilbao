@@ -159,7 +159,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         cargarClientesDesdeBaseDeDatos(baseDeDatos);
 
-//        btnAltaCliente.addActionListener(e -> new VentanaAltaCliente(modeloListaClientes, baseDeDatos));
+        btnAltaCliente.addActionListener(e -> new VentanaAltaCliente(modeloListaClientes, baseDeDatos));
         btnBajaCliente.addActionListener(e -> darDeBajaCliente(baseDeDatos));
         listaClientes.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) { // Asegurarse de que la selección es definitiva
@@ -179,7 +179,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         btnNuevoSeguro.addActionListener(e -> {
             if (listaClientes.getSelectedValue() != null) {
                 String dniCliente = listaClientes.getSelectedValue().split("- DNI: ")[1];
-//                new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, baseDeDatos);
+                new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, baseDeDatos);
             } else {
                 JOptionPane.showMessageDialog(this, "Selecciona un cliente primero.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -209,11 +209,11 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 
                 int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado);
                 System.out.println(Id);
-//                System.out.println(dniCliente);
-//                System.out.println(tipo);
-//                System.out.println(fecha);
-//                System.out.println(costo);
-//                System.out.println(estado);
+                System.out.println(dniCliente);
+                System.out.println(tipo);
+                System.out.println(fecha);
+                System.out.println(costo);
+                System.out.println(estado);
                 try {
                     baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo");
                     cargarSegurosCliente(baseDeDatos);
@@ -235,7 +235,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenu menu = new JMenu("Chat");
         JMenuItem itemChat = new JMenuItem("Atencion al cliente");
         
-//        itemChat.addActionListener(e -> {new VentanaChatEmpleado(baseDeDatos);});
+        itemChat.addActionListener(e -> {new VentanaChatEmpleado(baseDeDatos);});
         
         menuBar.add(menu);
         menu.add(itemChat);

@@ -212,7 +212,7 @@ public class InicioSesion extends JFrame {
                     if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                         JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario + ".");
                         dispose();
-//                        new VentanaCliente(usuario, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña));
+                        new VentanaCliente(usuario, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña));
                         encontrado = true;
                         break;
                     }
