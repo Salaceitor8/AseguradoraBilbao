@@ -3,21 +3,13 @@ package main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
 
 public class VentanaAltaCliente extends JFrame {
 
-    private DefaultListModel<String> modeloListaClientes;
-    private List<String[]> listaOriginalClientes;
-    private final String archivoCSVClientes;
+    private final Bdd baseDeDatos;
 
-    public VentanaAltaCliente(DefaultListModel<String> modeloListaClientes, List<String[]> listaOriginalClientes, String archivoCSVClientes) {
-        this.modeloListaClientes = modeloListaClientes;
-        this.listaOriginalClientes = listaOriginalClientes;
-        this.archivoCSVClientes = archivoCSVClientes;
+    public VentanaAltaCliente(DefaultListModel<String> modeloListaClientes, Bdd baseDeDatos) {
+        this.baseDeDatos = baseDeDatos;
 
         // Configuración básica de la ventana
         setTitle("Dar de Alta Cliente");
@@ -178,20 +170,15 @@ public class VentanaAltaCliente extends JFrame {
 
                 // Si el usuario confirma los datos
                 if (confirmacion == JOptionPane.YES_OPTION) {
-                    // Crear un nuevo cliente y añadirlo a la lista
-                    String[] nuevoCliente = {nombre," "+apellidos, " "+dni, " "+telefono, " "+email};
-                    listaOriginalClientes.add(nuevoCliente);
-                    String clienteEnLista = nombre + " " + apellidos + " - DNI: " + dni;
-                    modeloListaClientes.addElement(clienteEnLista);
-
-                    // Actualizar el archivo CSV
-                    actualizarClientesCSV(archivoCSVClientes);
-
-                    // Mostrar mensaje de confirmación de guardado
-                    JOptionPane.showMessageDialog(panelAltaCliente, "Cliente guardado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
-
-                    // Cerrar la ventana
-                    dispose();
+                    // Guardar el cliente en la base de datos
+                    try {
+                        baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email);
+                        JOptionPane.showMessageDialog(panelAltaCliente, "Cliente guardado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                        modeloListaClientes.addElement(nombre + " " + apellidos + " - DNI: " + dni);
+                        dispose(); // Cerrar la ventana
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(panelAltaCliente, "Error al guardar el cliente: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -213,18 +200,5 @@ public class VentanaAltaCliente extends JFrame {
                 }
             }
         });
-    }
-
-    // Método para actualizar el archivo CSV con los clientes actualizados
-    private void actualizarClientesCSV(String archivoCSV) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoCSV))) {
-            for (String[] cliente : listaOriginalClientes) {
-                bw.write(String.join(",", cliente));
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al actualizar el archivo CSV: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 }

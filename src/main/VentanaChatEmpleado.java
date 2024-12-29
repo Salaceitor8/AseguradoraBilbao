@@ -4,26 +4,31 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import domain.*;
 
 public class VentanaChatEmpleado extends JFrame {
 
     private JList<String> listaClientes;
     private DefaultListModel<String> modeloListaClientes;
-    private JPanel panelChat; 
+    private JPanel panelChat;
     private JTextArea campoMensaje; // Cambiar a JTextArea para permitir múltiples líneas
     private JButton btnEnviar;
     private Map<String, List<Mensaje>> mensajesPorCliente;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final String archivoMensajes = "mensajes.csv"; // Archivo de mensajes
+    private final Bdd baseDeDatos;
+
     private JScrollPane scrollChat;
 
-    public VentanaChatEmpleado() {
+    public VentanaChatEmpleado(Bdd baseDeDatos) {
+        this.baseDeDatos = baseDeDatos;
+
         // Configuración básica de la ventana
         setTitle("Atención al Cliente - Chat");
         setSize(800, 600);
@@ -71,9 +76,8 @@ public class VentanaChatEmpleado extends JFrame {
         add(panelMensaje, BorderLayout.SOUTH);       // Campo de mensaje en la parte inferior
 
         // Cargar la lista de clientes
-        cargarClientesDesdeCSV("clientes.csv");
-        cargarMensajesDesdeCSV(archivoMensajes);
-
+        cargarClientesDesdeBaseDeDatos();
+        
         // Listener para cambiar el chat al seleccionar un cliente
         listaClientes.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -102,59 +106,34 @@ public class VentanaChatEmpleado extends JFrame {
         setVisible(true);
     }
 
-    public void cargarClientesDesdeCSV(String archivoCSV) {
-        try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] datos = linea.split(",");
-                if (datos.length == 5) {
-                    String nombre = datos[0].trim();
-                    String apellidos = datos[1].trim();
-                    String dni = datos[2].trim();
-                    String cliente = nombre + " " + apellidos + " - DNI: " + dni;
-                    modeloListaClientes.addElement(cliente);
-                }
+    public void cargarClientesDesdeBaseDeDatos() {
+        try {
+            java.sql.ResultSet rs = baseDeDatos.obtenerClientes();
+            while (rs.next()) {
+                String nombre = rs.getString("nombre").trim();
+                String apellidos = rs.getString("apellidos").trim();
+                String dni = rs.getString("dni").trim();
+                String cliente = nombre + " " + apellidos + " - DNI: " + dni;
+                modeloListaClientes.addElement(cliente);
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar los clientes desde el archivo CSV: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void cargarMensajesDesdeCSV(String archivoCSV) {
-        try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
-            String linea;
-            boolean esPrimeraLinea = true;  // Bandera para saltar el encabezado
-            while ((linea = br.readLine()) != null) {
-                if (esPrimeraLinea) {
-                    esPrimeraLinea = false;
-                    continue;  // Saltar la primera línea (encabezado)
-                }
-                String[] datos = linea.split(";");
-                if (datos.length == 4) {
-                    String dniCliente = datos[0].trim();
-                    String remitente = datos[1].trim();
-                    String mensaje = datos[2].trim();
-                    LocalDateTime fechaHora = LocalDateTime.parse(datos[3].trim(), dateFormatter);
-                    Mensaje nuevoMensaje = new Mensaje(remitente, mensaje, fechaHora);
-                    mensajesPorCliente.computeIfAbsent(dniCliente, k -> new ArrayList<>()).add(nuevoMensaje);
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar los mensajes desde el archivo CSV: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los clientes desde la base de datos: " + e.getMessage(),
+                                          "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void cargarMensajesCliente(String cliente) {
         panelChat.removeAll();  // Limpiar el panel de chat
-        if (mensajesPorCliente.containsKey(cliente)) {
-            List<Mensaje> mensajes = mensajesPorCliente.get(cliente);
+        String clienteSeleccionado = listaClientes.getSelectedValue();
+        if(clienteSeleccionado == null) return;
+        String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
+        try {
+            ArrayList<Mensaje> mensajes = baseDeDatos.obtenerMensajes(dniCliente);
             for (Mensaje mensaje : mensajes) {
-                agregarBurbujaMensaje(mensaje);
-            }
-        } else {
-            panelChat.add(new JLabel("No hay mensajes para este cliente."));
+				agregarBurbujaMensaje(mensaje);
+			}
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los mensajes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         panelChat.revalidate();  // Asegurar que el panel se actualice
@@ -171,9 +150,6 @@ public class VentanaChatEmpleado extends JFrame {
         contenido.setEditable(false);
         contenido.setBorder(new EmptyBorder(5, 5, 5, 5)); // Espaciado interno
         contenido.setFont(new Font("Arial", Font.PLAIN, 14)); // Fuente más grande
-        
-        // Ancho preferido más grande para las burbujas de chat
-        contenido.setMaximumSize(new Dimension(500, Integer.MAX_VALUE)); 
 
         // Color de fondo y alineación según remitente
         if (mensaje.getRemitente().equalsIgnoreCase("cliente")) {
@@ -187,11 +163,6 @@ public class VentanaChatEmpleado extends JFrame {
         JLabel hora = new JLabel(mensaje.getFechaHora().format(dateFormatter));
         hora.setFont(new Font("Arial", Font.PLAIN, 10)); // Hora más pequeña
         hora.setForeground(Color.GRAY); // Letra gris para la hora
-        if (mensaje.getRemitente().equalsIgnoreCase("cliente")) {
-        	hora.setHorizontalAlignment(SwingConstants.LEFT);
-        } else {
-        	hora.setHorizontalAlignment(SwingConstants.RIGHT);
-        }
 
         burbuja.add(hora, BorderLayout.SOUTH); // Añadir la hora debajo del mensaje
         burbuja.setOpaque(false); // Hacer transparente la burbuja
@@ -210,57 +181,22 @@ public class VentanaChatEmpleado extends JFrame {
             String dniCliente = clienteSeleccionado.split("- DNI: ")[1].trim();
             Mensaje nuevoMensaje = new Mensaje("empleado", texto, LocalDateTime.now());
 
-            // Añadir el mensaje a la lista de mensajes del cliente
-            mensajesPorCliente.computeIfAbsent(dniCliente, k -> new ArrayList<>()).add(nuevoMensaje);
+            // Añadir el mensaje a la base de datos
+            try {
+                baseDeDatos.insertarMensaje(dniCliente, nuevoMensaje.getRemitente(), nuevoMensaje.getContenido(), nuevoMensaje.getFechaHora().format(dateFormatter));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al guardar el mensaje: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             // Actualizar el panel de chat con el nuevo mensaje
             agregarBurbujaMensaje(nuevoMensaje);
 
             // Limpiar el campo de texto después de enviar
             campoMensaje.setText("");
-
-            // Guardar el mensaje en el CSV
-            guardarMensajeEnCSV(dniCliente, nuevoMensaje);
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, selecciona un cliente antes de enviar el mensaje.",
                                           "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-
-    private void guardarMensajeEnCSV(String dniCliente, Mensaje mensaje) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoMensajes, true))) {
-            String linea = dniCliente + ";" + mensaje.getRemitente() + ";" + mensaje.getContenido() + ";" +
-                    mensaje.getFechaHora().format(dateFormatter);
-            bw.write(linea);
-            bw.newLine();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al guardar el mensaje en el archivo CSV: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    class Mensaje {
-        private String remitente;
-        private String contenido;
-        private LocalDateTime fechaHora;
-
-        public Mensaje(String remitente, String contenido, LocalDateTime fechaHora) {
-            this.remitente = remitente;
-            this.contenido = contenido;
-            this.fechaHora = fechaHora;
-        }
-
-        public String getRemitente() {
-            return remitente;
-        }
-
-        public String getContenido() {
-            return contenido;
-        }
-
-        public LocalDateTime getFechaHora() {
-            return fechaHora;
         }
     }
 

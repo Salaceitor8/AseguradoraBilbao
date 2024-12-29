@@ -19,16 +19,17 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class VentanaCliente extends JFrame{
-	private JTable tablaSeguros;
+import domain.Seguro;
+
+public class VentanaCliente extends JFrame {
+    private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
     private JButton btnActualizarDatos, btnReportarSiniestro, btnChatAtencion;
-	
-	public VentanaCliente(String nombreCliente, List<Object[]> segurosCliente) {
-		 // Configuración básica de la ventana
+
+    public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente) {
+        // Configuración básica de la ventana
         setTitle("Aseguradora Bilbao - Cliente");
-//        setSize(800, 600);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -62,8 +63,14 @@ public class VentanaCliente extends JFrame{
         panelCentro.add(scrollTabla, BorderLayout.CENTER);
 
         // Llenar tabla con datos de seguros
-        for (Object[] seguro : segurosCliente) {
-            modeloTablaSeguros.addRow(seguro);
+        for (Seguro s : segurosCliente) {
+        	Object[] o = new Object[] {
+        			s.getTipo().toString(),
+        			s.getFechaContratacionFormato(),
+        			s.getCostoMensual(),
+        			s.getEstado()
+        	};
+            modeloTablaSeguros.addRow(o);;
         }
 
         add(panelCentro, BorderLayout.CENTER);
@@ -105,16 +112,15 @@ public class VentanaCliente extends JFrame{
         actualizarCostoTotal(segurosCliente);
 
         setVisible(true);
-	}
-	private void actualizarCostoTotal(List<Object[]> segurosCliente) {
+    }
+
+    private void actualizarCostoTotal(List<Seguro> segurosCliente) {
         double totalCosto = 0;
-        for (Object[] seguro : segurosCliente) {
-            if ("Activo".equals(seguro[3])) {
-                totalCosto += (double) seguro[2]; // Asumimos que el costo anual está en la posición 2
+        for (Seguro s : segurosCliente) {
+            if ("Activo".equals(s.getEstado())) {
+                totalCosto += s.getCostoMensual(); // Asumimos que el costo anual está en la posición 2
             }
         }
         lblCostoTotal.setText("Costo Total: " + totalCosto + " €");
     }
-	
-
 }
