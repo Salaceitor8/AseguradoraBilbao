@@ -7,7 +7,10 @@
 	</classpathentry>
 	<classpathentry kind="src" path="fotos"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="Sources"/>
-	<classpathentry kind="lib" path="C:/Users/salazar.inigo/eclipse-workspace2/sqlite-jdbc-3.47.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.47.1.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
