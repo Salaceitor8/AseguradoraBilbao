@@ -5,17 +5,16 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import domain.*;
-import domain.Seguro;
-import domain.TipoSeguro;
 import gui.SeguroCellRenderer;
 
 public class VentanaPrincipalEmpleado extends JFrame {
@@ -27,20 +26,28 @@ public class VentanaPrincipalEmpleado extends JFrame {
     private JPanel panelInfoCliente;
     private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
-    private Map<String, List<Seguro>> segurosPorCliente;
-    private List<String[]> listaOriginalClientes;
+    private Map<String, java.util.List<Seguro>> segurosPorCliente;
     private JLabel totalCostoSeguros;
-    private final String archivoCSVClientes = "clientes.csv";
-    private final String archivoCSVSeguros = "seguros.csv";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    
+
 
     // Constructor
-    public VentanaPrincipalEmpleado() {
+    public VentanaPrincipalEmpleado(Bdd baseDeDatos) {
         setTitle("Aseguradoras Bilbao - Panel de Empleado");
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
+        
+     // Añadir un WindowListener para cerrar la conexión al cerrar la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                baseDeDatos.cerrarConexion();
+                System.out.println("La conexión a la base de datos se ha cerrado.");
+            }
+        });
 
         Color colorPrincipal = new Color(0, 51, 102);
         Color colorContraste = new Color(255, 255, 255);
@@ -150,24 +157,29 @@ public class VentanaPrincipalEmpleado extends JFrame {
         panelPrincipal.add(panelInfoCliente, BorderLayout.CENTER);
         add(panelPrincipal);
 
-        cargarClientesDesdeCSV(archivoCSVClientes);
-        cargarSegurosDesdeCSV(archivoCSVSeguros);
+        cargarClientesDesdeBaseDeDatos(baseDeDatos);
 
-        btnAltaCliente.addActionListener(e -> new VentanaAltaCliente(modeloListaClientes, listaOriginalClientes, archivoCSVClientes));
-        btnBajaCliente.addActionListener(e -> darDeBajaCliente());
-        listaClientes.addListSelectionListener(e -> cargarSegurosCliente());
+//        btnAltaCliente.addActionListener(e -> new VentanaAltaCliente(modeloListaClientes, baseDeDatos));
+        btnBajaCliente.addActionListener(e -> darDeBajaCliente(baseDeDatos));
+        listaClientes.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) { // Asegurarse de que la selección es definitiva
+                String clienteSeleccionado = listaClientes.getSelectedValue();
+                cargarSegurosCliente(baseDeDatos);
+                
+            }
+            double costoTotal = 0;
+            for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
+            	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
+            		costoTotal += Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());            	
+            	}
+			}
+            totalCostoSeguros.setText("Costo Total de Seguros: "+ costoTotal +" €");
+        });
 
         btnNuevoSeguro.addActionListener(e -> {
             if (listaClientes.getSelectedValue() != null) {
                 String dniCliente = listaClientes.getSelectedValue().split("- DNI: ")[1];
-
-                List<Seguro> segurosCliente = segurosPorCliente.get(dniCliente);
-                if (segurosCliente == null) {
-                    segurosCliente = new ArrayList<>();
-                    segurosPorCliente.put(dniCliente, segurosCliente);
-                }
-
-                new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, archivoCSVSeguros);
+//                new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, baseDeDatos);
             } else {
                 JOptionPane.showMessageDialog(this, "Selecciona un cliente primero.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -183,104 +195,94 @@ public class VentanaPrincipalEmpleado extends JFrame {
             String clienteSeleccionado = listaClientes.getSelectedValue();
             if (clienteSeleccionado != null) {
                 String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
-                List<Seguro> segurosCliente = segurosPorCliente.get(dniCliente);
-                if (segurosCliente != null) {
-                    segurosCliente.get(filaSeleccionada).setEstado("Inactivo");
-                    actualizarSegurosCSV();
-                    cargarSegurosCliente();
+                System.out.println(dniCliente);
+                String tipo = tablaSeguros.getValueAt(filaSeleccionada, 0).toString();
+                System.out.println(tipo);
+                String fecha = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+                Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+                System.out.println(o);
+                System.out.println(fecha);
+                double costo = Double.parseDouble(tablaSeguros.getValueAt(filaSeleccionada, 2).toString());
+                System.out.println(costo);
+                String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
+                System.out.println(estado);
+                
+                int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado);
+                System.out.println(Id);
+//                System.out.println(dniCliente);
+//                System.out.println(tipo);
+//                System.out.println(fecha);
+//                System.out.println(costo);
+//                System.out.println(estado);
+                try {
+                    baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo");
+                    cargarSegurosCliente(baseDeDatos);
                     JOptionPane.showMessageDialog(this, "El seguro ha sido dado de baja.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al dar de baja el seguro: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+            double costoTotal = 0;
+            for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
+            	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
+            		costoTotal += Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
+            	}
+			}
+            totalCostoSeguros.setText("Costo Total de Seguros: "+ costoTotal +" €");
         });
         
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Chat");
-        JMenuItem itemChat = new JMenuItem("Atencion al clietne");
+        JMenuItem itemChat = new JMenuItem("Atencion al cliente");
         
-        itemChat.addActionListener(e -> {new VentanaChatEmpleado();});
+//        itemChat.addActionListener(e -> {new VentanaChatEmpleado(baseDeDatos);});
         
         menuBar.add(menu);
         menu.add(itemChat);
         
         setJMenuBar(menuBar);
-        
-        
 
         setVisible(true);
     }
 
-    private void cargarSegurosDesdeCSV(String archivoCSV) {
-        segurosPorCliente = new HashMap<>();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] datosSeguro = linea.split(",");
-                String dniCliente = datosSeguro[0];
-                TipoSeguro tipoSeguro = TipoSeguro.valueOf(datosSeguro[1].trim().toUpperCase());
-
-                LocalDate fechaContratacion = LocalDate.parse(datosSeguro[2], dateFormatter);
-                double costoMensual = Double.parseDouble(datosSeguro[3]);
-                String estado = datosSeguro[4];
-
-                Seguro seguro = new Seguro(tipoSeguro, fechaContratacion, costoMensual, estado);
-                segurosPorCliente.computeIfAbsent(dniCliente, k -> new ArrayList<>()).add(seguro);
+    private void cargarClientesDesdeBaseDeDatos(Bdd baseDeDatos) {
+        try {
+        	ResultSet rs = baseDeDatos.obtenerClientes();
+            while (rs.next()) {
+                String nombre = rs.getString("nombre");
+                String apellidos = rs.getString("apellidos");
+                String dni = rs.getString("dni");
+                modeloListaClientes.addElement(nombre + " " + apellidos + " - DNI: " + dni);
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar los seguros desde el archivo CSV: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los clientes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }
 
-    private void cargarSegurosCliente() {
+    private void cargarSegurosCliente(Bdd baseDeDatos) {
         modeloTablaSeguros.setRowCount(0);
-
         String clienteSeleccionado = listaClientes.getSelectedValue();
         if (clienteSeleccionado == null) return;
 
         String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
-        List<Seguro> segurosCliente = segurosPorCliente.get(dniCliente);
         double totalCosto = 0;
+        try {
+            ArrayList<Seguro> seguros = baseDeDatos.obtenerSeguros(dniCliente);
+            
+            for (Seguro s : seguros) {
+				modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado()});
+			}
 
-        if (segurosCliente != null) {
-            for (Seguro seguro : segurosCliente) {
-                modeloTablaSeguros.addRow(new Object[]{
-                        seguro.getTipo().name(),
-                        seguro.getFechaContratacion().toString(),
-                        seguro.getCostoMensual(),
-                        seguro.getEstado()
-                });
-                if (seguro.getEstado().equals("Activo")) {
-                    totalCosto += seguro.getCostoMensual();
-                }
-            }
-        }
 
-        totalCostoSeguros.setText("Costo Total de Seguros: " + totalCosto + " €");
-    }
-
-    private void actualizarSegurosCSV() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoCSVSeguros))) {
-            for (Map.Entry<String, List<Seguro>> entry : segurosPorCliente.entrySet()) {
-                String dniCliente = entry.getKey();
-                for (Seguro seguro : entry.getValue()) {
-                    String fechaContratacion = seguro.getFechaContratacion().format(dateFormatter);
-                    bw.write(dniCliente + ", " + seguro.getTipo().name() + ", " + fechaContratacion + ", " +
-                            seguro.getCostoMensual() + ", " + seguro.getEstado());
-                    bw.newLine();
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al actualizar el archivo CSV de seguros: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            totalCostoSeguros.setText("Costo Total de Seguros: " + totalCosto + " €");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los seguros: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    
 
-    private void darDeBajaCliente() {
+    private void darDeBajaCliente(Bdd baseDeDatos) {
         String clienteSeleccionado = listaClientes.getSelectedValue();
         if (clienteSeleccionado == null) {
             JOptionPane.showMessageDialog(this, "Selecciona un cliente para dar de baja.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -289,69 +291,39 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Seguro que quieres dar de baja al cliente?", "Confirmación", JOptionPane.YES_NO_OPTION);
         if (confirmacion == JOptionPane.YES_OPTION) {
-            listaOriginalClientes.removeIf(cliente -> (cliente[0] + " " + cliente[1] + " - DNI: " + cliente[2]).equals(clienteSeleccionado));
-            modeloListaClientes.removeElement(clienteSeleccionado);
-            actualizarClientesCSV(archivoCSVClientes);
-            JOptionPane.showMessageDialog(this, "El cliente ha sido dado de baja.", "Información", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    private void cargarClientesDesdeCSV(String archivoCSV) {
-        listaOriginalClientes = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] datosCliente = linea.split(",");
-                if (datosCliente.length == 5) {
-                    listaOriginalClientes.add(datosCliente);
-                    String clienteEnLista = datosCliente[0] + "" + datosCliente[1] + " - DNI:" + datosCliente[2];
-                    modeloListaClientes.addElement(clienteEnLista);
-                }
+            try {
+                String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
+                baseDeDatos.eliminarCliente(dniCliente);
+                modeloListaClientes.removeElement(clienteSeleccionado);
+                JOptionPane.showMessageDialog(this, "El cliente ha sido dado de baja.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al dar de baja al cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar el archivo CSV: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void actualizarClientesCSV(String archivoCSV) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoCSV))) {
-            for (String[] cliente : listaOriginalClientes) {
-                bw.write(String.join(",", cliente));
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al actualizar el archivo CSV: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void filtrarClientes(String filtro) {
         if (filtro.isEmpty()) {
             modeloListaClientes.clear();
-            for (String[] cliente : listaOriginalClientes) {
-                String clienteEnLista = cliente[0] + " " + cliente[1] + " - DNI: " + cliente[2];
-                modeloListaClientes.addElement(clienteEnLista);
-            }
+            cargarClientesDesdeBaseDeDatos(new Bdd("aseguradora.db")); // Asegúrate de usar la base de datos correcta
             return;
         }
 
-        List<String[]> clientesFiltrados = new ArrayList<>();
-        for (String[] cliente : listaOriginalClientes) {
-            if ((cliente[0] + " " + cliente[1]).toLowerCase().contains(filtro.toLowerCase())) {
-                clientesFiltrados.add(cliente);
+        DefaultListModel<String> modeloFiltrado = new DefaultListModel<>();
+        for (int i = 0; i < modeloListaClientes.size(); i++) {
+            String cliente = modeloListaClientes.getElementAt(i);
+            if (cliente.toLowerCase().contains(filtro.toLowerCase())) {
+                modeloFiltrado.addElement(cliente);
             }
         }
 
-        modeloListaClientes.clear();
-        for (String[] cliente : clientesFiltrados) {
-            String clienteEnLista = cliente[0] + " " + cliente[1] + " - DNI: " + cliente[2];
-            modeloListaClientes.addElement(clienteEnLista);
-        }
+        listaClientes.setModel(modeloFiltrado);
     }
-
+    
     public static void main(String[] args) {
-        new VentanaPrincipalEmpleado();
-    }
+		new VentanaPrincipalEmpleado(new Bdd("aseguradora.db"));
+	}
+
+    
 }
+
