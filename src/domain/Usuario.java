@@ -7,7 +7,16 @@ public abstract class Usuario {
 	protected String apellidos;
 	protected String dni;
 	protected String email;
+	protected int nTelefono;
 	protected String dirección;
+	
+	public int getnTelefono() {
+		return nTelefono;
+	}
+	public void setnTelefono(int nTelefono) {
+		this.nTelefono = nTelefono;
+	}
+
 	public int getId() {
 		return idUsuario;
 	}
@@ -44,6 +53,15 @@ public abstract class Usuario {
 	public void setDirección(String dirección) {
 		this.dirección = dirección;
 	}
+	public Usuario(String nombre, String apellidos, String dni, String email, int nTelefono) {
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.dni = dni;
+		this.email = email;
+		this.nTelefono = nTelefono;
+	}
+	
+	
 	
 	
 

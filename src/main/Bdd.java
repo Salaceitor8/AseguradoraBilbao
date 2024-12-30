@@ -14,6 +14,7 @@ import java.util.List;
 
 import domain.Seguro;
 import domain.TipoSeguro;
+import domain.Cliente;
 import domain.Mensaje;
 
 
@@ -71,6 +72,9 @@ public class Bdd {
             System.err.println("Error al crear las tablas: " + e.getMessage());
         }
     }
+    
+    
+
 
     // Métodos CRUD para Clientes
     public void insertarCliente(String nombre, String apellidos, String dni, String telefono, String email) {
@@ -97,6 +101,29 @@ public class Bdd {
             return null;
         }
     }
+    
+    public Cliente obtenerCLiente(String dni) {
+    	String sql = "SELECT * FROM clientes WHERE dni = ?";
+    	Cliente c = null;
+    	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+    	    pstmt.setString(1, dni);
+    	    ResultSet rs = pstmt.executeQuery();
+    	    while (rs.next()) {
+    	        String nombre = rs.getString("nombre");
+    	        String apellidos = rs.getString("apellidos");
+    	        int telefono = rs.getInt("telefono");
+    	        String email = rs.getString("email");
+    	        c = new Cliente(nombre, apellidos, dni, email, telefono);
+    	        return c;
+    	    }
+    	    
+    	} catch (SQLException e) {
+    	    e.printStackTrace();
+    	}
+		return c;
+
+    	
+    }
 
     public void actualizarCliente(String dni, String nombre, String apellidos, String telefono, String email) {
         String sql = "UPDATE clientes SET nombre = ?, apellidos = ?, telefono = ?, email = ? WHERE dni = ?";
@@ -110,6 +137,19 @@ public class Bdd {
             System.out.println("Cliente actualizado correctamente.");
         } catch (SQLException e) {
             System.err.println("Error al actualizar cliente: " + e.getMessage());
+        }
+    }
+    
+    public void actualizarDatosEnBD(String dni, String email, String telefono) {
+    	String sql = "UPDATE clientes SET email = ?, telefono = ? WHERE dni = ?";
+    	try (PreparedStatement pstmt = connection.prepareStatement(sql);){
+            pstmt.setString(1, email);
+            pstmt.setString(2, telefono);
+            pstmt.setString(3, dni);
+            pstmt.executeUpdate();
+            System.out.println("cliente actualizado");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -292,5 +332,7 @@ public class Bdd {
             System.err.println("Error al cerrar la conexión: " + e.getMessage());
         }
     }
+
+	
 }
 

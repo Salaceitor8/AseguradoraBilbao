@@ -6,10 +6,17 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,15 +26,18 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import domain.Cliente;
 import domain.Seguro;
+import domain.TipoSeguro;
 
 public class VentanaCliente extends JFrame {
     private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton btnActualizarDatos, btnReportarSiniestro, btnChatAtencion;
+    private JButton btnActualizarDatos, btnReportarSiniestro, btnChatAtencion, btnMiPerfil;
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente) {
+    public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni) {
         // Configuración básica de la ventana
         setTitle("Aseguradora Bilbao - Cliente");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -80,13 +90,14 @@ public class VentanaCliente extends JFrame {
         panelOpciones.setLayout(new BoxLayout(panelOpciones, BoxLayout.Y_AXIS));
         panelOpciones.setBorder(new EmptyBorder(10, 10, 10, 10));
         panelOpciones.setBackground(Color.WHITE);
-
+        
+        btnMiPerfil = new JButton("Mi perfil");
         btnActualizarDatos = new JButton("Actualizar Datos");
         btnReportarSiniestro = new JButton("Reportar Siniestro");
         btnChatAtencion = new JButton("Atención al Cliente");
 
         // Estilo de los botones
-        JButton[] botones = {btnActualizarDatos, btnReportarSiniestro, btnChatAtencion};
+        JButton[] botones = {btnMiPerfil, btnActualizarDatos, btnReportarSiniestro, btnChatAtencion};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -97,8 +108,21 @@ public class VentanaCliente extends JFrame {
             panelOpciones.add(boton);
             panelOpciones.add(Box.createVerticalStrut(10)); // Espacio entre botones
         }
-
+        Image usuario = (new ImageIcon("fotos/users.png")).getImage().getScaledInstance(35, 35, DO_NOTHING_ON_CLOSE);
+        ImageIcon iconoUsuario = new ImageIcon(usuario);
+        btnMiPerfil.setIcon(iconoUsuario);
         add(panelOpciones, BorderLayout.EAST);
+        
+        btnMiPerfil.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Cliente c = bd.obtenerCLiente(dni);
+				
+				new VentanaPerfilCliente(c.getNombre(), c.getDni(), c.getDirección(), c.getEmail(), c.getnTelefono()+"");
+				
+			}
+		});
 
         // SUR (Resumen financiero)
         JPanel panelResumen = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -123,4 +147,14 @@ public class VentanaCliente extends JFrame {
         }
         lblCostoTotal.setText("Costo Total: " + totalCosto + " €");
     }
+    
+    public static void main(String[] args) {
+    	List<Seguro> seguros = new ArrayList<Seguro>();
+    	for (int i = 0; i < 3; i++) {
+			Seguro s = new Seguro(TipoSeguro.COCHE, LocalDate.now(), 100.0, "Activo");
+			seguros.add(s);
+		}
+    	
+		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("aseguradora.db"), "79000259C");
+	}
 }

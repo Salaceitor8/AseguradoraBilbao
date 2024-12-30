@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import domain.Cliente;
 import domain.Seguro;
 
 public class InicioSesion extends JFrame {
@@ -212,7 +213,7 @@ public class InicioSesion extends JFrame {
                     if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                         JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario + ".");
                         dispose();
-                        new VentanaCliente(usuario, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña));
+                        new VentanaCliente(usuario, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
                         encontrado = true;
                         break;
                     }
