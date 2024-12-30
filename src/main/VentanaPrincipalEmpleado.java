@@ -235,7 +235,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenu menu = new JMenu("Chat");
         JMenuItem itemChat = new JMenuItem("Atencion al cliente");
         
-        itemChat.addActionListener(e -> {new VentanaChatEmpleado(baseDeDatos);});
+        itemChat.addActionListener(e -> {new VentanaChatEmpleado("127.0.0.1",12345);});
         
         menuBar.add(menu);
         menu.add(itemChat);
@@ -321,7 +321,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
     }
     
     public static void main(String[] args) {
-		new VentanaPrincipalEmpleado(new Bdd("aseguradora.db"));
+		new VentanaPrincipalEmpleado(new Bdd("resources/db/aseguradora.db"));
 	}
 
     
