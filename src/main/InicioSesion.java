@@ -68,12 +68,40 @@ public class InicioSesion extends JFrame {
         btnEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnEmpleado.setBackground(COLOR_RESALTADO);
+                new Thread(() -> {
+                    for (int i = 0; i <= 255; i += 5) {
+                        int intensidad = i; // Necesario para la lambda
+                        SwingUtilities.invokeLater(() -> btnEmpleado.setBackground(new Color(
+                            COLOR_NORMAL.getRed() + (COLOR_RESALTADO.getRed() - COLOR_NORMAL.getRed()) * intensidad / 255,
+                            COLOR_NORMAL.getGreen() + (COLOR_RESALTADO.getGreen() - COLOR_NORMAL.getGreen()) * intensidad / 255,
+                            COLOR_NORMAL.getBlue() + (COLOR_RESALTADO.getBlue() - COLOR_NORMAL.getBlue()) * intensidad / 255
+                        )));
+                        try {
+                            Thread.sleep(5); // Velocidad de la animación
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnEmpleado.setBackground(COLOR_NORMAL);
+                new Thread(() -> {
+                    for (int i = 255; i >= 0; i -= 5) {
+                        int intensidad = i; // Necesario para la lambda
+                        SwingUtilities.invokeLater(() -> btnEmpleado.setBackground(new Color(
+                            COLOR_NORMAL.getRed() + (COLOR_RESALTADO.getRed() - COLOR_NORMAL.getRed()) * intensidad / 255,
+                            COLOR_NORMAL.getGreen() + (COLOR_RESALTADO.getGreen() - COLOR_NORMAL.getGreen()) * intensidad / 255,
+                            COLOR_NORMAL.getBlue() + (COLOR_RESALTADO.getBlue() - COLOR_NORMAL.getBlue()) * intensidad / 255
+                        )));
+                        try {
+                            Thread.sleep(5); // Velocidad de la animación
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         });
         Image empleado = (new ImageIcon("fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
@@ -92,12 +120,40 @@ public class InicioSesion extends JFrame {
         btnCliente.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnCliente.setBackground(COLOR_RESALTADO);
+                new Thread(() -> {
+                    for (int i = 0; i <= 255; i += 5) {
+                        int intensidad = i;
+                        SwingUtilities.invokeLater(() -> btnCliente.setBackground(new Color(
+                            COLOR_NORMAL.getRed() + (COLOR_RESALTADO.getRed() - COLOR_NORMAL.getRed()) * intensidad / 255,
+                            COLOR_NORMAL.getGreen() + (COLOR_RESALTADO.getGreen() - COLOR_NORMAL.getGreen()) * intensidad / 255,
+                            COLOR_NORMAL.getBlue() + (COLOR_RESALTADO.getBlue() - COLOR_NORMAL.getBlue()) * intensidad / 255
+                        )));
+                        try {
+                            Thread.sleep(5);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnCliente.setBackground(COLOR_NORMAL);
+                new Thread(() -> {
+                    for (int i = 255; i >= 0; i -= 5) {
+                        int intensidad = i;
+                        SwingUtilities.invokeLater(() -> btnCliente.setBackground(new Color(
+                            COLOR_NORMAL.getRed() + (COLOR_RESALTADO.getRed() - COLOR_NORMAL.getRed()) * intensidad / 255,
+                            COLOR_NORMAL.getGreen() + (COLOR_RESALTADO.getGreen() - COLOR_NORMAL.getGreen()) * intensidad / 255,
+                            COLOR_NORMAL.getBlue() + (COLOR_RESALTADO.getBlue() - COLOR_NORMAL.getBlue()) * intensidad / 255
+                        )));
+                        try {
+                            Thread.sleep(5);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         });
         Image cliente = (new ImageIcon("fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
