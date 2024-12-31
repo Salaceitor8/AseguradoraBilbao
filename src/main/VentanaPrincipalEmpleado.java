@@ -222,12 +222,22 @@ public class VentanaPrincipalEmpleado extends JFrame {
                     JOptionPane.showMessageDialog(this, "Error al dar de baja el seguro: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+            List<Seguro> seguros = new ArrayList<>();
             double costoTotal = 0;
-            for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
-            	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
-            		costoTotal += Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
-            	}
-			}
+//            for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
+//            	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
+//            		costoTotal += Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
+//            	}
+//			}
+            for(int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
+            	TipoSeguro tipo = TipoSeguro.valueOf(tablaSeguros.getValueAt(i, 0).toString());
+            	LocalDate fecha = LocalDate.parse(tablaSeguros.getValueAt(i, 1).toString());
+            	double costo = Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
+            	String estado = tablaSeguros.getValueAt(i, 3).toString();
+            	Seguro s = new Seguro(tipo, fecha, costo, estado);
+            	seguros.add(s);
+            }
+            costoTotal = calcularCostoTotal(seguros, 0);
             totalCostoSeguros.setText("Costo Total de Seguros: "+ costoTotal +" €");
         });
         
@@ -319,6 +329,17 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         listaClientes.setModel(modeloFiltrado);
     }
+    
+    public double calcularCostoTotal(List<Seguro> seguros, int indice) {
+        if (indice >= seguros.size()) return 0; // Caso base
+
+        Seguro seguro = seguros.get(indice);
+        double costoActual = seguro.getCostoMensual();
+
+        // Llamada recursiva al siguiente seguro
+        return costoActual + calcularCostoTotal(seguros, indice + 1);
+    }
+
     
     public static void main(String[] args) {
 		new VentanaPrincipalEmpleado(new Bdd("resources/db/aseguradora.db"));
