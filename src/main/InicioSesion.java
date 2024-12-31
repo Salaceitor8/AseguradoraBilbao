@@ -58,6 +58,8 @@ public class InicioSesion extends JFrame {
         etiquetaTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         etiquetaTitulo.setForeground(COLOR_CONTRASTE);
         panel.add(etiquetaTitulo, BorderLayout.NORTH);
+        
+        iniciarAnimacionColor(etiquetaTitulo);
 
         JPanel botones = new JPanel(new GridLayout(1, 2, 10, 10));
         botones.setBackground(COLOR_PRINCIPAL);
@@ -321,6 +323,40 @@ public class InicioSesion extends JFrame {
         campoUsuario.setText("");
         campoContraseña.setText("");
     }
+    
+    private void iniciarAnimacionColor(JLabel label) {
+        new Thread(() -> {
+            boolean aumentando = true; // Controla si aumenta o disminuye la intensidad
+            int intensidad = 0;        // Intensidad inicial para el componente rojo (R)
+
+            while (true) {
+                // Ajustar intensidad (R)
+                if (aumentando) {
+                    intensidad += 5;
+                    if (intensidad >= 255) aumentando = false; // Límite superior
+                } else {
+                    intensidad -= 5;
+                    if (intensidad <= 0) aumentando = true; // Límite inferior
+                }
+
+                // Actualizar el color en el hilo de la interfaz gráfica
+                int finalIntensidad = intensidad;
+                SwingUtilities.invokeLater(() -> label.setForeground(
+                    new Color(finalIntensidad, 255, 255) // Gradiente de cian a blanco
+                ));
+
+                // Pausa para suavizar la animación
+                try {
+                    Thread.sleep(15); // Ajusta la velocidad del cambio de color
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+
 
     public static void main(String[] args) {
         new InicioSesion();
