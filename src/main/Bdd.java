@@ -125,6 +125,86 @@ public class Bdd {
     	
     }
     
+    public String cargarUsuarioDesdeBD(String dni) {
+        String sql = "SELECT usuario FROM clientes WHERE dni = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dni);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("usuario"); // Devuelve la contraseña
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Muestra errores en la consola
+        }
+        return null; // Devuelve null si no se encontró el cliente o hubo un error
+    }
+    
+    public String cargarContraseñaDesdeBD(String dni) {
+        String sql = "SELECT contraseña FROM clientes WHERE dni = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dni);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("contraseña"); // Devuelve la contraseña
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Muestra errores en la consola
+        }
+        return null; // Devuelve null si no se encontró el cliente o hubo un error
+    }
+    
+    public boolean existeUsuarioEnBD(String usuario) {
+        String sql = "SELECT COUNT(*) FROM clientes WHERE usuario = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, usuario);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Devuelve true si el usuario ya existe
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Devuelve false si no hay coincidencias o hay un error
+    }
+
+    
+    public boolean cambiarUsuarioEnBD(String dni, String nuevoUsuario) {
+        String sql = "UPDATE clientes SET usuario = ? WHERE dni = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nuevoUsuario); // Establecer la nueva contraseña
+            stmt.setString(2, dni); // Establecer el DNI del cliente
+
+            int filasActualizadas = stmt.executeUpdate(); // Ejecutar la actualización
+            return filasActualizadas > 0; // Devuelve true si se actualizó al menos una fila
+        } catch (Exception e) {
+            e.printStackTrace(); // Imprime cualquier error en la consola
+        }
+        return false; // Devuelve false si ocurre un error
+    }
+    
+    public boolean cambiarContraseñaEnBD(String dni, String nuevaContraseña) {
+        String sql = "UPDATE clientes SET contraseña = ? WHERE dni = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nuevaContraseña); // Establecer la nueva contraseña
+            stmt.setString(2, dni); // Establecer el DNI del cliente
+
+            int filasActualizadas = stmt.executeUpdate(); // Ejecutar la actualización
+            return filasActualizadas > 0; // Devuelve true si se actualizó al menos una fila
+        } catch (Exception e) {
+            e.printStackTrace(); // Imprime cualquier error en la consola
+        }
+        return false; // Devuelve false si ocurre un error
+    }
+
+
+    
     public String cargarRutaFotoDesdeBD(String dni) {
     	String sql = "SELECT foto FROM clientes WHERE dni = ?";
         

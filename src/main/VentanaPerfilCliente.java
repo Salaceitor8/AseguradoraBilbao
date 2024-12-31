@@ -10,6 +10,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,7 +27,7 @@ import java.util.List;
 public class VentanaPerfilCliente extends JFrame {
 
     private JTextField campoNombre, campoDNI, campoEmail, campoTelefono;
-    private JButton btnCambiarFoto, btnEditar, btnGuardar, btnCambiarContraseña, btnVerHistorial;
+    private JButton btnCambiarFoto, btnEditar, btnGuardar, btnCambiarContraseña, btnCambiarUsuario;
     private JLabel lblFotoPerfil;
 
     public VentanaPerfilCliente(String nombreCliente, String dni, String direccion, String email, String telefono, Bdd bd, List<Seguro> seguros) {
@@ -131,18 +133,18 @@ public class VentanaPerfilCliente extends JFrame {
         JPanel panelBotones = new JPanel(new FlowLayout());
         btnEditar = new JButton("Editar");
         btnGuardar = new JButton("Guardar Cambios");
+        btnCambiarUsuario = new JButton("Cambiar Usuario");
         btnCambiarContraseña = new JButton("Cambiar Contraseña");
-        btnVerHistorial = new JButton("Ver Historial");
 
         btnEditar.addActionListener(e -> habilitarEdicion());
         btnGuardar.addActionListener(e -> guardarCambios(bd));
-        btnCambiarContraseña.addActionListener(e -> mostrarDialogoCambiarContraseña());
-        btnVerHistorial.addActionListener(e -> mostrarHistorial());
+        btnCambiarUsuario.addActionListener(e -> new VentanaCambiarUsuario(dni, bd));
+        btnCambiarContraseña.addActionListener(e -> new VentanaCambiarContraseña(campoDNI.getText(), bd));
 
         panelBotones.add(btnEditar);
         panelBotones.add(btnGuardar);
+        panelBotones.add(btnCambiarUsuario);
         panelBotones.add(btnCambiarContraseña);
-        panelBotones.add(btnVerHistorial);
         add(panelBotones, BorderLayout.SOUTH);
 
         setVisible(true);
@@ -232,15 +234,6 @@ public class VentanaPerfilCliente extends JFrame {
             JOptionPane.showMessageDialog(this, "Habilita la edición antes de guardar cambios.");
         }
     }
-
-
-    private void mostrarDialogoCambiarContraseña() {
-        JOptionPane.showMessageDialog(this, "Función de cambiar contraseña aún no implementada.");
-    }
-
-    private void mostrarHistorial() {
-        JOptionPane.showMessageDialog(this, "Función de historial aún no implementada.");
-    }
     
 
 
@@ -328,8 +321,5 @@ public class VentanaPerfilCliente extends JFrame {
 
 
 
-//    public static void main(String[] args) {
-//        new VentanaPerfilCliente("Nerea Ramírez", "12345678A", "Calle Falsa 123", "nerea@email.com", "600123456");
-//    }
 }
 

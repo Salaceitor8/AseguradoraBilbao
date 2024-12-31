@@ -210,13 +210,47 @@ public class InicioSesion extends JFrame {
                     String dni = rs.getString("dni");
                     String nombre = rs.getString("nombre");
                     String apellidos = rs.getString("apellidos");
-                    if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
-                        JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario + ".");
-                        dispose();
-                        new VentanaCliente(usuario, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
-                        encontrado = true;
-                        break;
+                    if(baseDeDatos.cargarContraseñaDesdeBD(dni) == null) {
+                    	if (baseDeDatos.cargarUsuarioDesdeBD(dni) == null) {
+                    		if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
+                                JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                dispose();
+                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
+                                encontrado = true;
+                                break;
+                            }
+                    	}else {
+                    		if(baseDeDatos.cargarUsuarioDesdeBD(dni).equals(usuario) && dni.equals(contraseña)) {
+                    			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                dispose();
+                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
+                                encontrado = true;
+                                break;
+                    		}
+                    	}
+                    	
+                    }else {
+                    	if(baseDeDatos.cargarUsuarioDesdeBD(dni) != null) {
+                    		if(baseDeDatos.cargarUsuarioDesdeBD(dni).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBD(dni).equals(contraseña)) {
+                    			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                dispose();
+                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
+                                encontrado = true;
+                                break;
+                    		}
+                    	}else {
+                    		if((nombre + "_" + apellidos).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBD(dni).equals(contraseña)) {
+                    			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                dispose();
+                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
+                                encontrado = true;
+                                break;
+                    		}
+                    	}
+                    	
+                    	
                     }
+                    
                 }
                 if (!encontrado) {
                     JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
