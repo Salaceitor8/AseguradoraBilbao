@@ -119,7 +119,7 @@ public class VentanaCliente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Cliente c = bd.obtenerCLiente(dni);
 				
-				new VentanaPerfilCliente(c.getNombre(), c.getDni(), c.getDirección(), c.getEmail(), c.getnTelefono()+"");
+				new VentanaPerfilCliente(c.getNombre(), c.getDni(), c.getDirección(), c.getEmail(), c.getnTelefono()+"", bd, segurosCliente);
 				
 			}
 		});

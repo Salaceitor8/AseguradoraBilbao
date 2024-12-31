@@ -124,6 +124,24 @@ public class Bdd {
 
     	
     }
+    
+    public String cargarRutaFotoDesdeBD(String dni) {
+    	String sql = "SELECT foto FROM clientes WHERE dni = ?";
+        
+            
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dni);
+            try (ResultSet rs = stmt.executeQuery()) {
+            	if (rs.next()) {
+            		return rs.getString("foto");
+            	}
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public void actualizarCliente(String dni, String nombre, String apellidos, String telefono, String email) {
         String sql = "UPDATE clientes SET nombre = ?, apellidos = ?, telefono = ?, email = ? WHERE dni = ?";
@@ -140,6 +158,21 @@ public class Bdd {
         }
     }
     
+    public void guardarRutaFotoEnBD(String dni, String rutaFoto) {
+    	String sql = "UPDATE clientes SET foto = ? WHERE dni = ?";
+        
+            
+    	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+    		pstmt.setString(1, rutaFoto);
+    		pstmt.setString(2, dni);
+    		pstmt.executeUpdate();
+            pstmt.executeUpdate();
+            System.out.println("foto actualizado");
+        } catch (Exception e) {
+        	System.err.println("Error al actualizar: " + e.getMessage());
+        }
+    }
+    
     public void actualizarDatosEnBD(String dni, String email, String telefono) {
     	String sql = "UPDATE clientes SET email = ?, telefono = ? WHERE dni = ?";
     	try (PreparedStatement pstmt = connection.prepareStatement(sql);){
@@ -149,7 +182,7 @@ public class Bdd {
             pstmt.executeUpdate();
             System.out.println("cliente actualizado");
         } catch (Exception e) {
-            e.printStackTrace();
+        	System.err.println("Error al actualizar: " + e.getMessage());
         }
     }
 
