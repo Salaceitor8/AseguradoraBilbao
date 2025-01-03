@@ -10,12 +10,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import domain.Seguro;
 import domain.Solicitud;
 import domain.TipoSeguro;
 import domain.Cliente;
+import domain.EstadoSolicitud;
 import domain.Mensaje;
 
 
@@ -438,7 +440,7 @@ public class Bdd {
     
  // Método para añadir una solicitud
     public void añadirSolicitud(String dniCliente, String pregunta) {
-        String sql = "INSERT INTO solicitudes_preguntas (dni_cliente, pregunta, estado) VALUES (?, ?, 'pendiente')";
+        String sql = "INSERT INTO solicitudes_preguntas (dni_cliente, pregunta, estado) VALUES (?, ?, 'PENDIENTE')";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, dniCliente);
             pstmt.setString(2, pregunta);
@@ -451,7 +453,7 @@ public class Bdd {
 
     // Método para obtener solicitudes pendientes
     public List<Solicitud> obtenerSolicitudesPendientes() {
-        String sql = "SELECT * FROM solicitudes_preguntas WHERE estado = 'pendiente'";
+        String sql = "SELECT * FROM solicitudes_preguntas WHERE estado = 'PENDIENTE'";
         List<Solicitud> solicitudes = new ArrayList<>();
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -459,7 +461,7 @@ public class Bdd {
                         rs.getInt("id"),
                         rs.getString("dni_cliente"),
                         rs.getString("pregunta"),
-                        rs.getString("estado"),
+                        EstadoSolicitud.valueOf(rs.getString("estado")),
                         rs.getString("respuesta")
                 );
                 solicitudes.add(solicitud);
@@ -472,7 +474,7 @@ public class Bdd {
 
     // Método para aceptar una solicitud
     public void aceptarSolicitud(int id, String respuesta) {
-        String sql = "UPDATE solicitudes_preguntas SET estado = 'aceptada', respuesta = ? WHERE id = ?";
+        String sql = "UPDATE solicitudes_preguntas SET estado = 'ACEPTADA', respuesta = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, respuesta);
             pstmt.setInt(2, id);
@@ -485,7 +487,7 @@ public class Bdd {
 
     // Método para rechazar una solicitud
     public void rechazarSolicitud(int id) {
-        String sql = "UPDATE solicitudes_preguntas SET estado = 'rechazada', respuesta = NULL WHERE id = ?";
+        String sql = "UPDATE solicitudes_preguntas SET estado = 'RECHAZADA', respuesta = NULL WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
@@ -494,6 +496,100 @@ public class Bdd {
             System.err.println("Error al rechazar solicitud: " + e.getMessage());
         }
     }
+    
+    public List<Solicitud> obtenerSolicitudesPorFiltro(String estado, String dniFiltro) {
+    	System.out.println(dniFiltro);
+        List<Solicitud> solicitudes = new ArrayList<>();
+        String sql = "SELECT * FROM solicitudes_preguntas WHERE 1=1";
+        if (!estado.equals("TODAS")) {
+            sql += " AND UPPER(estado) = ?";
+        }
+        if (!dniFiltro.equals("Buscar por DNI...")) {
+            sql += " AND dni_cliente LIKE ?";
+        }
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            int paramIndex = 1;
+
+            if (!estado.equals("TODAS")) {
+                pstmt.setString(paramIndex, estado.toUpperCase());
+            }
+            if (!dniFiltro.equals("Buscar por DNI...") && !estado.equals("TODAS")) {
+                pstmt.setString(paramIndex+1, "%" + dniFiltro.trim() + "%");
+            }
+            if(estado.equals("TODAS") && !dniFiltro.equals("Buscar por DNI...")) {
+            	pstmt.setString(paramIndex, "%" + dniFiltro.trim() + "%");
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    solicitudes.add(new Solicitud(
+                            rs.getInt("id"),
+                            rs.getString("dni_cliente"),
+                            rs.getString("pregunta"),
+                            EstadoSolicitud.valueOf(rs.getString("estado").toUpperCase()),
+                            rs.getString("respuesta")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener solicitudes filtradas: " + e.getMessage());
+        }
+
+        return solicitudes;
+    }
+    
+    public HashMap<String, String> obtenerSolicitudesAceptadas() {
+        HashMap<String, String> solicitudesAceptadas = new HashMap<>();
+        String sql = "SELECT pregunta, respuesta FROM solicitudes_preguntas WHERE estado = 'ACEPTADA'";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                String pregunta = rs.getString("pregunta");
+                String respuesta = rs.getString("respuesta");
+                solicitudesAceptadas.put(pregunta, respuesta);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener solicitudes aceptadas: " + e.getMessage());
+        }
+
+        return solicitudesAceptadas;
+    }
+
+
+    // Método para obtener el ID de una solicitud en base al DNI y la pregunta
+    public int obtenerIdSolicitud(String dniCliente, String pregunta) {
+        String sql = "SELECT id FROM solicitudes_preguntas WHERE dni_cliente = ? AND pregunta = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, dniCliente);
+            pstmt.setString(2, pregunta);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener ID de la solicitud: " + e.getMessage());
+        }
+        return -1; // Retorna -1 si no se encuentra el ID
+    }
+
+    // Método para dejar una solicitud en pendiente
+    public void dejarEnPendiente(int id) {
+        String sql = "UPDATE solicitudes_preguntas SET estado = 'PENDIENTE', respuesta = NULL WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Solicitud cambiada a pendiente correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al cambiar solicitud a pendiente: " + e.getMessage());
+        }
+    }
+
 
 
     // Cerrar la conexión

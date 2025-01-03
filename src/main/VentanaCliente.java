@@ -172,6 +172,6 @@ public class VentanaCliente extends JFrame {
 			seguros.add(s);
 		}
     	
-		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("aseguradora.db"), "79000259C");
+		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C");
 	}
 }

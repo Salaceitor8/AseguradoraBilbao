@@ -37,6 +37,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         setTitle("Aseguradoras Bilbao - Panel de Empleado");
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Pantalla completa
         setLocationRelativeTo(null);
         setResizable(true);
         
@@ -245,7 +246,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenu menu = new JMenu("Chat");
         JMenuItem itemChat = new JMenuItem("Atencion al cliente");
         
-        itemChat.addActionListener(e -> {new VentanaChatEmpleado("127.0.0.1",12345);});
+        itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
         
         menuBar.add(menu);
         menu.add(itemChat);

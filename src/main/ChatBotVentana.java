@@ -21,7 +21,7 @@ public class ChatBotVentana extends JFrame {
 
     public ChatBotVentana(List<Seguro> seguros, Bdd baseDeDatos, String dniCliente) {
         this.segurosCliente = seguros; // Cargar la lista de seguros
-        inicializarRespuestas(); // Llenar las respuestas predefinidas
+        inicializarRespuestas(baseDeDatos); // Llenar las respuestas predefinidas
 
         // Configuración básica de la ventana
         setTitle("ChatBot - Atención al Cliente");
@@ -93,20 +93,20 @@ public class ChatBotVentana extends JFrame {
         setVisible(true);
     }
 
-    private void inicializarRespuestas() {
-        respuestasPredefinidas = new HashMap<>();
-        respuestasPredefinidas.put("¿Cuáles son mis seguros activos?", ""); // Respuesta dinámica
-        respuestasPredefinidas.put("¿Cómo reportar un siniestro?", "Para reportar un siniestro, llama al 900-123-456 o utiliza la opción 'Reportar Siniestro' en tu perfil.\n\n");
-        respuestasPredefinidas.put("¿Cuál es el número de atención al cliente?", "El número de atención al cliente es 900-123-456.\n\n");
-        respuestasPredefinidas.put("Gracias", "¡De nada! ¿Hay algo más en lo que pueda ayudarte?\n\n");
-        respuestasPredefinidas.put("¿Qué tipos de seguro ofrecen?", "Ofrecemos seguros de vida, coche y hogar. Si quiere mas información llama al 900-123-456.\n\n");
-        respuestasPredefinidas.put("¿Cómo puedo cancelar un seguro?", "Para cancelar un seguro, llama al 900-123-456 y solicita la cancelación.\n\n");
-        respuestasPredefinidas.put("¿Qué pasa si no pago a tiempo?", "Si no pagas a tiempo, tu seguro será suspendido hasta regularizar el pago. Si quiere mas información llama al 900-123-456.\n\n");
-        respuestasPredefinidas.put("¿Cómo actualizo mi información personal?", "Puedes actualizar tu información desde la sección 'Mi Perfil'.\n\n");
-        respuestasPredefinidas.put("¿Cómo contacto con un asesor?", "Llama al 900-123-456 para contactar con un asesor.\n\n");
-        respuestasPredefinidas.put("¿Cuánto cuesta un seguro de vida?", "El costo del seguro de vida depende de tu edad y cobertura elegida. Si quiere mas información llama al 900-123-456.\n\n");
-        respuestasPredefinidas.put("¿Qué cobertura tiene el seguro de coche?", "El seguro de coche cubre daños a terceros, robo y colisiones. Si quiere mas información llama al 900-123-456.\n\n");
-        respuestasPredefinidas.put("¿Cuáles son los beneficios del seguro hogar?", "El seguro hogar cubre incendios, robos y daños por agua. Si quiere mas información llama al 900-123-456.\n\n");
+    private void inicializarRespuestas(Bdd bd) {
+        respuestasPredefinidas = bd.obtenerSolicitudesAceptadas();
+//        respuestasPredefinidas.put("¿Cuáles son mis seguros activos?", ""); // Respuesta dinámica
+//        respuestasPredefinidas.put("¿Cómo reportar un siniestro?", "Para reportar un siniestro, llama al 900-123-456 o utiliza la opción 'Reportar Siniestro' en tu perfil.\n\n");
+//        respuestasPredefinidas.put("¿Cuál es el número de atención al cliente?", "El número de atención al cliente es 900-123-456.\n\n");
+//        respuestasPredefinidas.put("Gracias", "¡De nada! ¿Hay algo más en lo que pueda ayudarte?\n\n");
+//        respuestasPredefinidas.put("¿Qué tipos de seguro ofrecen?", "Ofrecemos seguros de vida, coche y hogar. Si quiere mas información llama al 900-123-456.\n\n");
+//        respuestasPredefinidas.put("¿Cómo puedo cancelar un seguro?", "Para cancelar un seguro, llama al 900-123-456 y solicita la cancelación.\n\n");
+//        respuestasPredefinidas.put("¿Qué pasa si no pago a tiempo?", "Si no pagas a tiempo, tu seguro será suspendido hasta regularizar el pago. Si quiere mas información llama al 900-123-456.\n\n");
+//        respuestasPredefinidas.put("¿Cómo actualizo mi información personal?", "Puedes actualizar tu información desde la sección 'Mi Perfil'.\n\n");
+//        respuestasPredefinidas.put("¿Cómo contacto con un asesor?", "Llama al 900-123-456 para contactar con un asesor.\n\n");
+//        respuestasPredefinidas.put("¿Cuánto cuesta un seguro de vida?", "El costo del seguro de vida depende de tu edad y cobertura elegida. Si quiere mas información llama al 900-123-456.\n\n");
+//        respuestasPredefinidas.put("¿Qué cobertura tiene el seguro de coche?", "El seguro de coche cubre daños a terceros, robo y colisiones. Si quiere mas información llama al 900-123-456.\n\n");
+//        respuestasPredefinidas.put("¿Cuáles son los beneficios del seguro hogar?", "El seguro hogar cubre incendios, robos y daños por agua. Si quiere mas información llama al 900-123-456.\n\n");
     }
 
     private void actualizarPreguntas() {

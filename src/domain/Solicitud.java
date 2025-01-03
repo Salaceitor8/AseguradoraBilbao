@@ -4,20 +4,20 @@ public class Solicitud {
     private int id;
     private String dniCliente;
     private String pregunta;
-    private String estado;
+    private EstadoSolicitud estado;
     private String respuesta;
 
     // Constructor completo
-    public Solicitud(int id, String dniCliente, String pregunta, String estado, String respuesta) {
+    public Solicitud(int id, String dniCliente, String pregunta, EstadoSolicitud estadoSolicitud, String respuesta) {
         this.id = id;
         this.dniCliente = dniCliente;
         this.pregunta = pregunta;
-        this.estado = estado;
+        this.estado = estadoSolicitud;
         this.respuesta = respuesta;
     }
 
     // Constructor sin ID (para cuando se crea una nueva solicitud)
-    public Solicitud(String dniCliente, String pregunta, String estado) {
+    public Solicitud(String dniCliente, String pregunta, EstadoSolicitud estado) {
         this.dniCliente = dniCliente;
         this.pregunta = pregunta;
         this.estado = estado;
@@ -48,11 +48,11 @@ public class Solicitud {
         this.pregunta = pregunta;
     }
 
-    public String getEstado() {
+    public EstadoSolicitud getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoSolicitud estado) {
         this.estado = estado;
     }
 
