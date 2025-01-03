@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import domain.Seguro;
 import java.awt.*;
@@ -37,7 +38,7 @@ public class ChatBotVentana extends JFrame {
 
         // Área de chat
         areaChat = new JTextArea();
-        areaChat.setBorder(null);
+//        areaChat.setBorder(null);
         areaChat.setEditable(false);
         areaChat.setLineWrap(true);
         areaChat.setWrapStyleWord(true);
@@ -51,7 +52,6 @@ public class ChatBotVentana extends JFrame {
         // Panel superior para el botón "Solicitar Pregunta"
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBackground(colorContraste);
-        panelSuperior.setBorder(null);
 
         btnSolicitarPregunta = new JButton("Solicitar Pregunta");
         btnSolicitarPregunta.setFont(new Font("Arial", Font.BOLD, 14));
@@ -72,13 +72,19 @@ public class ChatBotVentana extends JFrame {
         actualizarPreguntas(); // Mostrar las primeras preguntas
 
         // Botones de navegación
-        btnArriba = new JButton("<-");
+        btnArriba = new JButton();
+        Image izquierda = (new ImageIcon("fotos/Izquierda.png")).getImage().getScaledInstance(25, 25, DO_NOTHING_ON_CLOSE);
+        ImageIcon iconoIzquierda = new ImageIcon(izquierda);
+        btnArriba.setIcon(iconoIzquierda);
         btnArriba.setFont(new Font("Arial", Font.BOLD, 18));
         btnArriba.setBackground(colorBotonNavegacion);
         btnArriba.setForeground(colorContraste);
         btnArriba.addActionListener(e -> cambiarPagina(-1)); // Ir a la página anterior
 
-        btnAbajo = new JButton("->");
+        btnAbajo = new JButton();
+        Image derecha = (new ImageIcon("fotos/Derecha.png")).getImage().getScaledInstance(25, 25, DO_NOTHING_ON_CLOSE);
+        ImageIcon iconoDerecha = new ImageIcon(derecha);
+        btnAbajo.setIcon(iconoDerecha);
         btnAbajo.setFont(new Font("Arial", Font.BOLD, 18));
         btnAbajo.setBackground(colorBotonNavegacion);
         btnAbajo.setForeground(colorContraste);
