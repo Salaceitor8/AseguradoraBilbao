@@ -9,6 +9,5 @@ module Aseguradora_Bilbao {
 	requires java.sql;
 	requires jcalendar;
 	requires jfreechart;
-	requires itext5.itextpdf;
 
 }

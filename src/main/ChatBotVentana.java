@@ -17,9 +17,9 @@ public class ChatBotVentana extends JFrame {
     private JPanel panelPreguntas;
     private int paginaActual = 0;   // Página actual
     private final int PREGUNTAS_POR_PAGINA = 3; // Máximo de preguntas por página
-    private JButton btnArriba, btnAbajo; // Botones de navegación
+    private JButton btnArriba, btnAbajo, btnSolicitarPregunta; // Botones de navegación y solicitar pregunta
 
-    public ChatBotVentana(List<Seguro> seguros) {
+    public ChatBotVentana(List<Seguro> seguros, Bdd baseDeDatos, String dniCliente) {
         this.segurosCliente = seguros; // Cargar la lista de seguros
         inicializarRespuestas(); // Llenar las respuestas predefinidas
 
@@ -32,10 +32,12 @@ public class ChatBotVentana extends JFrame {
         // Colores consistentes con el diseño
         Color colorPrincipal = new Color(0, 51, 102); // Azul oscuro
         Color colorContraste = Color.WHITE;           // Blanco
-        Color colorBoton = new Color(0, 102, 204);   // Azul claro
+        Color colorBotonNavegacion = new Color(0, 102, 204);   // Azul claro
+        Color colorBotonSolicitar = new Color(0, 153, 76);     // Verde suave
 
         // Área de chat
         areaChat = new JTextArea();
+        areaChat.setBorder(null);
         areaChat.setEditable(false);
         areaChat.setLineWrap(true);
         areaChat.setWrapStyleWord(true);
@@ -43,7 +45,22 @@ public class ChatBotVentana extends JFrame {
         areaChat.setForeground(colorPrincipal); // Texto azul oscuro
         areaChat.setFont(new Font("Arial", Font.PLAIN, 16));
         JScrollPane scrollChat = new JScrollPane(areaChat);
+        scrollChat.setBorder(null);
         add(scrollChat, BorderLayout.CENTER);
+
+        // Panel superior para el botón "Solicitar Pregunta"
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.setBackground(colorContraste);
+        panelSuperior.setBorder(null);
+
+        btnSolicitarPregunta = new JButton("Solicitar Pregunta");
+        btnSolicitarPregunta.setFont(new Font("Arial", Font.BOLD, 14));
+        btnSolicitarPregunta.setBackground(colorBotonNavegacion);
+        btnSolicitarPregunta.setForeground(colorContraste);
+        btnSolicitarPregunta.setPreferredSize(new Dimension(200, 40));
+        btnSolicitarPregunta.addActionListener(e -> new VentanaSolicitarPregunta(baseDeDatos, dniCliente));
+        panelSuperior.add(btnSolicitarPregunta, BorderLayout.EAST);
+        add(panelSuperior, BorderLayout.NORTH);
 
         // Panel de preguntas predefinidas
         JPanel panelNavegacion = new JPanel(new BorderLayout());
@@ -57,13 +74,13 @@ public class ChatBotVentana extends JFrame {
         // Botones de navegación
         btnArriba = new JButton("<-");
         btnArriba.setFont(new Font("Arial", Font.BOLD, 18));
-        btnArriba.setBackground(colorBoton);
+        btnArriba.setBackground(colorBotonNavegacion);
         btnArriba.setForeground(colorContraste);
         btnArriba.addActionListener(e -> cambiarPagina(-1)); // Ir a la página anterior
 
         btnAbajo = new JButton("->");
         btnAbajo.setFont(new Font("Arial", Font.BOLD, 18));
-        btnAbajo.setBackground(colorBoton);
+        btnAbajo.setBackground(colorBotonNavegacion);
         btnAbajo.setForeground(colorContraste);
         btnAbajo.addActionListener(e -> cambiarPagina(1)); // Ir a la siguiente página
 
@@ -165,6 +182,6 @@ public class ChatBotVentana extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ChatBotVentana(new ArrayList<>());
+        new ChatBotVentana(new ArrayList<>(), new Bdd("resources/db/aseguradora.db"), "12345678A");
     }
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Seguro;
+import domain.Solicitud;
 import domain.TipoSeguro;
 import domain.Cliente;
 import domain.Mensaje;
@@ -433,6 +434,67 @@ public class Bdd {
             System.err.println("Error al actualizar el estado del seguro: " + e.getMessage());
         }
     }
+    
+    
+ // Método para añadir una solicitud
+    public void añadirSolicitud(String dniCliente, String pregunta) {
+        String sql = "INSERT INTO solicitudes_preguntas (dni_cliente, pregunta, estado) VALUES (?, ?, 'pendiente')";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, dniCliente);
+            pstmt.setString(2, pregunta);
+            pstmt.executeUpdate();
+            System.out.println("Solicitud añadida correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al añadir solicitud: " + e.getMessage());
+        }
+    }
+
+    // Método para obtener solicitudes pendientes
+    public List<Solicitud> obtenerSolicitudesPendientes() {
+        String sql = "SELECT * FROM solicitudes_preguntas WHERE estado = 'pendiente'";
+        List<Solicitud> solicitudes = new ArrayList<>();
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Solicitud solicitud = new Solicitud(
+                        rs.getInt("id"),
+                        rs.getString("dni_cliente"),
+                        rs.getString("pregunta"),
+                        rs.getString("estado"),
+                        rs.getString("respuesta")
+                );
+                solicitudes.add(solicitud);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener solicitudes pendientes: " + e.getMessage());
+        }
+        return solicitudes;
+    }
+
+    // Método para aceptar una solicitud
+    public void aceptarSolicitud(int id, String respuesta) {
+        String sql = "UPDATE solicitudes_preguntas SET estado = 'aceptada', respuesta = ? WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, respuesta);
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+            System.out.println("Solicitud aceptada correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al aceptar solicitud: " + e.getMessage());
+        }
+    }
+
+    // Método para rechazar una solicitud
+    public void rechazarSolicitud(int id) {
+        String sql = "UPDATE solicitudes_preguntas SET estado = 'rechazada', respuesta = NULL WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Solicitud rechazada correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al rechazar solicitud: " + e.getMessage());
+        }
+    }
+
 
     // Cerrar la conexión
     public void cerrarConexion() {

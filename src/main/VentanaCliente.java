@@ -136,7 +136,7 @@ public class VentanaCliente extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ChatBotVentana(segurosCliente);
+				new ChatBotVentana(segurosCliente, bd, dni);
 				
 			}
 		});
