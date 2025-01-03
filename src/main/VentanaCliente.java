@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class VentanaCliente extends JFrame {
     private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton btnActualizarDatos, btnReportarSiniestro, btnChatAtencion, btnMiPerfil;
+    private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil;
     private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni) {
@@ -44,6 +46,14 @@ public class VentanaCliente extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                bd.cerrarConexion();
+                System.out.println("La conexión a la base de datos se ha cerrado.");
+            }
+        });
 
         // Layout principal
         setLayout(new BorderLayout());
@@ -92,12 +102,11 @@ public class VentanaCliente extends JFrame {
         panelOpciones.setBackground(Color.WHITE);
         
         btnMiPerfil = new JButton("Mi perfil");
-        btnActualizarDatos = new JButton("Actualizar Datos");
         btnReportarSiniestro = new JButton("Reportar Siniestro");
         btnChatAtencion = new JButton("Atención al Cliente");
 
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnActualizarDatos, btnReportarSiniestro, btnChatAtencion};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -120,6 +129,14 @@ public class VentanaCliente extends JFrame {
 				Cliente c = bd.obtenerCLiente(dni);
 				
 				new VentanaPerfilCliente(c.getNombre(), c.getDni(), c.getDirección(), c.getEmail(), c.getnTelefono()+"", bd, segurosCliente);
+				
+			}
+		});
+        btnChatAtencion.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ChatBotVentana(segurosCliente);
 				
 			}
 		});

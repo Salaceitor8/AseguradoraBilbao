@@ -2,7 +2,6 @@ package main;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -19,7 +18,7 @@ import domain.Seguro;
 public class VentanaPerfilCliente extends JFrame {
 
     private JTextField campoNombre, campoDNI, campoEmail, campoTelefono;
-    private JButton btnCambiarFoto, btnEditar, btnGuardar, btnCambiarContraseña, btnCambiarUsuario;
+    private JButton btnCambiarFoto, btnEditar, btnGuardar, btnCambiarContraseña, btnCambiarUsuario, btnDescargarContrato;
     private JLabel lblFotoPerfil;
     private JPanel panelGraficos;
     private JProgressBar barraProgreso;
@@ -125,11 +124,13 @@ public class VentanaPerfilCliente extends JFrame {
         btnGuardar = new JButton("Guardar Cambios");
         btnCambiarUsuario = new JButton("Cambiar Usuario");
         btnCambiarContraseña = new JButton("Cambiar Contraseña");
+        
 
         btnEditar.addActionListener(e -> habilitarEdicion());
         btnGuardar.addActionListener(e -> guardarCambios(bd));
         btnCambiarUsuario.addActionListener(e -> new VentanaCambiarUsuario(dni, bd));
         btnCambiarContraseña.addActionListener(e -> new VentanaCambiarContraseña(campoDNI.getText(), bd));
+        
 
         panelBotones.add(btnEditar);
         panelBotones.add(btnGuardar);
@@ -142,6 +143,10 @@ public class VentanaPerfilCliente extends JFrame {
 
         setVisible(true);
     }
+    
+    
+
+
 
     private void simularCalculoEstadisticas(List<Seguro> seguros, Bdd bd) {
         new Thread(() -> {
