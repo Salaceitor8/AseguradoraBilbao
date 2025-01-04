@@ -1,0 +1,135 @@
+package main;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
+
+public class VentanaReportarSiniestros extends JFrame {
+
+    private JComboBox<String> comboBoxTipoSeguro;
+    private JComboBox<String> comboBoxPrecioSeguro;
+    private JTextArea textAreaResumen;
+    private HashMap<String, ArrayList<Integer>> preciosPorSeguro;
+
+    public VentanaReportarSiniestros(HashMap<String, ArrayList<Integer>> preciosPorSeguro) {
+        this.preciosPorSeguro = preciosPorSeguro;
+
+        setTitle("Reportar Siniestro");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        // Colores
+        Color fondo = new Color(240, 240, 240); // Color claro de fondo
+        Color texto = new Color(50, 50, 50); // Color de texto
+        Color botones = new Color(70, 130, 180); // Color azul para botones
+
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setBackground(fondo);
+        panelSuperior.setLayout(new FlowLayout());
+
+        // Etiquetas y ComboBoxes
+        JLabel labelTipoSeguro = new JLabel("Tipo de Seguro:");
+        labelTipoSeguro.setForeground(texto);
+        comboBoxTipoSeguro = new JComboBox<>(preciosPorSeguro.keySet().toArray(new String[0]));
+
+        JLabel labelPrecioSeguro = new JLabel("Precio del Seguro:");
+        labelPrecioSeguro.setForeground(texto);
+        comboBoxPrecioSeguro = new JComboBox<>();
+
+        comboBoxTipoSeguro.addActionListener(e -> filtrarPreciosSeguros());
+
+        panelSuperior.add(labelTipoSeguro);
+        panelSuperior.add(comboBoxTipoSeguro);
+        panelSuperior.add(labelPrecioSeguro);
+        panelSuperior.add(comboBoxPrecioSeguro);
+
+        // Panel Central (Resumen del siniestro)
+        JPanel panelCentral = new JPanel();
+        panelCentral.setBackground(fondo);
+        panelCentral.setLayout(new BorderLayout());
+
+        JLabel labelResumen = new JLabel("Resumen del Siniestro:");
+        labelResumen.setForeground(texto);
+        textAreaResumen = new JTextArea(10, 30);
+        JScrollPane scrollPane = new JScrollPane(textAreaResumen);
+
+        panelCentral.add(labelResumen, BorderLayout.NORTH);
+        panelCentral.add(scrollPane, BorderLayout.CENTER);
+
+        // Panel Inferior (Botón Enviar)
+        JPanel panelInferior = new JPanel();
+        panelInferior.setBackground(fondo);
+        panelInferior.setLayout(new FlowLayout());
+
+        JButton botonEnviar = new JButton("Enviar");
+        botonEnviar.setBackground(botones);
+        botonEnviar.setForeground(Color.WHITE);
+        botonEnviar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                enviarSiniestro();
+            }
+        });
+
+        panelInferior.add(botonEnviar);
+
+        // Añadir paneles a la ventana
+        add(panelSuperior, BorderLayout.NORTH);
+        add(panelCentral, BorderLayout.CENTER);
+        add(panelInferior, BorderLayout.SOUTH);
+
+        // Inicializar ComboBox de precios
+        filtrarPreciosSeguros();
+    }
+
+    private void filtrarPreciosSeguros() {
+        // Lógica para filtrar los precios según el tipo de seguro seleccionado
+        String tipoSeleccionado = (String) comboBoxTipoSeguro.getSelectedItem();
+        comboBoxPrecioSeguro.removeAllItems();
+
+        if (tipoSeleccionado != null && preciosPorSeguro.containsKey(tipoSeleccionado)) {
+            for (Integer precio : preciosPorSeguro.get(tipoSeleccionado)) {
+                comboBoxPrecioSeguro.addItem(precio + "€");
+            }
+        }
+    }
+
+    private void enviarSiniestro() {
+        String tipoSeguro = (String) comboBoxTipoSeguro.getSelectedItem();
+        String precioSeguro = (String) comboBoxPrecioSeguro.getSelectedItem();
+        String resumen = textAreaResumen.getText();
+
+        if (resumen.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, escribe un resumen del siniestro.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Confirma que desea reportar el siniestro con el siguiente resumen?\n" + resumen,
+                "Confirmar Siniestro",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Aquí guardarías el siniestro en la base de datos
+            JOptionPane.showMessageDialog(this, "El siniestro ha sido enviado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            dispose(); // Cierra la ventana
+        }
+    }
+
+    public static void main(String[] args) {
+        // Ejemplo de inicialización
+        HashMap<String, ArrayList<Integer>> preciosPorSeguro = new HashMap<>();
+        preciosPorSeguro.put("Vida", new ArrayList<>(List.of(100, 150)));
+        preciosPorSeguro.put("Coche", new ArrayList<>(List.of(200, 300)));
+        preciosPorSeguro.put("Vivienda", new ArrayList<>(List.of(175, 350)));
+
+        SwingUtilities.invokeLater(() -> {
+            VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro);
+            ventana.setVisible(true);
+        });
+    }
+}
