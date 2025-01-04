@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 import domain.Seguro;
+import gui.BarraProgreso;
 
 public class InicioSesion extends JFrame {
 
@@ -267,16 +268,28 @@ public class InicioSesion extends JFrame {
         	                // Caso 1: Usuario y contraseña no configurados, usar nombre_apellidos y dni como credenciales
         	                if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
         	                	}else {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
         	                	}
         	                	
@@ -285,16 +298,28 @@ public class InicioSesion extends JFrame {
         	                // Caso 2: Usuario configurado pero contraseña no configurada
         	                if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni).equals(usuario) && dni.equals(contraseña)) {
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
         	                	}else {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
         	                	}
         	                }
@@ -305,16 +330,29 @@ public class InicioSesion extends JFrame {
         	                if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni).equals(usuario) &&
         	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
+        	                        
         	                	}else {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
         	                	}
         	                }
@@ -323,16 +361,28 @@ public class InicioSesion extends JFrame {
         	                if ((nombre + "_" + apellidos).equals(usuario) &&
         	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
         	                	}else {
-        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-            	                    dispose();
-            	                    new VentanaPrincipalEmpleado(baseDeDatos);
-            	                    encontrado = true;
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+        	                        	dispose();
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	});
+        	                        encontrado = true;
             	                    break;
         	                	}
         	                }
@@ -360,15 +410,27 @@ public class InicioSesion extends JFrame {
                     	if (baseDeDatos.cargarUsuarioDesdeBDclientes(dni) == null) {
                     		if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                     			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
-                    				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                    dispose();
-                                    new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                        	dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+        	                        	});
                                     encontrado = true;
                                     break;
                     			}else {
-                    				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-                                    dispose();
-                                    new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+        	                        // Mostrar la barra de progreso
+        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                        progressBarDialog.setVisible(true); // Muestra la barra
+        	                        // Al completar, abrir la ventana principal
+        	                        SwingUtilities.invokeLater(() -> {
+            	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+        	                        	dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+        	                        	});
                                     encontrado = true;
                                     break;
                     			}
@@ -378,15 +440,27 @@ public class InicioSesion extends JFrame {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && dni.equals(contraseña)) {
                     			if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
-                        				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                        dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        // Mostrar la barra de progreso
+            	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+            	                        progressBarDialog.setVisible(true); // Muestra la barra
+            	                        // Al completar, abrir la ventana principal
+            	                        SwingUtilities.invokeLater(() -> {
+                	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+            	                        	dispose();
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        	});
                                         encontrado = true;
                                         break;
                         			}else {
-                        				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-                                        dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+            	                        // Mostrar la barra de progreso
+            	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+            	                        progressBarDialog.setVisible(true); // Muestra la barra
+            	                        // Al completar, abrir la ventana principal
+            	                        SwingUtilities.invokeLater(() -> {
+                	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+            	                        	dispose();
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        	});
                                         encontrado = true;
                                         break;
                         			}
@@ -399,15 +473,27 @@ public class InicioSesion extends JFrame {
                     	if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni) != null) {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
-                        				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                        dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        // Mostrar la barra de progreso
+            	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+            	                        progressBarDialog.setVisible(true); // Muestra la barra
+            	                        // Al completar, abrir la ventana principal
+            	                        SwingUtilities.invokeLater(() -> {
+                	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+            	                        	dispose();
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        	});
                                         encontrado = true;
                                         break;
                         			}else {
-                        				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-                                        dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+            	                        // Mostrar la barra de progreso
+            	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+            	                        progressBarDialog.setVisible(true); // Muestra la barra
+            	                        // Al completar, abrir la ventana principal
+            	                        SwingUtilities.invokeLater(() -> {
+                	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+            	                        	dispose();
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        	});
                                         encontrado = true;
                                         break;
                         			}
@@ -417,15 +503,27 @@ public class InicioSesion extends JFrame {
                     	}else {
                     		if((nombre + "_" + apellidos).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
-                        				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                        dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        // Mostrar la barra de progreso
+            	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+            	                        progressBarDialog.setVisible(true); // Muestra la barra
+            	                        // Al completar, abrir la ventana principal
+            	                        SwingUtilities.invokeLater(() -> {
+                	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+            	                        	dispose();
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        	});
                                         encontrado = true;
                                         break;
                         			}else {
-                        				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-                                        dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+            	                        // Mostrar la barra de progreso
+            	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
+            	                        progressBarDialog.setVisible(true); // Muestra la barra
+            	                        // Al completar, abrir la ventana principal
+            	                        SwingUtilities.invokeLater(() -> {
+                	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+            	                        	dispose();
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+            	                        	});
                                         encontrado = true;
                                         break;
                         			}
