@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -23,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import domain.Cliente;
@@ -148,6 +150,27 @@ public class VentanaCliente extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ChatBotVentana(segurosCliente, bd, dni);
+				
+			}
+		});
+        btnReportarSiniestro.addActionListener(new ActionListener() {
+			
+			@SuppressWarnings("unlikely-arg-type")
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				HashMap<TipoSeguro, ArrayList<Double>> preciosPorSeguro = new HashMap<>();
+				ArrayList<Seguro> seguros = bd.obtenerSeguros(dni);
+				for (Seguro s : seguros) {
+					if(preciosPorSeguro.values().contains(TipoSeguro.valueOf(s.getTipo().toString()))) {
+						preciosPorSeguro.get(TipoSeguro.valueOf(s.getTipo().toString())).add(s.getCostoMensual());
+					}else {
+						preciosPorSeguro.put(TipoSeguro.valueOf(s.getTipo().toString()), new ArrayList<Double>(List.of(s.getCostoMensual())));
+					}
+				}
+				SwingUtilities.invokeLater(() -> {
+					VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro, bd, dni);
+		            ventana.setVisible(true);
+		        });
 				
 			}
 		});

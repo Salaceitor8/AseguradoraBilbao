@@ -1,19 +1,25 @@
 package main;
 import javax.swing.*;
+
+import domain.TipoSeguro;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.List;
 
 public class VentanaReportarSiniestros extends JFrame {
 
-    private JComboBox<String> comboBoxTipoSeguro;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JComboBox<String> comboBoxTipoSeguro;
     private JComboBox<String> comboBoxPrecioSeguro;
     private JTextArea textAreaResumen;
-    private HashMap<String, ArrayList<Integer>> preciosPorSeguro;
+    private HashMap<TipoSeguro, ArrayList<Double>> preciosPorSeguro;
 
-    public VentanaReportarSiniestros(HashMap<String, ArrayList<Integer>> preciosPorSeguro) {
+    public VentanaReportarSiniestros(HashMap<TipoSeguro, ArrayList<Double>> preciosPorSeguro, Bdd bd, String dni) {
         this.preciosPorSeguro = preciosPorSeguro;
 
         setTitle("Reportar Siniestro");
@@ -34,12 +40,14 @@ public class VentanaReportarSiniestros extends JFrame {
         // Etiquetas y ComboBoxes
         JLabel labelTipoSeguro = new JLabel("Tipo de Seguro:");
         labelTipoSeguro.setForeground(texto);
-        comboBoxTipoSeguro = new JComboBox<>(preciosPorSeguro.keySet().toArray(new String[0]));
+        comboBoxTipoSeguro = new JComboBox<>(
+        	    preciosPorSeguro.keySet().stream().map(TipoSeguro::toString).toArray(String[]::new)
+        	);
+
 
         JLabel labelPrecioSeguro = new JLabel("Precio del Seguro:");
         labelPrecioSeguro.setForeground(texto);
         comboBoxPrecioSeguro = new JComboBox<>();
-
         comboBoxTipoSeguro.addActionListener(e -> filtrarPreciosSeguros());
 
         panelSuperior.add(labelTipoSeguro);
@@ -71,7 +79,7 @@ public class VentanaReportarSiniestros extends JFrame {
         botonEnviar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                enviarSiniestro();
+                enviarSiniestro(bd, dni);
             }
         });
 
@@ -92,13 +100,13 @@ public class VentanaReportarSiniestros extends JFrame {
         comboBoxPrecioSeguro.removeAllItems();
 
         if (tipoSeleccionado != null && preciosPorSeguro.containsKey(tipoSeleccionado)) {
-            for (Integer precio : preciosPorSeguro.get(tipoSeleccionado)) {
+            for (Double precio : preciosPorSeguro.get(tipoSeleccionado)) {
                 comboBoxPrecioSeguro.addItem(precio + "€");
             }
         }
     }
 
-    private void enviarSiniestro() {
+    private void enviarSiniestro(Bdd bd, String dni) {
         String tipoSeguro = (String) comboBoxTipoSeguro.getSelectedItem();
         String precioSeguro = (String) comboBoxPrecioSeguro.getSelectedItem();
         String resumen = textAreaResumen.getText();
@@ -114,7 +122,7 @@ public class VentanaReportarSiniestros extends JFrame {
                 JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
-            // Aquí guardarías el siniestro en la base de datos
+        	bd.insertarSiniestro(dni, resumen, TipoSeguro.valueOf(tipoSeguro), "PENDIENTE");
             JOptionPane.showMessageDialog(this, "El siniestro ha sido enviado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             dispose(); // Cierra la ventana
         }
@@ -122,13 +130,19 @@ public class VentanaReportarSiniestros extends JFrame {
 
     public static void main(String[] args) {
         // Ejemplo de inicialización
-        HashMap<String, ArrayList<Integer>> preciosPorSeguro = new HashMap<>();
-        preciosPorSeguro.put("Vida", new ArrayList<>(List.of(100, 150)));
-        preciosPorSeguro.put("Coche", new ArrayList<>(List.of(200, 300)));
-        preciosPorSeguro.put("Vivienda", new ArrayList<>(List.of(175, 350)));
+        HashMap<TipoSeguro, ArrayList<Double>> preciosPorSeguro = new HashMap<>();
+        ArrayList<Double> precios = new ArrayList<Double>();
+        ArrayList<Double> precios1 = new ArrayList<Double>();
+        ArrayList<Double> precios2 = new ArrayList<Double>();
+        precios.add(100.0);
+        precios1.add(90.0);
+        precios2.add(80.0);
+        preciosPorSeguro.put(TipoSeguro.VIDA, precios);
+        preciosPorSeguro.put(TipoSeguro.COCHE, precios1);
+        preciosPorSeguro.put(TipoSeguro.VIVIENDA, precios2);
 
         SwingUtilities.invokeLater(() -> {
-            VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro);
+            VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro, new Bdd("resources/db/aseguradora.db"), "79000259C");
             ventana.setVisible(true);
         });
     }

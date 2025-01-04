@@ -414,7 +414,20 @@ public class Bdd {
             System.err.println("Error al insertar seguro: " + e.getMessage());
         }
     }
+    public void insertarSiniestro(String dniCliente, String resumen, TipoSeguro tipoSeguro, String estado) {
+        String sql = "INSERT INTO siniestros (dni_cliente, resumen, tipo_seguro, estado) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, dniCliente); // DNI del cliente
+            pstmt.setString(2, resumen); // Resumen del siniestro
+            pstmt.setString(3, tipoSeguro.toString()); // Tipo de seguro
+            pstmt.setString(4, estado); // Estado del siniestro
 
+            pstmt.executeUpdate();
+            System.out.println("Siniestro insertado correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al insertar siniestro: " + e.getMessage());
+        }
+    }
 
     
     public ArrayList<Seguro> obtenerSeguros(String dniCliente) {
