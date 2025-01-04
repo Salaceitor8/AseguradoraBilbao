@@ -5,16 +5,16 @@ import java.awt.event.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.List;
-
 import javax.swing.*;
-
-import domain.Cliente;
 import domain.Seguro;
 
 public class InicioSesion extends JFrame {
 
-    private static final Color COLOR_PRINCIPAL = new Color(0, 51, 102); // Azul oscuro
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Color COLOR_PRINCIPAL = new Color(0, 51, 102); // Azul oscuro
     private static final Color COLOR_CONTRASTE = Color.WHITE;
     private CardLayout cardLayout;
     private JPanel panelCentral;
@@ -253,13 +253,68 @@ public class InicioSesion extends JFrame {
         String contraseña = new String(campoContraseña.getPassword());
 
         if (esEmpleado) {
-            if ("Empleado1234".equals(usuario) && "hola".equals(contraseña)) {
-                JOptionPane.showMessageDialog(this, "Bienvenido, empleado.");
-                dispose();
-                new VentanaPrincipalEmpleado(baseDeDatos);
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        	try {
+        	    ResultSet rs = baseDeDatos.obtenerEmpleados();
+        	    boolean encontrado = false;
+        	    while (rs.next()) {
+        	        String dni = rs.getString("dni");
+        	        String nombre = rs.getString("nombre");
+        	        String apellidos = rs.getString("apellidos");
+
+        	        // Verificar si el usuario y contraseña están configurados
+        	        if (baseDeDatos.cargarContraseñaDesdeBDempleados(dni) == null) {
+        	            if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni) == null) {
+        	                // Caso 1: Usuario y contraseña no configurados, usar nombre_apellidos y dni como credenciales
+        	                if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
+        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                    dispose();
+        	                    new VentanaPrincipalEmpleado(baseDeDatos);
+        	                    encontrado = true;
+        	                    break;
+        	                }
+        	            } else {
+        	                // Caso 2: Usuario configurado pero contraseña no configurada
+        	                if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni).equals(usuario) && dni.equals(contraseña)) {
+        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                    dispose();
+        	                    new VentanaPrincipalEmpleado(baseDeDatos);
+        	                    encontrado = true;
+        	                    break;
+        	                }
+        	            }
+        	        } else {
+        	            // Caso 3: Usuario y contraseña configurados
+        	            if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni) != null) {
+        	                if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni).equals(usuario) &&
+        	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
+        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                    dispose();
+        	                    new VentanaPrincipalEmpleado(baseDeDatos);
+        	                    encontrado = true;
+        	                    break;
+        	                }
+        	            } else {
+        	                // Caso 4: Usuario no configurado pero contraseña configurada
+        	                if ((nombre + "_" + apellidos).equals(usuario) &&
+        	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
+        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                    dispose();
+        	                    new VentanaPrincipalEmpleado(baseDeDatos);
+        	                    encontrado = true;
+        	                    break;
+        	                }
+        	            }
+        	        }
+        	    }
+
+        	    if (!encontrado) {
+        	        JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+        	    }
+        	} catch (SQLException e) {
+        	    JOptionPane.showMessageDialog(this, "Error al validar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        	    e.printStackTrace();
+        	}
+
         } else {
             try {
                 ResultSet rs = baseDeDatos.obtenerClientes();
@@ -268,8 +323,8 @@ public class InicioSesion extends JFrame {
                     String dni = rs.getString("dni");
                     String nombre = rs.getString("nombre");
                     String apellidos = rs.getString("apellidos");
-                    if(baseDeDatos.cargarContraseñaDesdeBD(dni) == null) {
-                    	if (baseDeDatos.cargarUsuarioDesdeBD(dni) == null) {
+                    if(baseDeDatos.cargarContraseñaDesdeBDclientes(dni) == null) {
+                    	if (baseDeDatos.cargarUsuarioDesdeBDclientes(dni) == null) {
                     		if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                                 JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
                                 dispose();
@@ -278,7 +333,7 @@ public class InicioSesion extends JFrame {
                                 break;
                             }
                     	}else {
-                    		if(baseDeDatos.cargarUsuarioDesdeBD(dni).equals(usuario) && dni.equals(contraseña)) {
+                    		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && dni.equals(contraseña)) {
                     			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
                                 dispose();
                                 new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
@@ -288,8 +343,8 @@ public class InicioSesion extends JFrame {
                     	}
                     	
                     }else {
-                    	if(baseDeDatos.cargarUsuarioDesdeBD(dni) != null) {
-                    		if(baseDeDatos.cargarUsuarioDesdeBD(dni).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBD(dni).equals(contraseña)) {
+                    	if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni) != null) {
+                    		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
                     			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
                                 dispose();
                                 new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
@@ -297,7 +352,7 @@ public class InicioSesion extends JFrame {
                                 break;
                     		}
                     	}else {
-                    		if((nombre + "_" + apellidos).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBD(dni).equals(contraseña)) {
+                    		if((nombre + "_" + apellidos).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
                     			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
                                 dispose();
                                 new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);

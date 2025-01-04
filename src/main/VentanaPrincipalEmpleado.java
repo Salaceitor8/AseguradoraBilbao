@@ -1,7 +1,6 @@
 package main;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,11 +8,8 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
-
 import domain.*;
 import gui.SeguroCellRenderer;
 
@@ -26,14 +22,16 @@ public class VentanaPrincipalEmpleado extends JFrame {
     private JPanel panelInfoCliente;
     private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
-    private Map<String, java.util.List<Seguro>> segurosPorCliente;
+    @SuppressWarnings("unused")
+	private Map<String, java.util.List<Seguro>> segurosPorCliente;
     private JLabel totalCostoSeguros;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
 
 
     // Constructor
-    public VentanaPrincipalEmpleado(Bdd baseDeDatos) {
+    @SuppressWarnings("serial")
+	public VentanaPrincipalEmpleado(Bdd baseDeDatos) {
         setTitle("Aseguradoras Bilbao - Panel de Empleado");
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -164,7 +162,8 @@ public class VentanaPrincipalEmpleado extends JFrame {
         btnBajaCliente.addActionListener(e -> darDeBajaCliente(baseDeDatos));
         listaClientes.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) { // Asegurarse de que la selección es definitiva
-                String clienteSeleccionado = listaClientes.getSelectedValue();
+                @SuppressWarnings("unused")
+				String clienteSeleccionado = listaClientes.getSelectedValue();
                 cargarSegurosCliente(baseDeDatos);
                 
             }

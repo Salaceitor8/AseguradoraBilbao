@@ -9,7 +9,11 @@ import java.awt.event.ActionListener;
 
 public class VentanaSolicitarPregunta extends JFrame {
 
-    private JTextArea campoPregunta;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextArea campoPregunta;
     private JButton btnEnviar;
     private JLabel lblContador;
     private final int LIMITE_CARACTERES = 45;

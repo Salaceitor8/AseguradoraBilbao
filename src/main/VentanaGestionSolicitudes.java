@@ -8,7 +8,11 @@ import java.util.List;
 
 public class VentanaGestionSolicitudes extends JFrame {
 
-    private JTable tablaSolicitudes;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTable tablaSolicitudes;
     private DefaultTableModel modeloTabla;
     private JComboBox<String> comboFiltroEstado;
     private JTextField campoFiltroDNI;
@@ -92,7 +96,12 @@ public class VentanaGestionSolicitudes extends JFrame {
         // Centro (Tabla de solicitudes)
         String[] columnas = {"Cliente (DNI)", "Pregunta", "Estado", "Respuesta"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false; // No permitir edición de las celdas
             }

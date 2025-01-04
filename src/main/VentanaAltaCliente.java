@@ -6,10 +6,12 @@ import java.awt.event.*;
 
 public class VentanaAltaCliente extends JFrame {
 
-    private final Bdd baseDeDatos;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     public VentanaAltaCliente(DefaultListModel<String> modeloListaClientes, Bdd baseDeDatos) {
-        this.baseDeDatos = baseDeDatos;
 
         // Configuración básica de la ventana
         setTitle("Dar de Alta Cliente");

@@ -7,7 +7,11 @@ import java.awt.event.FocusEvent;
 
 public class PlaceholderPasswordField extends JPasswordField {
 
-    private String placeholder;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String placeholder;
 
     public PlaceholderPasswordField(String placeholder) {
         this.placeholder = placeholder;

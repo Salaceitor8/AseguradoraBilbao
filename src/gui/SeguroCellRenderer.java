@@ -8,7 +8,11 @@ import java.time.format.DateTimeFormatter;
 
 public class SeguroCellRenderer extends DefaultTableCellRenderer {
 
-    // Formato para mostrar la fecha en la tabla
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// Formato para mostrar la fecha en la tabla
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override

@@ -6,12 +6,12 @@ import java.awt.event.*;
 
 public class VentanaCambiarUsuario extends JFrame {
 
-    private final String dniCliente; // DNI del cliente
-    private final Bdd bd; // Instancia de la base de datos
 
-    public VentanaCambiarUsuario(String dniCliente, Bdd bd) {
-        this.dniCliente = dniCliente;
-        this.bd = bd;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public VentanaCambiarUsuario(String dniCliente, Bdd bd) {
 
         // Configuración básica de la ventana
         setTitle("Cambiar Nombre de Usuario");

@@ -12,10 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -27,18 +25,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
 import domain.Cliente;
 import domain.Seguro;
 import domain.TipoSeguro;
 
 public class VentanaCliente extends JFrame {
-    private JTable tablaSeguros;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
     private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil;
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni) {
         // Configuración básica de la ventana
         setTitle("Aseguradora Bilbao - Cliente");

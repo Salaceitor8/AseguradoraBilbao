@@ -1,18 +1,19 @@
 package main;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import domain.Seguro;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ChatBotVentana extends JFrame {
 
-    private JTextArea areaChat;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextArea areaChat;
     private Map<String, String> respuestasPredefinidas;
     private List<Seguro> segurosCliente; // Lista de seguros del cliente
     private JPanel panelPreguntas;
@@ -34,7 +35,7 @@ public class ChatBotVentana extends JFrame {
         Color colorPrincipal = new Color(0, 51, 102); // Azul oscuro
         Color colorContraste = Color.WHITE;           // Blanco
         Color colorBotonNavegacion = new Color(0, 102, 204);   // Azul claro
-        Color colorBotonSolicitar = new Color(0, 153, 76);     // Verde suave
+//        Color colorBotonSolicitar = new Color(0, 153, 76);     // Verde suave
 
         // Área de chat
         areaChat = new JTextArea();

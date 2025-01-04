@@ -1,7 +1,6 @@
 package main;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
@@ -10,7 +9,11 @@ import java.util.Set;
 
 public class ServidorChat extends JFrame {
 
-    private static final int PUERTO = 12345;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final int PUERTO = 12345;
     private static Set<ClienteHandler> clientesConectados = new HashSet<>();
     private DefaultListModel<String> modeloListaClientes;
     private JTextArea areaLog;

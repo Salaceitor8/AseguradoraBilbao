@@ -7,7 +7,11 @@ import java.awt.event.FocusEvent;
 
 public class PlaceholderTextField extends JTextField {
 
-    private String placeholder;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String placeholder;
 
     public PlaceholderTextField(String placeholder) {
         this.placeholder = placeholder;

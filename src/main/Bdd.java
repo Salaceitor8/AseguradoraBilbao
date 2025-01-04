@@ -94,6 +94,17 @@ public class Bdd {
             System.err.println("Error al insertar cliente: " + e.getMessage());
         }
     }
+    
+    public ResultSet obtenerEmpleados() {
+        String sql = "SELECT * FROM empleados";
+        try {
+            return connection.createStatement().executeQuery(sql);
+        } catch (SQLException e) {
+            System.err.println("Error al obtener empleados: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     public ResultSet obtenerClientes() {
         String sql = "SELECT * FROM clientes";
@@ -128,7 +139,39 @@ public class Bdd {
     	
     }
     
-    public String cargarUsuarioDesdeBD(String dni) {
+    public String cargarUsuarioDesdeBDempleados(String dni) {
+        String sql = "SELECT usuario FROM empleados WHERE dni = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dni);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("usuario"); // Devuelve la contraseña
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Muestra errores en la consola
+        }
+        return null; // Devuelve null si no se encontró el cliente o hubo un error
+    }
+    
+    public String cargarContraseñaDesdeBDempleados(String dni) {
+        String sql = "SELECT contraseña FROM empleados WHERE dni = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dni);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("contraseña"); // Devuelve la contraseña
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Muestra errores en la consola
+        }
+        return null; // Devuelve null si no se encontró el cliente o hubo un error
+    }
+    
+    public String cargarUsuarioDesdeBDclientes(String dni) {
         String sql = "SELECT usuario FROM clientes WHERE dni = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -144,7 +187,7 @@ public class Bdd {
         return null; // Devuelve null si no se encontró el cliente o hubo un error
     }
     
-    public String cargarContraseñaDesdeBD(String dni) {
+    public String cargarContraseñaDesdeBDclientes(String dni) {
         String sql = "SELECT contraseña FROM clientes WHERE dni = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

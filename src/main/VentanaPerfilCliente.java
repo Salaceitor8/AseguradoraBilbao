@@ -17,8 +17,13 @@ import domain.Seguro;
 
 public class VentanaPerfilCliente extends JFrame {
 
-    private JTextField campoNombre, campoDNI, campoEmail, campoTelefono;
-    private JButton btnCambiarFoto, btnEditar, btnGuardar, btnCambiarContraseña, btnCambiarUsuario, btnDescargarContrato;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
+	private JTextField campoNombre, campoDNI, campoEmail, campoTelefono;
+    private JButton btnCambiarFoto, btnEditar, btnGuardar, btnCambiarContraseña, btnCambiarUsuario;
     private JLabel lblFotoPerfil;
     private JPanel panelGraficos;
     private JProgressBar barraProgreso;

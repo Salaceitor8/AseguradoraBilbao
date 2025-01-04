@@ -9,7 +9,11 @@ import java.net.Socket;
 
 public class VentanaChatEmpleado extends JFrame {
 
-    private JPanel panelChat;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel panelChat;
     private JTextArea campoMensaje;
     private JButton btnEnviar;
     private JScrollPane scrollChat;

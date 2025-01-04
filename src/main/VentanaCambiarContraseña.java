@@ -6,12 +6,12 @@ import java.awt.event.*;
 
 public class VentanaCambiarContraseña extends JFrame {
 
-    private final String dniCliente; // DNI del cliente
-    private final Bdd bd; // Instancia de la base de datos
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     public VentanaCambiarContraseña(String dniCliente, Bdd bd) {
-        this.dniCliente = dniCliente;
-        this.bd = bd;
 
         // Configuración básica de la ventana
         setTitle("Cambiar Contraseña");
@@ -120,7 +120,7 @@ public class VentanaCambiarContraseña extends JFrame {
             }
 
             // Validar la contraseña actual desde la base de datos
-            String contraseñaGuardada = bd.cargarContraseñaDesdeBD(dniCliente);
+            String contraseñaGuardada = bd.cargarContraseñaDesdeBDclientes(dniCliente);
             if (!contraseñaActual.equals(contraseñaGuardada)) {
                 JOptionPane.showMessageDialog(this, "La contraseña actual no es correcta.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;

@@ -2,10 +2,7 @@ package main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import com.toedter.calendar.JDateChooser;
-
-import domain.Seguro;
 import domain.TipoSeguro;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +12,11 @@ import java.time.format.DateTimeFormatter;
 
 public class VentanaAltaSeguro extends JFrame {
 
-    private JComboBox<TipoSeguro> comboTipoSeguro;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JComboBox<TipoSeguro> comboTipoSeguro;
     private JDateChooser campoFechaContratacion;
     private JTextField campoCostoAnual;
     private JComboBox<String> comboEstado;
