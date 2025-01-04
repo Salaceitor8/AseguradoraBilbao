@@ -14,9 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import domain.Seguro;
+import domain.Siniestro;
 import domain.Solicitud;
 import domain.TipoSeguro;
 import domain.Cliente;
+import domain.EstadoSiniestro;
 import domain.EstadoSolicitud;
 import domain.Mensaje;
 
@@ -428,6 +430,110 @@ public class Bdd {
             System.err.println("Error al insertar siniestro: " + e.getMessage());
         }
     }
+    
+    public List<Siniestro> obtenerSiniestros(String estado, String dni) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM siniestros");
+        boolean hasCondition = false;
+
+        // Construir condiciones dinámicas
+        if (!"TODOS".equalsIgnoreCase(estado)) {
+            sql.append(" WHERE estado = ?");
+            hasCondition = true;
+        }
+
+        if (dni != null && !dni.trim().isEmpty() && !dni.equals("Buscar por DNI...")) {
+            sql.append(hasCondition ? " AND " : " WHERE ");
+            sql.append("dni_cliente = ?");
+        }
+
+        List<Siniestro> siniestros = new ArrayList<>();
+        try (PreparedStatement pstmt = connection.prepareStatement(sql.toString())) {
+            int parameterIndex = 1;
+
+            // Asignar parámetros a la consulta
+            if (!"TODOS".equalsIgnoreCase(estado)) {
+                pstmt.setString(parameterIndex++, estado);
+            }
+
+            if (dni != null && !dni.trim().isEmpty() && !dni.equals("Buscar por DNI...")) {
+                pstmt.setString(parameterIndex++, dni);
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Siniestro siniestro = new Siniestro(
+                            rs.getInt("id"),
+                            rs.getString("dni_cliente"),
+                            rs.getString("resumen"),
+                            TipoSeguro.valueOf(rs.getString("tipo_seguro")),
+                            rs.getDouble("precio"),
+
+                            EstadoSiniestro.valueOf(rs.getString("estado"))
+                    );
+                    siniestros.add(siniestro);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener siniestros: " + e.getMessage());
+        }
+        return siniestros;
+    }
+    
+    public void dejarEnPendienteSiniestro(String dni, String tipoSeguro) {
+        String sql = "UPDATE siniestros SET estado = 'PENDIENTE' WHERE dni_cliente = ? AND tipo_seguro = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, dni);
+            pstmt.setString(2, tipoSeguro);
+
+            int filasActualizadas = pstmt.executeUpdate();
+            if (filasActualizadas > 0) {
+                System.out.println("Siniestro marcado como PENDIENTE.");
+            } else {
+                System.out.println("No se encontró ningún siniestro para dejar en pendiente.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al dejar siniestro en pendiente: " + e.getMessage());
+        }
+    }
+
+    
+    public void rechazarSiniestro(String dni, String tipoSeguro) {
+        String sql = "UPDATE siniestros SET estado = 'RECHAZADO' WHERE dni_cliente = ? AND tipo_seguro = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, dni);
+            pstmt.setString(2, tipoSeguro);
+
+            int filasActualizadas = pstmt.executeUpdate();
+            if (filasActualizadas > 0) {
+                System.out.println("Siniestro marcado como RECHAZADO.");
+            } else {
+                System.out.println("No se encontró ningún siniestro para rechazar.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al rechazar siniestro: " + e.getMessage());
+        }
+    }
+
+    
+    public void resolverSiniestro(String dni, String tipoSeguro) {
+        String sql = "UPDATE siniestros SET estado = 'RESUELTO' WHERE dni_cliente = ? AND tipo_seguro = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, dni);
+            pstmt.setString(2, tipoSeguro);
+
+            int filasActualizadas = pstmt.executeUpdate();
+            if (filasActualizadas > 0) {
+                System.out.println("Siniestro marcado como RESUELTO.");
+            } else {
+                System.out.println("No se encontró ningún siniestro para resolver.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al resolver siniestro: " + e.getMessage());
+        }
+    }
+
+
+
 
     
     public ArrayList<Seguro> obtenerSeguros(String dniCliente) {
@@ -676,6 +782,68 @@ public class Bdd {
             System.err.println("Error al cambiar solicitud a pendiente: " + e.getMessage());
         }
     }
+    
+    public List<Siniestro> obtenerSiniestrosPorFiltro(String estado, String dniFiltro) {
+        System.out.println("Filtro DNI: " + dniFiltro);
+        List<Siniestro> siniestros = new ArrayList<>();
+        String sql = "SELECT * FROM siniestros WHERE 1=1";
+        
+        if (!estado.equalsIgnoreCase("TODOS")) {
+            sql += " AND UPPER(estado) = ?";
+        }
+        if (!dniFiltro.equals("Buscar por DNI...") && !dniFiltro.trim().isEmpty()) {
+            sql += " AND dni_cliente LIKE ?";
+        }
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            int paramIndex = 1;
+
+            if (!estado.equalsIgnoreCase("TODOS")) {
+                pstmt.setString(paramIndex++, estado.toUpperCase());
+            }
+            if (!dniFiltro.equals("Buscar por DNI...") && !dniFiltro.trim().isEmpty()) {
+                pstmt.setString(paramIndex, "%" + dniFiltro.trim() + "%");
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    siniestros.add(new Siniestro(
+                            rs.getInt("id"),
+                            rs.getString("dni_cliente"),
+                            rs.getString("resumen"),
+                            TipoSeguro.valueOf(rs.getString("tipo_seguro")),
+                            rs.getDouble("precio"),
+                            EstadoSiniestro.valueOf(rs.getString("estado").toUpperCase())
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener siniestros filtrados: " + e.getMessage());
+        }
+
+        return siniestros;
+    }
+    
+    public List<Siniestro> obtenerSiniestrosPendientes() {
+        String sql = "SELECT * FROM siniestros WHERE estado = 'PENDIENTE'";
+        List<Siniestro> siniestros = new ArrayList<>();
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+            	siniestros.add(new Siniestro(
+                        rs.getInt("id"),
+                        rs.getString("dni_cliente"),
+                        rs.getString("resumen"),
+                        TipoSeguro.valueOf(rs.getString("tipo_seguro")),
+                        rs.getDouble("precio"),
+                        EstadoSiniestro.valueOf(rs.getString("estado").toUpperCase())
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener solicitudes pendientes: " + e.getMessage());
+        }
+        return siniestros;
+    }
+
 
 
 

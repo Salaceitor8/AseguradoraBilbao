@@ -242,13 +242,18 @@ public class VentanaPrincipalEmpleado extends JFrame {
         });
         
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Chat");
-        JMenuItem itemChat = new JMenuItem("Atencion al cliente");
+        JMenu menu = new JMenu("Atencion al cliente");
+        JMenuItem itemChat = new JMenuItem("Solicitudes");
+        JMenu menu1 = new JMenu("Gestion Siniestros");
+        JMenuItem itemSin = new JMenuItem("Siniestros");
         
         itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
+        itemSin.addActionListener(e -> {new VentanaSiniestrosPendientes(baseDeDatos);});
         
         menuBar.add(menu);
         menu.add(itemChat);
+        menuBar.add(menu1);
+        menu1.add(itemSin);
         
         setJMenuBar(menuBar);
 
