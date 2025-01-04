@@ -161,12 +161,16 @@ public class VentanaCliente extends JFrame {
 				HashMap<TipoSeguro, ArrayList<Double>> preciosPorSeguro = new HashMap<>();
 				ArrayList<Seguro> seguros = bd.obtenerSeguros(dni);
 				for (Seguro s : seguros) {
-					if(preciosPorSeguro.values().contains(TipoSeguro.valueOf(s.getTipo().toString()))) {
-						preciosPorSeguro.get(TipoSeguro.valueOf(s.getTipo().toString())).add(s.getCostoMensual());
-					}else {
-						preciosPorSeguro.put(TipoSeguro.valueOf(s.getTipo().toString()), new ArrayList<Double>(List.of(s.getCostoMensual())));
+					if(s.getEstado().equals("Activo")) {
+						if(preciosPorSeguro.values().contains(TipoSeguro.valueOf(s.getTipo().toString()))) {
+							preciosPorSeguro.get(TipoSeguro.valueOf(s.getTipo().toString())).add(s.getCostoMensual());
+						}else {
+							preciosPorSeguro.put(TipoSeguro.valueOf(s.getTipo().toString()), new ArrayList<Double>(List.of(s.getCostoMensual())));
+						}
 					}
+					
 				}
+				System.out.println(preciosPorSeguro);
 				SwingUtilities.invokeLater(() -> {
 					VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro, bd, dni);
 		            ventana.setVisible(true);

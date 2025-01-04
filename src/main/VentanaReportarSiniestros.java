@@ -43,6 +43,8 @@ public class VentanaReportarSiniestros extends JFrame {
         comboBoxTipoSeguro = new JComboBox<>(
         	    preciosPorSeguro.keySet().stream().map(TipoSeguro::toString).toArray(String[]::new)
         	);
+        comboBoxTipoSeguro.addItem("No seleccionado");
+        comboBoxTipoSeguro.setSelectedItem("No seleccionado");
 
 
         JLabel labelPrecioSeguro = new JLabel("Precio del Seguro:");
@@ -98,11 +100,18 @@ public class VentanaReportarSiniestros extends JFrame {
         // Lógica para filtrar los precios según el tipo de seguro seleccionado
         String tipoSeleccionado = (String) comboBoxTipoSeguro.getSelectedItem();
         comboBoxPrecioSeguro.removeAllItems();
+//        System.out.println(tipoSeleccionado);
+//        System.out.println(preciosPorSeguro);
+//        System.out.println(TipoSeguro.valueOf(tipoSeleccionado));
+//        System.out.println(preciosPorSeguro.containsKey(TipoSeguro.valueOf(tipoSeleccionado)));
 
-        if (tipoSeleccionado != null && preciosPorSeguro.containsKey(tipoSeleccionado)) {
-            for (Double precio : preciosPorSeguro.get(tipoSeleccionado)) {
+        if (tipoSeleccionado != "No seleccionado" && preciosPorSeguro.containsKey(TipoSeguro.valueOf(tipoSeleccionado))) {
+            for (Double precio : preciosPorSeguro.get(TipoSeguro.valueOf(tipoSeleccionado))) {
                 comboBoxPrecioSeguro.addItem(precio + "€");
             }
+            comboBoxPrecioSeguro.addItem("No seleccionado");
+            comboBoxPrecioSeguro.setSelectedItem("No seleccionado");
+            
         }
     }
 
@@ -110,18 +119,34 @@ public class VentanaReportarSiniestros extends JFrame {
         String tipoSeguro = (String) comboBoxTipoSeguro.getSelectedItem();
         String precioSeguro = (String) comboBoxPrecioSeguro.getSelectedItem();
         String resumen = textAreaResumen.getText();
+        
+        if(tipoSeguro.equals("No seleccionado")) {
+        	JOptionPane.showMessageDialog(this, "Por favor, elije un tipo de seguro.", "Error", JOptionPane.ERROR_MESSAGE);
+        	return;
+        }
+        
+        if(precioSeguro.equals("No seleccionado")) {
+        	JOptionPane.showMessageDialog(this, "Por favor, elije el precio del seguro del que quiere reportar el siniestro.", "Error", JOptionPane.ERROR_MESSAGE);
+        	return;
+        }
 
         if (resumen.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, escribe un resumen del siniestro.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        int confirmacion = JOptionPane.showConfirmDialog(this,
-                "¿Confirma que desea reportar el siniestro con el siguiente resumen?\n" + resumen,
-                "Confirmar Siniestro",
-                JOptionPane.YES_NO_OPTION);
+        String confirmacion = String.format(
+        	    "Tipo de Seguro: %s\nPrecio: %s\nResumen: %s\n\n¿Confirma que desea reportar este siniestro?",
+        	    tipoSeguro, precioSeguro, resumen
+        	);
+        int resultado = JOptionPane.showConfirmDialog(
+        	    this,
+        	    confirmacion,
+        	    "Confirmar Siniestro",
+        	    JOptionPane.YES_NO_OPTION
+        );
 
-        if (confirmacion == JOptionPane.YES_OPTION) {
+        if (resultado == JOptionPane.YES_OPTION) {
         	bd.insertarSiniestro(dni, resumen, TipoSeguro.valueOf(tipoSeguro), "PENDIENTE");
             JOptionPane.showMessageDialog(this, "El siniestro ha sido enviado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             dispose(); // Cierra la ventana
