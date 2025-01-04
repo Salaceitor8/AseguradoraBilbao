@@ -139,6 +139,37 @@ public class Bdd {
     	
     }
     
+    public String obtenerGeneroCliente(String dni) {
+    	String sql = "SELECT genero FROM clientes WHERE dni = ?";
+    	
+    	try(PreparedStatement stmt = connection.prepareStatement(sql)){
+    		stmt.setString(1, dni);
+    		try(ResultSet rs = stmt.executeQuery()){
+    			if(rs.next()){
+    				return rs.getString("genero");
+    			}
+    		}
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+		return null;
+    }
+    public String obtenerGeneroEmpleado(String dni) {
+    	String sql = "SELECT genero FROM empleados WHERE dni = ?";
+    	
+    	try(PreparedStatement stmt = connection.prepareStatement(sql)){
+    		stmt.setString(1, dni);
+    		try(ResultSet rs = stmt.executeQuery()){
+    			if(rs.next()){
+    				return rs.getString("genero");
+    			}
+    		}
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+		return null;
+    }
+    
     public String cargarUsuarioDesdeBDempleados(String dni) {
         String sql = "SELECT usuario FROM empleados WHERE dni = ?";
 

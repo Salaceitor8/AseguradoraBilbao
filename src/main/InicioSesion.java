@@ -266,20 +266,37 @@ public class InicioSesion extends JFrame {
         	            if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni) == null) {
         	                // Caso 1: Usuario y contraseña no configurados, usar nombre_apellidos y dni como credenciales
         	                if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
-        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-        	                    dispose();
-        	                    new VentanaPrincipalEmpleado(baseDeDatos);
-        	                    encontrado = true;
-        	                    break;
+        	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}else {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}
+        	                	
         	                }
         	            } else {
         	                // Caso 2: Usuario configurado pero contraseña no configurada
         	                if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni).equals(usuario) && dni.equals(contraseña)) {
-        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-        	                    dispose();
-        	                    new VentanaPrincipalEmpleado(baseDeDatos);
-        	                    encontrado = true;
-        	                    break;
+        	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}else {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}
         	                }
         	            }
         	        } else {
@@ -287,21 +304,37 @@ public class InicioSesion extends JFrame {
         	            if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni) != null) {
         	                if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni).equals(usuario) &&
         	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
-        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-        	                    dispose();
-        	                    new VentanaPrincipalEmpleado(baseDeDatos);
-        	                    encontrado = true;
-        	                    break;
+        	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}else {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}
         	                }
         	            } else {
         	                // Caso 4: Usuario no configurado pero contraseña configurada
         	                if ((nombre + "_" + apellidos).equals(usuario) &&
         	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
-        	                    JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-        	                    dispose();
-        	                    new VentanaPrincipalEmpleado(baseDeDatos);
-        	                    encontrado = true;
-        	                    break;
+        	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}else {
+        	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+            	                    dispose();
+            	                    new VentanaPrincipalEmpleado(baseDeDatos);
+            	                    encontrado = true;
+            	                    break;
+        	                	}
         	                }
         	            }
         	        }
@@ -326,38 +359,76 @@ public class InicioSesion extends JFrame {
                     if(baseDeDatos.cargarContraseñaDesdeBDclientes(dni) == null) {
                     	if (baseDeDatos.cargarUsuarioDesdeBDclientes(dni) == null) {
                     		if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
-                                JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                dispose();
-                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
-                                encontrado = true;
-                                break;
+                    			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
+                    				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                    dispose();
+                                    new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+                                    encontrado = true;
+                                    break;
+                    			}else {
+                    				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+                                    dispose();
+                                    new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+                                    encontrado = true;
+                                    break;
+                    			}
+                                
                             }
                     	}else {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && dni.equals(contraseña)) {
-                    			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                dispose();
-                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
-                                encontrado = true;
-                                break;
+                    			if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
+                        			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
+                        				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                        dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+                                        encontrado = true;
+                                        break;
+                        			}else {
+                        				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+                                        dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+                                        encontrado = true;
+                                        break;
+                        			}
+                                    
+                                }
                     		}
                     	}
                     	
                     }else {
                     	if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni) != null) {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
-                    			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                dispose();
-                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
-                                encontrado = true;
-                                break;
+                        			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
+                        				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                        dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+                                        encontrado = true;
+                                        break;
+                        			}else {
+                        				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+                                        dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+                                        encontrado = true;
+                                        break;
+                        			}
+                                    
+                                
                     		}
                     	}else {
                     		if((nombre + "_" + apellidos).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
-                    			JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-                                dispose();
-                                new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni);
-                                encontrado = true;
-                                break;
+                        			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
+                        				JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                                        dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+                                        encontrado = true;
+                                        break;
+                        			}else {
+                        				JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+                                        dispose();
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "M");
+                                        encontrado = true;
+                                        break;
+                        			}
                     		}
                     	}
                     	

@@ -39,7 +39,7 @@ public class VentanaCliente extends JFrame {
     private JLabel lblCostoTotal;
     private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil;
     
-    public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni) {
+    public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero) {
         // Configuración básica de la ventana
         setTitle("Aseguradora Bilbao - Cliente");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -63,13 +63,24 @@ public class VentanaCliente extends JFrame {
         Color colorContraste = Color.WHITE;           // Blanco
 
         // HEADER (NORTE)
-        JPanel panelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelHeader.setBackground(colorPrincipal);
-        JLabel lblBienvenida = new JLabel("Bienvenido, " + nombreCliente);
-        lblBienvenida.setForeground(colorContraste);
-        lblBienvenida.setFont(new Font("Arial", Font.BOLD, 18));
-        panelHeader.add(lblBienvenida);
-        add(panelHeader, BorderLayout.NORTH);
+        if(genero.equals("H")) {
+        	JPanel panelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            panelHeader.setBackground(colorPrincipal);
+            JLabel lblBienvenida = new JLabel("Bienvenido, " + nombreCliente);
+            lblBienvenida.setForeground(colorContraste);
+            lblBienvenida.setFont(new Font("Arial", Font.BOLD, 18));
+            panelHeader.add(lblBienvenida);
+            add(panelHeader, BorderLayout.NORTH);
+        }else {
+        	JPanel panelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            panelHeader.setBackground(colorPrincipal);
+            JLabel lblBienvenida = new JLabel("Bienvenida, " + nombreCliente);
+            lblBienvenida.setForeground(colorContraste);
+            lblBienvenida.setFont(new Font("Arial", Font.BOLD, 18));
+            panelHeader.add(lblBienvenida);
+            add(panelHeader, BorderLayout.NORTH);
+        }
+        
 
         // CENTRO (Tabla de seguros)
         JPanel panelCentro = new JPanel(new BorderLayout());
@@ -172,6 +183,6 @@ public class VentanaCliente extends JFrame {
 			seguros.add(s);
 		}
     	
-		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C");
+		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C", "M");
 	}
 }
