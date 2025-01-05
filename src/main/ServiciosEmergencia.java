@@ -3,6 +3,8 @@ package main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ServiciosEmergencia extends JFrame {
 
@@ -257,6 +259,7 @@ public class ServiciosEmergencia extends JFrame {
         lblCalle.setForeground(Color.WHITE);
         JTextField txtCalle = new JTextField();
 
+
         JLabel lblPortal = new JLabel("Portal:");
         lblPortal.setForeground(Color.WHITE);
         JTextField txtPortal = new JTextField();
@@ -268,7 +271,9 @@ public class ServiciosEmergencia extends JFrame {
         JLabel lblComentarios = new JLabel("Comentarios:");
         lblComentarios.setForeground(Color.WHITE);
         JTextField txtComentarios = new JTextField();
+        
 
+        
         // Botón para enviar la información
         JButton btnEnviar = new JButton("Enviar");
         btnEnviar.setBackground(new Color(51, 153, 255));
@@ -286,7 +291,49 @@ public class ServiciosEmergencia extends JFrame {
             JOptionPane.showMessageDialog(this, "Ubicación enviada:\n" + ubicacion);
             dispose();
         });
+        
+//        Hacer que al darle al enter salte al siguiente campo
+        txtCalle.addKeyListener(new KeyAdapter() {
 
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtPortal.requestFocus();
+				}
+			}
+        	
+		});
+        txtPortal.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtPiso.requestFocus();
+				}
+			}
+        	
+		});
+        txtPiso.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtComentarios.requestFocus();
+				}
+			}
+        	
+		});
+        txtComentarios.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					btnEnviar.doClick();
+				}
+			}
+        	
+		});
+        
         // Botón para regresar a las opciones
         JButton btnVolver = new JButton("Volver");
         btnVolver.setBackground(Color.RED);
