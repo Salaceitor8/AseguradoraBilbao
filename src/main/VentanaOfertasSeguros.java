@@ -33,7 +33,7 @@ public class VentanaOfertasSeguros extends JFrame {
         // Ofertas de seguros
         String[][] ofertas = {
             {"Seguro de Hogar", "Protege tu hogar desde 15€/mes"},
-            {"Seguro de Auto", "Cobertura completa desde 25€/mes"},
+            {"Seguro de Coche", "Cobertura completa desde 25€/mes"},
             {"Seguro de Vida", "Tranquilidad para tu familia desde 10€/mes"},
         };
 
