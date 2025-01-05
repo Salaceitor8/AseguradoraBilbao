@@ -275,7 +275,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;
@@ -287,7 +287,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;
@@ -305,7 +305,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;
@@ -317,7 +317,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;
@@ -337,7 +337,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;
@@ -350,7 +350,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;
@@ -368,7 +368,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;
@@ -380,7 +380,7 @@ public class InicioSesion extends JFrame {
         	                        SwingUtilities.invokeLater(() -> {
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos);
+        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
         	                        	});
         	                        encontrado = true;
             	                    break;

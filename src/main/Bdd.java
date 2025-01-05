@@ -843,6 +843,22 @@ public class Bdd {
         }
         return siniestros;
     }
+    
+    public ArrayList<String> obtenerNombresEmpleados() {
+        ArrayList<String> nombresEmpleados = new ArrayList<>();
+        String sql = "SELECT nombre FROM empleados WHERE departamento = 'Atención al Cliente y Ventas'";
+        
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                nombresEmpleados.add(rs.getString("nombre"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener nombres de empleados: " + e.getMessage());
+        }
+        
+        return nombresEmpleados;
+    }
+
 
 
 

@@ -31,7 +31,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
     // Constructor
     @SuppressWarnings("serial")
-	public VentanaPrincipalEmpleado(Bdd baseDeDatos) {
+	public VentanaPrincipalEmpleado(Bdd baseDeDatos, String nombre) {
         setTitle("Aseguradoras Bilbao - Panel de Empleado");
         setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -247,14 +247,29 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenuItem itemChat = new JMenuItem("Solicitudes");
         JMenu menu1 = new JMenu("Gestion Siniestros");
         JMenuItem itemSin = new JMenuItem("Siniestros");
+        JMenu menu2 = new JMenu("Simulación de Trabajo");
+        JMenuItem itemSim = new JMenuItem("Simulación");
         
         itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
         itemSin.addActionListener(e -> {new VentanaSiniestrosPendientes(baseDeDatos);});
+        itemSim.addActionListener(e -> {
+        	System.out.println(nombre);
+        	if(nombre.equals("Mikel")) {
+        		SwingUtilities.invokeLater(() -> {
+                    VentanaSimulacionAtencion ventana = new VentanaSimulacionAtencion(baseDeDatos);
+                    ventana.setVisible(true);
+                });
+        	}else {
+        		JOptionPane.showMessageDialog(this, "Solo el jefe puede acceder a esta simulación.", "Error", JOptionPane.ERROR_MESSAGE);
+        	}
+        });
         
         menuBar.add(menu);
         menu.add(itemChat);
         menuBar.add(menu1);
         menu1.add(itemSin);
+        menuBar.add(menu2);
+        menu2.add(itemSim);
         
         setJMenuBar(menuBar);
 
@@ -348,7 +363,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
     
     public static void main(String[] args) {
-		new VentanaPrincipalEmpleado(new Bdd("resources/db/aseguradora.db"));
+		new VentanaPrincipalEmpleado(new Bdd("resources/db/aseguradora.db"), "Hola");
 	}
 
     
