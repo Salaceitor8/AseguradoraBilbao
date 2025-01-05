@@ -4,7 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BarraProgreso extends JDialog {
-    public BarraProgreso(JFrame parent) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public BarraProgreso(JFrame parent) {
         super(parent, "Cargando Seguros...", true); // true para que sea modal
         setSize(400, 120);
         setLocationRelativeTo(parent);
