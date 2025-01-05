@@ -89,6 +89,7 @@ public class VentanaCliente extends JFrame {
         String[] columnas = {"Tipo de Seguro", "Fecha de Contratación", "Costo Anual (€)", "Estado"};
         modeloTablaSeguros = new DefaultTableModel(columnas, 0);
         tablaSeguros = new JTable(modeloTablaSeguros);
+        tablaSeguros.getTableHeader().setReorderingAllowed(false);
         tablaSeguros.setRowHeight(25);
         tablaSeguros.setFont(new Font("Arial", Font.PLAIN, 14));
         tablaSeguros.setSelectionBackground(new Color(51, 153, 255)); // Azul claro

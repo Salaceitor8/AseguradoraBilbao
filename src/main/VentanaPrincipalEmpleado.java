@@ -121,6 +121,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
             }
         };
         tablaSeguros = new JTable(modeloTablaSeguros);
+        tablaSeguros.getTableHeader().setReorderingAllowed(false);
         tablaSeguros.setBackground(Color.WHITE);
         tablaSeguros.setForeground(Color.BLACK);
         tablaSeguros.setFont(new Font("Arial", Font.PLAIN, 14));

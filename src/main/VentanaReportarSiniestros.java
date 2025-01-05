@@ -45,12 +45,18 @@ public class VentanaReportarSiniestros extends JFrame {
         	);
         comboBoxTipoSeguro.addItem("No seleccionado");
         comboBoxTipoSeguro.setSelectedItem("No seleccionado");
+        comboBoxTipoSeguro.setEditable(true);
+        
+        iniciarAnimacionColor(comboBoxTipoSeguro);
 
 
         JLabel labelPrecioSeguro = new JLabel("Precio del Seguro:");
         labelPrecioSeguro.setForeground(texto);
         comboBoxPrecioSeguro = new JComboBox<>();
         comboBoxTipoSeguro.addActionListener(e -> filtrarPreciosSeguros());
+        comboBoxPrecioSeguro.setEditable(true);
+        
+        iniciarAnimacionColor(comboBoxPrecioSeguro);
 
         panelSuperior.add(labelTipoSeguro);
         panelSuperior.add(comboBoxTipoSeguro);
@@ -152,6 +158,54 @@ public class VentanaReportarSiniestros extends JFrame {
             dispose(); // Cierra la ventana
         }
     }
+    
+    private void iniciarAnimacionColor(JComboBox<String> comboBox) {
+        new Thread(() -> {
+            boolean aumentando = true; // Controla si aumenta o disminuye la intensidad
+            int intensidad = 0;        // Intensidad inicial para el componente rojo (R)
+
+            while (true) {
+                // Comprobar si está seleccionada la opción "No seleccionado"
+                if ("No seleccionado".equals(comboBox.getSelectedItem())) {
+                    // Ajustar intensidad (R)
+                    if (aumentando) {
+                        intensidad += 5;
+                        if (intensidad >= 255) aumentando = false; // Límite superior
+                    } else {
+                        intensidad -= 5;
+                        if (intensidad <= 0) aumentando = true; // Límite inferior
+                    }
+
+                    // Actualizar el color en el hilo de la interfaz gráfica
+                    int finalIntensidad = intensidad;
+                    SwingUtilities.invokeLater(() -> {
+                        Component editorComponent = comboBox.getEditor().getEditorComponent();
+                        if (editorComponent instanceof JTextField) {
+                            JTextField textField = (JTextField) editorComponent;
+                            textField.setForeground(new Color(finalIntensidad, 102, 102)); // Gradiente de rojo claro
+                        }
+                    });
+                } else {
+                    // Resetear el color si cambia la selección
+                    SwingUtilities.invokeLater(() -> {
+                        Component editorComponent = comboBox.getEditor().getEditorComponent();
+                        if (editorComponent instanceof JTextField) {
+                            JTextField textField = (JTextField) editorComponent;
+                            textField.setForeground(Color.BLACK); // Color por defecto
+                        }
+                    });
+                }
+
+                // Pausa para suavizar la animación
+                try {
+                    Thread.sleep(15); // Ajusta la velocidad del cambio de color
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 
     public static void main(String[] args) {
         // Ejemplo de inicialización

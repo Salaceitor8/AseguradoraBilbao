@@ -16,7 +16,7 @@ public class VentanaSolicitarPregunta extends JFrame {
 	private JTextArea campoPregunta;
     private JButton btnEnviar;
     private JLabel lblContador;
-    private final int LIMITE_CARACTERES = 45;
+    private final int LIMITE_CARACTERES = 35;
     private Bdd baseDeDatos;
     private String dniCliente;
 
