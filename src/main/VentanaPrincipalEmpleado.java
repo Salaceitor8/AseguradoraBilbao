@@ -249,6 +249,8 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenuItem itemSin = new JMenuItem("Siniestros");
         JMenu menu2 = new JMenu("Jornada de Trabajo");
         JMenuItem itemSim = new JMenuItem("Jornada");
+        JMenu menu3 = new JMenu("Encuestas");
+        JMenuItem itemEnc= new JMenuItem("Restultados");
         
         itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
         itemSin.addActionListener(e -> {new VentanaSiniestrosPendientes(baseDeDatos);});
@@ -263,6 +265,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         		JOptionPane.showMessageDialog(this, "Solo el jefe puede acceder a esta simulación.", "Error", JOptionPane.ERROR_MESSAGE);
         	}
         });
+        itemEnc.addActionListener(e -> {new VentanaResultadosEncuestas(baseDeDatos);});
         
         menuBar.add(menu);
         menu.add(itemChat);
@@ -270,6 +273,8 @@ public class VentanaPrincipalEmpleado extends JFrame {
         menu1.add(itemSin);
         menuBar.add(menu2);
         menu2.add(itemSim);
+        menuBar.add(menu3);
+        menu3.add(itemEnc);
         
         setJMenuBar(menuBar);
 

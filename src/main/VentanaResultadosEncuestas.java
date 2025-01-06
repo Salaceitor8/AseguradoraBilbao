@@ -6,6 +6,8 @@ import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -35,7 +37,6 @@ public class VentanaResultadosEncuestas extends JFrame {
         // Colores
         Color colorPrincipal = new Color(0, 51, 102); // Azul oscuro
         Color colorFondo = Color.WHITE;
-        Color colorTexto = Color.BLACK;
 
         // Panel superior: Título
         JPanel panelTitulo = new JPanel();
@@ -165,6 +166,14 @@ public class VentanaResultadosEncuestas extends JFrame {
                 "Promedio",                 // Etiqueta del eje Y
                 dataset                     // Dataset
         );
+
+        // Configurar el rango del eje Y
+        CategoryPlot plot = chart.getCategoryPlot();
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setRange(0, 5); // Fijar el rango del eje Y entre 0 y 5
+
+        // Opcional: Cambiar el color del fondo
+        plot.setBackgroundPaint(Color.WHITE);
 
         // Crear el panel para mostrar el gráfico
         ChartPanel chartPanel = new ChartPanel(chart);

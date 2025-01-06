@@ -39,7 +39,7 @@ public class VentanaCliente extends JFrame {
 	private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista;
+    private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta;
     
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero) {
         // Configuración básica de la ventana
@@ -120,9 +120,10 @@ public class VentanaCliente extends JFrame {
         btnChatAtencion = new JButton("Atención al Cliente");
         btnOfertas = new JButton("Ver Ofertas");
         btnSolicitarEspecialista = new JButton("Solicitar Especialista");
+        btnEncuesta = new JButton("Rellena la encuesta");
 
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -194,6 +195,15 @@ public class VentanaCliente extends JFrame {
 					VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro, bd, dni);
 		            ventana.setVisible(true);
 		        });
+				
+			}
+		});
+        
+        btnEncuesta.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new VentanaEncuesta(bd, dni);
 				
 			}
 		});
