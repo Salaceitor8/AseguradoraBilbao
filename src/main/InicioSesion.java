@@ -438,7 +438,6 @@ public class InicioSesion extends JFrame {
                             }
                     	}else {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && dni.equals(contraseña)) {
-                    			if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
             	                        // Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
@@ -464,8 +463,6 @@ public class InicioSesion extends JFrame {
                                         encontrado = true;
                                         break;
                         			}
-                                    
-                                }
                     		}
                     	}
                     	

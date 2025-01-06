@@ -247,8 +247,8 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenuItem itemChat = new JMenuItem("Solicitudes");
         JMenu menu1 = new JMenu("Gestion Siniestros");
         JMenuItem itemSin = new JMenuItem("Siniestros");
-        JMenu menu2 = new JMenu("Simulación de Trabajo");
-        JMenuItem itemSim = new JMenuItem("Simulación");
+        JMenu menu2 = new JMenu("Jornada de Trabajo");
+        JMenuItem itemSim = new JMenuItem("Jornada");
         
         itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
         itemSin.addActionListener(e -> {new VentanaSiniestrosPendientes(baseDeDatos);});

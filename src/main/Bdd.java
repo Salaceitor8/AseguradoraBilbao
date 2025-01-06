@@ -18,6 +18,7 @@ import domain.Siniestro;
 import domain.Solicitud;
 import domain.TipoSeguro;
 import domain.Cliente;
+import domain.Encuesta;
 import domain.EstadoSiniestro;
 import domain.EstadoSolicitud;
 import domain.Mensaje;
@@ -858,6 +859,46 @@ public class Bdd {
         
         return nombresEmpleados;
     }
+    
+    public void insertarEncuesta(String dniCliente, String fecha, String satisfecho, String aspectoFavorito, int valoracion, String comentario) {
+        String sql = "INSERT INTO encuestas (dni_cliente, fecha, satisfecho, aspecto_favorito, valoracion, comentario) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, dniCliente);
+            pstmt.setString(2, fecha);
+            pstmt.setString(3, satisfecho);
+            pstmt.setString(4, aspectoFavorito);
+            pstmt.setInt(5, valoracion);
+            pstmt.setString(6, comentario);
+            pstmt.executeUpdate();
+            System.out.println("Encuesta insertada correctamente.");
+        } catch (SQLException e) {
+            System.err.println("Error al insertar encuesta: " + e.getMessage());
+        }
+    }
+    
+    public List<Encuesta> obtenerEncuestas() {
+        List<Encuesta> encuestas = new ArrayList<>();
+        String sql = "SELECT * FROM encuestas";
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Encuesta encuesta = new Encuesta(
+                    rs.getInt("id"),
+                    rs.getString("dni_cliente"),
+                    rs.getString("fecha"),
+                    rs.getString("satisfecho"),
+                    rs.getString("aspecto_favorito"),
+                    rs.getInt("valoracion"),
+                    rs.getString("comentario")
+                );
+                encuestas.add(encuesta);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener encuestas: " + e.getMessage());
+        }
+        return encuestas;
+    }
+
+
 
 
 
