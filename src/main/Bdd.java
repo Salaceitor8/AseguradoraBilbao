@@ -282,6 +282,21 @@ public class Bdd {
         }
         return false; // Devuelve false si ocurre un error
     }
+    
+    public String obtenerDNIporCorreo(String correo) {
+        String sql = "SELECT dni FROM clientes WHERE correo = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, correo);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("dni");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
     
