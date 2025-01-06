@@ -1,7 +1,9 @@
 package main;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -52,7 +54,7 @@ public class VentanaResultadosEncuestas extends JFrame {
         panelCentral.setLayout(new GridLayout(1, 2, 10, 10)); // Dividido en dos columnas
         panelCentral.setBackground(colorFondo);
 
-        // Panel izquierdo: Tabla
+     // Panel izquierdo: Tabla
         String[] columnas = {"DNI Cliente", "Fecha", "Satisfecho", "Aspecto Favorito", "Valoración", "Comentario"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             private static final long serialVersionUID = 1L;
@@ -62,13 +64,49 @@ public class VentanaResultadosEncuestas extends JFrame {
                 return false; // No permitir edición de las celdas
             }
         };
+        DefaultTableCellRenderer centradoRenderer = new DefaultTableCellRenderer();
+        centradoRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        
         tablaEncuestas = new JTable(modeloTabla);
         tablaEncuestas.setRowHeight(25);
         tablaEncuestas.setFont(new Font("Arial", Font.PLAIN, 14));
         tablaEncuestas.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tablaEncuestas.getTableHeader().setBackground(colorPrincipal);
         tablaEncuestas.getTableHeader().setForeground(Color.WHITE);
+        TableColumnModel columnModel = tablaEncuestas.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(10); 
+        columnModel.getColumn(0).setCellRenderer(centradoRenderer);
+        columnModel.getColumn(1).setPreferredWidth(10);
+        columnModel.getColumn(1).setCellRenderer(centradoRenderer);
+        columnModel.getColumn(2).setPreferredWidth(10);
+        columnModel.getColumn(2).setCellRenderer(centradoRenderer);
+        columnModel.getColumn(3).setPreferredWidth(25);
+        columnModel.getColumn(3).setCellRenderer(centradoRenderer);
+        columnModel.getColumn(4).setPreferredWidth(5); 
+        columnModel.getColumn(4).setCellRenderer(centradoRenderer);
         JScrollPane scrollTabla = new JScrollPane(tablaEncuestas);
+        tablaEncuestas.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                int fila = tablaEncuestas.rowAtPoint(e.getPoint());
+                int columna = tablaEncuestas.columnAtPoint(e.getPoint());
+
+                // Verificar si se hizo clic en la columna de "Comentario"
+                if (columna == 5) { // Índice de la columna de comentarios
+                    Object comentario = modeloTabla.getValueAt(fila, columna);
+                    if (comentario != null) {
+                        // Mostrar el comentario completo en un cuadro de diálogo
+                        JOptionPane.showMessageDialog(
+                            tablaEncuestas,
+                            comentario.toString(),
+                            "Comentario completo",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
+                }
+            }
+        });
+
         panelCentral.add(scrollTabla);
 
         // Panel derecho: Gráficos
@@ -95,12 +133,10 @@ public class VentanaResultadosEncuestas extends JFrame {
         btnCerrar.setForeground(Color.WHITE);
 
         panelBotones.add(btnActualizar);
-        panelBotones.add(btnCerrar);
         add(panelBotones, BorderLayout.SOUTH);
 
         // Listeners de botones
         btnActualizar.addActionListener(e -> actualizarResultados(bd));
-        btnCerrar.addActionListener(e -> dispose());
 
         // Cargar datos iniciales
         actualizarResultados(bd);

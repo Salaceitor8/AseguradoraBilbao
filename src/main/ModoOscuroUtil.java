@@ -1,14 +1,26 @@
 package main;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.*;
 
 public class ModoOscuroUtil {
+	
+	// Mapa para guardar los colores originales de los componentes
+    private static final Map<JComponent, Color[]> coloresOriginales = new HashMap<>();
 
     // Método para aplicar transición suave al modo oscuro
     public static void aplicarModoOscuro(JFrame frame, boolean activar) {
         Color inicio = activar ? Color.WHITE : Color.DARK_GRAY;
         Color fin = activar ? Color.DARK_GRAY : Color.WHITE;
+        
+     // Guardar colores originales antes de aplicar el modo oscuro
+        if (activar) {
+            guardarColoresOriginales(frame.getContentPane());
+        }
+
 
         new Thread(() -> {
             for (int i = 0; i <= 100; i++) { // 100 pasos de transición
@@ -38,7 +50,47 @@ public class ModoOscuroUtil {
                     Thread.currentThread().interrupt();
                 }
             }
+            
+         // Restaurar colores originales si se desactiva el modo oscuro
+            if (!activar) {
+                restaurarColoresOriginales(frame.getContentPane());
+            }
         }).start();
+    }
+    
+ // Método para guardar los colores originales de los componentes
+    private static void guardarColoresOriginales(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JComponent) {
+                JComponent jComponent = (JComponent) component;
+                if (!coloresOriginales.containsKey(jComponent)) {
+                    coloresOriginales.put(jComponent, new Color[]{
+                        jComponent.getBackground(),
+                        jComponent.getForeground()
+                    });
+                }
+                if (component instanceof Container) {
+                    guardarColoresOriginales((Container) component);
+                }
+            }
+        }
+    }
+
+    // Método para restaurar los colores originales de los componentes
+    private static void restaurarColoresOriginales(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JComponent) {
+                JComponent jComponent = (JComponent) component;
+                Color[] colores = coloresOriginales.get(jComponent);
+                if (colores != null) {
+                    jComponent.setBackground(colores[0]);
+                    jComponent.setForeground(colores[1]);
+                }
+                if (component instanceof Container) {
+                    restaurarColoresOriginales((Container) component);
+                }
+            }
+        }
     }
 
     // Método auxiliar para aplicar estilos a un componente y sus subcomponentes

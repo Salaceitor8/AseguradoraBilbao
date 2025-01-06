@@ -41,6 +41,7 @@ public class VentanaCliente extends JFrame {
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
     private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro;
+    private boolean activado = false;
     
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero) {
         // Configuración básica de la ventana
@@ -153,8 +154,16 @@ public class VentanaCliente extends JFrame {
 		});
         
         btnModoOscuro.addActionListener(e -> {
+        	
+        	if(activado == false) {
+        		ModoOscuroUtil.aplicarModoOscuro(this, true); // Llama a la transición
+        		activado = true;
+        	}else {
+        		ModoOscuroUtil.aplicarModoOscuro(this, false); // Llama a la transición
+        		activado = false;
+        	}
         
-            ModoOscuroUtil.aplicarModoOscuro(this, true); // Llama a la transición
+            
         });
         
         
