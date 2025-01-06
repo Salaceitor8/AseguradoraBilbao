@@ -284,7 +284,7 @@ public class Bdd {
     }
     
     public String obtenerDNIporCorreo(String correo) {
-        String sql = "SELECT dni FROM clientes WHERE correo = ?";
+        String sql = "SELECT dni FROM clientes WHERE email = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, correo);
             try (ResultSet rs = stmt.executeQuery()) {

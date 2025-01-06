@@ -176,7 +176,7 @@ public class InicioSesion extends JFrame {
     }
 
     private JPanel crearPanelLogin() {
-        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panel.setBackground(COLOR_PRINCIPAL);
 
@@ -207,14 +207,14 @@ public class InicioSesion extends JFrame {
 
         // Botón para ver contraseña
         JButton btnVerContraseña = new JButton("👁️");
-        btnVerContraseña.setPreferredSize(new Dimension(30, campoContraseña.getPreferredSize().height)); // Tamaño compacto
-        btnVerContraseña.setFocusPainted(false); // Elimina el borde de enfoque
-        btnVerContraseña.setMargin(new Insets(0, 0, 0, 0)); // Elimina el margen interno
+        btnVerContraseña.setPreferredSize(new Dimension(30, campoContraseña.getPreferredSize().height));
+        btnVerContraseña.setFocusPainted(false); 
+        btnVerContraseña.setMargin(new Insets(0, 0, 0, 0)); 
         btnVerContraseña.addActionListener(e -> {
-            if (campoContraseña.getEchoChar() == '\u2022') { // Carácter oculto
-                campoContraseña.setEchoChar((char) 0); // Mostrar texto
+            if (campoContraseña.getEchoChar() == '\u2022') { 
+                campoContraseña.setEchoChar((char) 0); 
             } else {
-                campoContraseña.setEchoChar('\u2022'); // Ocultar texto
+                campoContraseña.setEchoChar('\u2022');
             }
         });
         panelContraseña.add(btnVerContraseña, BorderLayout.EAST);
@@ -233,6 +233,20 @@ public class InicioSesion extends JFrame {
 			}
         	
 		});
+     
+        JButton btnRecuperarContraseña = new JButton("Recuperar Contraseña");
+        btnRecuperarContraseña.setForeground(COLOR_CONTRASTE);
+        btnRecuperarContraseña.setBackground(Color.GRAY);
+        btnRecuperarContraseña.setFocusPainted(false);
+        btnRecuperarContraseña.setMargin(new Insets(5, 15, 5, 15));
+        btnRecuperarContraseña.setPreferredSize(new Dimension(230, 30)); 
+        btnRecuperarContraseña.addActionListener(e -> {
+            VentanaRecuperarContraseña ventanaRecuperar = new VentanaRecuperarContraseña(baseDeDatos);
+            ventanaRecuperar.setVisible(true);
+        });
+
+        
+        
 
         JButton btnRegresar = new JButton("Regresar");
         btnRegresar.setBackground(Color.RED);
@@ -267,6 +281,8 @@ public class InicioSesion extends JFrame {
         panel.add(panelContraseña);
         panel.add(btnIniciarSesion);
         panel.add(btnRegresar);
+        panel.add(btnRecuperarContraseña);
+        
         
                 return panel;
     }
