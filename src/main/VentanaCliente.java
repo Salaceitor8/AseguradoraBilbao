@@ -28,6 +28,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import domain.Cliente;
+import main.ModoOscuroUtil;
 import domain.Seguro;
 import domain.TipoSeguro;
 
@@ -39,7 +40,7 @@ public class VentanaCliente extends JFrame {
 	private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta;
+    private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro;
     
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero) {
         // Configuración básica de la ventana
@@ -116,6 +117,7 @@ public class VentanaCliente extends JFrame {
         panelOpciones.setBackground(Color.WHITE);
         
         btnMiPerfil = new JButton("Mi perfil");
+        btnModoOscuro = new JButton("Modo oscuro");
         btnReportarSiniestro = new JButton("Reportar Siniestro");
         btnChatAtencion = new JButton("Atención al Cliente");
         btnOfertas = new JButton("Ver Ofertas");
@@ -123,7 +125,7 @@ public class VentanaCliente extends JFrame {
         btnEncuesta = new JButton("Rellena la encuesta");
 
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -149,6 +151,13 @@ public class VentanaCliente extends JFrame {
 				
 			}
 		});
+        
+        btnModoOscuro.addActionListener(e -> {
+        
+            ModoOscuroUtil.aplicarModoOscuro(this, true); // Llama a la transición
+        });
+        
+        
         btnChatAtencion.addActionListener(new ActionListener() {
 			
 			@Override
