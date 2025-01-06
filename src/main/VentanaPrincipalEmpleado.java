@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import main.ModoOscuroUtil;
 import domain.*;
 import gui.SeguroCellRenderer;
 
@@ -251,6 +252,8 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenuItem itemSim = new JMenuItem("Jornada");
         JMenu menu3 = new JMenu("Encuestas");
         JMenuItem itemEnc= new JMenuItem("Resultados");
+        JMenu menuConfiguracion = new JMenu("Configuración");
+        JCheckBoxMenuItem modoOscuroItem = new JCheckBoxMenuItem("Modo oscuro");
         
         itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
         itemSin.addActionListener(e -> {new VentanaSiniestrosPendientes(baseDeDatos);});
@@ -266,6 +269,20 @@ public class VentanaPrincipalEmpleado extends JFrame {
         	}
         });
         itemEnc.addActionListener(e -> {new VentanaResultadosEncuestas(baseDeDatos);});
+        
+     // Añadir funcionalidad al botón
+        modoOscuroItem.addActionListener(e -> {
+            boolean activar = modoOscuroItem.isSelected(); // Ver si está activado o desactivado
+            ModoOscuroUtil.aplicarModoOscuro(this, activar); // Cambiar el tema
+            // Opcional: guardar la preferencia para usarla más tarde
+            // guardarPreferenciaModoOscuro(activar);
+        });
+
+        // Añadir el botón al menú de configuración
+        menuConfiguracion.add(modoOscuroItem);
+
+        // Añadir el menú a la barra de menús
+        menuBar.add(menuConfiguracion);
         
         menuBar.add(menu);
         menu.add(itemChat);
