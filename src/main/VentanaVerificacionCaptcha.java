@@ -16,6 +16,7 @@ public class VentanaVerificacionCaptcha extends JFrame {
     private JButton botonVerificar;
     private JLabel labelCaptcha;
     private JProgressBar progressBar;
+    private boolean captchaResuelto = false;
     private Timer timer;  // Temporizador para deshabilitar el botón temporalmente
 
     public VentanaVerificacionCaptcha() {
@@ -107,6 +108,7 @@ public class VentanaVerificacionCaptcha extends JFrame {
 
         // Verificar si el CAPTCHA es correcto
         if (captchaUsuario.equals(captchaCorrecto)) {
+        	captchaResuelto = true;
             JOptionPane.showMessageDialog(this, "Captcha correcto, acceso permitido.");
             dispose();  // Cerrar la ventana de CAPTCHA
         } else {
@@ -126,7 +128,10 @@ public class VentanaVerificacionCaptcha extends JFrame {
             }
         }
     }
-
+    public boolean isCaptchaResuelto() {
+        
+		return captchaResuelto;
+    }
     private void iniciarTemporizador() {
         // Temporizador que deshabilita el botón de verificación por 10 segundos
         timer = new Timer(1000, new ActionListener() {

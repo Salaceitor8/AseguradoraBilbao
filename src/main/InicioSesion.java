@@ -197,7 +197,28 @@ public class InicioSesion extends JFrame {
 			}
         	
 		});
+     // Panel contenedor para el campo de contraseña y el botón
+        JPanel panelContraseña = new JPanel(new BorderLayout());
+        panelContraseña.setBackground(COLOR_PRINCIPAL);
 
+        // Campo de contraseña
+        campoContraseña = new JPasswordField();
+        panelContraseña.add(campoContraseña, BorderLayout.CENTER);
+
+        // Botón para ver contraseña
+        JButton btnVerContraseña = new JButton("👁️");
+        btnVerContraseña.setPreferredSize(new Dimension(30, campoContraseña.getPreferredSize().height)); // Tamaño compacto
+        btnVerContraseña.setFocusPainted(false); // Elimina el borde de enfoque
+        btnVerContraseña.setMargin(new Insets(0, 0, 0, 0)); // Elimina el margen interno
+        btnVerContraseña.addActionListener(e -> {
+            if (campoContraseña.getEchoChar() == '\u2022') { // Carácter oculto
+                campoContraseña.setEchoChar((char) 0); // Mostrar texto
+            } else {
+                campoContraseña.setEchoChar('\u2022'); // Ocultar texto
+            }
+        });
+        panelContraseña.add(btnVerContraseña, BorderLayout.EAST);
+        
         JButton btnIniciarSesion = new JButton("Iniciar Sesión");
         btnIniciarSesion.setBackground(new Color(51, 153, 255));
         btnIniciarSesion.setForeground(COLOR_CONTRASTE);
@@ -243,10 +264,11 @@ public class InicioSesion extends JFrame {
         panel.add(etiquetaUsuario);
         panel.add(campoUsuario);
         panel.add(etiquetaContraseña);
-        panel.add(campoContraseña);
+        panel.add(panelContraseña);
         panel.add(btnIniciarSesion);
         panel.add(btnRegresar);
-        return panel;
+        
+                return panel;
     }
 
     private void iniciarSesion() {
@@ -330,7 +352,7 @@ public class InicioSesion extends JFrame {
         	                if (baseDeDatos.cargarUsuarioDesdeBDempleados(dni).equals(usuario) &&
         	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                        // Mostrar la barra de progreso
+        	                	// Mostrar la barra de progreso
         	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
         	                        progressBarDialog.setVisible(true); // Muestra la barra
         	                        // Al completar, abrir la ventana principal
@@ -361,7 +383,7 @@ public class InicioSesion extends JFrame {
         	                if ((nombre + "_" + apellidos).equals(usuario) &&
         	                        baseDeDatos.cargarContraseñaDesdeBDempleados(dni).equals(contraseña)) {
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                        // Mostrar la barra de progreso
+        	                		// Mostrar la barra de progreso
         	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
         	                        progressBarDialog.setVisible(true); // Muestra la barra
         	                        // Al completar, abrir la ventana principal
@@ -451,6 +473,7 @@ public class InicioSesion extends JFrame {
                                         encontrado = true;
                                         break;
                         			}else {
+                        				
             	                        // Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
             	                        progressBarDialog.setVisible(true); // Muestra la barra
