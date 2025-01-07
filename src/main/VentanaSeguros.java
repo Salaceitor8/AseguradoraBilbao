@@ -33,6 +33,28 @@ public class VentanaSeguros extends JFrame {
         JButton botonVida = crearBotonGrande("Vida", e -> mostrarPanel(panelPrincipal, "Vida"));
         JButton botonCoche = crearBotonGrande("Coche", e -> mostrarPanel(panelPrincipal, "Coche"));
         JButton botonHogar = crearBotonGrande("Hogar", e -> mostrarPanel(panelPrincipal, "Hogar"));
+        
+        // Panel para los botones
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        panelBotones.setBackground(new Color(0, 51, 102));
+
+        JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.setBackground(new Color(51, 153, 255));
+        btnGuardar.setForeground(Color.WHITE);
+        btnGuardar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnGuardar.addActionListener(e -> JOptionPane.showMessageDialog(this, "Cambios guardados correctamente."));
+
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setBackground(Color.RED);
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnCancelar.addActionListener(e -> dispose());
+
+        panelBotones.add(btnGuardar);
+        panelBotones.add(btnCancelar);
+
+        add(panelPrincipal);
+        setVisible(true);
 
         panelSeleccion.add(botonVida);
         panelSeleccion.add(botonCoche);
@@ -42,6 +64,7 @@ public class VentanaSeguros extends JFrame {
         setLayout(new BorderLayout());
         add(panelSeleccion, BorderLayout.NORTH);
         add(panelPrincipal, BorderLayout.CENTER);
+        add(panelBotones, BorderLayout.SOUTH);
 
         pack(); // Ajustar el tamaño de la ventana al contenido
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
