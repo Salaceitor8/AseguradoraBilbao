@@ -40,7 +40,7 @@ public class VentanaCliente extends JFrame {
 	private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton  btnReportarSiniestro, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro;
+    private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro;
     private boolean activado = false;
     
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero) {
@@ -119,6 +119,7 @@ public class VentanaCliente extends JFrame {
         
         btnMiPerfil = new JButton("Mi perfil");
         btnModoOscuro = new JButton("Modo oscuro");
+        btnTablonNotificaciones = new JButton("Tablón de Notificaciones");
         btnReportarSiniestro = new JButton("Reportar Siniestro");
         btnChatAtencion = new JButton("Atención al Cliente");
         btnOfertas = new JButton("Ver Ofertas");
@@ -126,7 +127,7 @@ public class VentanaCliente extends JFrame {
         btnEncuesta = new JButton("Rellena la encuesta");
 
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -162,8 +163,7 @@ public class VentanaCliente extends JFrame {
         		ModoOscuroUtil.aplicarModoOscuro(this, false); // Llama a la transición
         		activado = false;
         	}
-        
-            
+        	
         });
         
         
@@ -175,6 +175,15 @@ public class VentanaCliente extends JFrame {
 				
 			}
 		});
+        
+        btnTablonNotificaciones.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TablonNotificaciones tablon = new TablonNotificaciones(VentanaCliente.this);
+                tablon.mostrar();
+            }
+        });
+        
         btnOfertas.addActionListener(new ActionListener() {
 			
 			@Override
