@@ -22,6 +22,7 @@ import domain.Encuesta;
 import domain.EstadoSiniestro;
 import domain.EstadoSolicitud;
 import domain.Mensaje;
+import domain.Notificacion;
 
 
 public class Bdd {
@@ -118,6 +119,27 @@ public class Bdd {
             return null;
         }
     }
+    
+    public ArrayList<Notificacion> obtenerNotificacionesPorCliente(String dniCliente) {
+        String sql = "SELECT * FROM notificacion WHERE dni_cliente = ?";
+        ArrayList<Notificacion> lista = new ArrayList<Notificacion>();
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)){
+            pstmt.setString(1, dniCliente); // Establecer el parámetro
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	int id = rs.getInt("id");
+            	String dni_cliente = rs.getString("dni_cliente");
+            	String resumen = rs.getString("resumen");
+            	Notificacion n = new Notificacion(id, dni_cliente, resumen);
+            	lista.add(n);
+            }
+            return lista; // Ejecutar la consulta
+        } catch (SQLException e) {
+            System.err.println("Error al obtener notificaciones: " + e.getMessage());
+            return null;
+        }
+    }
+
     
     public Cliente obtenerCLiente(String dni) {
     	String sql = "SELECT * FROM clientes WHERE dni = ?";
