@@ -98,7 +98,18 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         panelBotonesClientes.add(btnAltaCliente);
         panelBotonesClientes.add(btnBajaCliente);
+        
+//		Boton modificar seguro
+        JButton btnModificarSeguro = new JButton("Modificar Seguro");
+        btnModificarSeguro.setBackground(new Color(51, 153, 255));
+        btnModificarSeguro.setForeground(Color.WHITE);
+        btnModificarSeguro.setEnabled(false);
+        btnModificarSeguro.addActionListener(e -> {
+            new VentanaSeguros().setVisible(true);
+        });
 
+        panelBotonesClientes.add(btnModificarSeguro);
+        
         JPanel panelClientes = new JPanel(new BorderLayout());
         panelClientes.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.WHITE, 1),
@@ -167,7 +178,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 @SuppressWarnings("unused")
 				String clienteSeleccionado = listaClientes.getSelectedValue();
                 cargarSegurosCliente(baseDeDatos);
-                
+                btnModificarSeguro.setEnabled(true);
             }
             double costoTotal = 0;
             for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
