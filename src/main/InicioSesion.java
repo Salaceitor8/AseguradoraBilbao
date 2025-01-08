@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 import javax.swing.*;
 import domain.Seguro;
@@ -456,9 +457,9 @@ public class InicioSesion extends JFrame {
         	                        progressBarDialog.setVisible(true); // Muestra la barra
         	                        // Al completar, abrir la ventana principal
         	                        SwingUtilities.invokeLater(() -> {
-        	                        	baseDeDatos.actualizarUltimoInicioCliente(dni);
+        	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
             	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-            	                		baseDeDatos.actualizarUltimoInicioCliente(dni);
+            	                		baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
         	                        	dispose();
                                         new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
         	                        	});
@@ -471,7 +472,7 @@ public class InicioSesion extends JFrame {
         	                        progressBarDialog.setVisible(true); // Muestra la barra
         	                        // Al completar, abrir la ventana principal
         	                        SwingUtilities.invokeLater(() -> {
-        	                        	baseDeDatos.actualizarUltimoInicioCliente(dni);
+        	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
                                         new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
@@ -490,7 +491,7 @@ public class InicioSesion extends JFrame {
             	                        progressBarDialog.setVisible(true); // Muestra la barra
             	                        // Al completar, abrir la ventana principal
             	                        SwingUtilities.invokeLater(() -> {
-            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni);
+            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
                                             new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
@@ -504,7 +505,7 @@ public class InicioSesion extends JFrame {
             	                        progressBarDialog.setVisible(true); // Muestra la barra
             	                        // Al completar, abrir la ventana principal
             	                        SwingUtilities.invokeLater(() -> {
-            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni);
+            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
                                             new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
@@ -526,7 +527,7 @@ public class InicioSesion extends JFrame {
             	                        progressBarDialog.setVisible(true); // Muestra la barra
             	                        // Al completar, abrir la ventana principal
             	                        SwingUtilities.invokeLater(() -> {
-            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni);
+            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
                                             new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
@@ -540,7 +541,7 @@ public class InicioSesion extends JFrame {
             	                        progressBarDialog.setVisible(true); // Muestra la barra
             	                        // Al completar, abrir la ventana principal
             	                        SwingUtilities.invokeLater(() -> {
-            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni);
+            	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
                                             new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");

@@ -320,10 +320,11 @@ public class Bdd {
         }
         return null;
     }
-	public void actualizarUltimoInicioCliente(String dni) {
-        String sql = "UPDATE clientes SET ultimo_inicio = NOW() WHERE dni = ?";
+	public void actualizarUltimoInicioCliente(String dni, String fecha) {
+        String sql = "UPDATE clientes SET ultimo_inicio = ? WHERE dni = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, dni); // Establecer el DNI del cliente
+            stmt.setString(2, fecha);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -336,9 +337,9 @@ public class Bdd {
             stmt.setString(1, dni); 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                Timestamp timestamp = rs.getTimestamp("ultimo_inicio");
-                if (timestamp != null) {
-                    return timestamp.toString(); 
+                String s = rs.getString("ultimo_inicio");
+                if (s != null) {
+                    return s.toString(); 
                 }
             }
         } catch (SQLException e) {
