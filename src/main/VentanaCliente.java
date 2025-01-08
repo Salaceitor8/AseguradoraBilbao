@@ -179,8 +179,7 @@ public class VentanaCliente extends JFrame {
         btnTablonNotificaciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TablonNotificaciones tablon = new TablonNotificaciones(VentanaCliente.this);
-                tablon.mostrar();
+                new TablonNotificaciones(dni,bd);
             }
         });
         
