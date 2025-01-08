@@ -18,7 +18,7 @@ public class VentanaSimuladorCostos extends JFrame {
         JLabel lblEdad = new JLabel("Edad:");
         JTextField txtEdad = new JTextField(10);
         JLabel lblTipoSeguro = new JLabel("Tipo de Seguro:");
-        JComboBox<String> cmbTipoSeguro = new JComboBox<>(new String[]{"Salud", "Vida", "Hogar"});
+        JComboBox<String> cmbTipoSeguro = new JComboBox<>(new String[]{"Coche", "Vida", "Hogar"});
         JLabel lblMonto = new JLabel("Monto Asegurado:");
         JTextField txtMonto = new JTextField(10);
         JLabel lblDuracion = new JLabel("Duración (años):");
@@ -74,15 +74,26 @@ public class VentanaSimuladorCostos extends JFrame {
         double base = obtenerCostoBase(tipoSeguro); // Obtener costo base según el tipo de seguro
         double ajusteEdad = (edad > 50) ? 1.2 : 1.0; // Aumentar 20% si la edad es mayor a 50
         double ajusteMonto = monto / 10000; // Ajustar por bloques de 10,000
-        double ajusteDuracion = (duracion > 1) ? 0.9 : 1.0; // Descuento de 10% por duración mayor a un año
+        double ajusteDuracion;
+        if (duracion == 1) {
+            ajusteDuracion = 1.0; // Sin descuento
+        } else if (duracion == 2) {
+            ajusteDuracion = 0.95; // 5% de descuento
+        } else if (duracion == 5) {
+            ajusteDuracion = 0.90; // 10% de descuento
+        } else if (duracion == 10) {
+            ajusteDuracion = 0.85; // 15% de descuento
+        } else {
+            ajusteDuracion = 1.0; // Sin descuento para valores fuera del rango
+        }
         return base * ajusteEdad * ajusteMonto * ajusteDuracion;
     }
 
     // Método simulado para obtener el costo base según el tipo de seguro
     private double obtenerCostoBase(String tipoSeguro) {
         switch (tipoSeguro) {
-            case "Salud":
-                return 500.0;
+            case "Coche":
+                return 400.0;
             case "Vida":
                 return 300.0;
             case "Hogar":
