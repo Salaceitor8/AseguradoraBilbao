@@ -7,35 +7,56 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+
 
 public class VentanaSimuladorCostos extends JFrame {
 
+	
+    private JTextField txtEdad, txtMonto;
+    private JComboBox<String> cmbTipoSeguro;
+    private JComboBox<Integer> cmbDuracion;
+    private JLabel lblResultado, lblRecomendacion;
+    private DefaultCategoryDataset dataset;
+    private ChartPanel chartPanel; // Panel que muestra el gráfico
+    
+    
     public VentanaSimuladorCostos() {
         // Configuración de la ventana principal
         setTitle("Simulador de Costos de Seguros");
-        setSize(500, 300);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centrar la ventana
 
-        // Crear controles
-        JLabel lblEdad = new JLabel("Edad:");
-        JTextField txtEdad = new JTextField(10);
-        JLabel lblTipoSeguro = new JLabel("Tipo de Seguro:");
-        JComboBox<String> cmbTipoSeguro = new JComboBox<>(new String[]{"Coche", "Vida", "Hogar"});
-        JLabel lblMonto = new JLabel("Monto Asegurado:");
-        JTextField txtMonto = new JTextField(10);
-        JLabel lblDuracion = new JLabel("Duración (años):");
-        JComboBox<Integer> cmbDuracion = new JComboBox<>(new Integer[]{1, 2, 5, 10});
-        JButton btnCalcular = new JButton("Calcular");
-        JLabel lblResultado = new JLabel("Costo Total: $0.00");
-        JButton btnMostrarGrafico = new JButton("Mostrar Gráfico"); // Nuevo botón
+        
+        // Inicializar el dataset para el gráfico
+        dataset = new DefaultCategoryDataset();
 
+        
+        // Configuración de los controles visuales
+        JLabel lblEdad = new JLabel("Edad:");
+        txtEdad = new JTextField(10);
+        JLabel lblTipoSeguro = new JLabel("Tipo de Seguro:");
+        cmbTipoSeguro = new JComboBox<>(new String[]{"Coche", "Vida", "Hogar"});
+        JLabel lblMonto = new JLabel("Monto Asegurado:");
+        txtMonto = new JTextField(10);
+        JLabel lblDuracion = new JLabel("Duración (años):");
+        cmbDuracion = new JComboBox<>(new Integer[]{1, 2, 5, 10});
+        JButton btnCalcular = new JButton("Calcular");
+        lblResultado = new JLabel("Costo Total: $0.00");
+        lblRecomendacion = new JLabel("Recomendación: ");
+        JButton btnMostrarGrafico = new JButton("Mostrar Gráfico");
+
+        
+        // Crear el gráfico inicial
+        chartPanel = crearGraficoInicial();
+
+        
         // Crear el panel principal con diseño
         JPanel panel = new JPanel(new GridLayout(7, 2, 10, 10)); // 7 filas, 2 columnas
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margen alrededor del panel
 
+        
         // Añadir controles al panel
         panel.add(lblEdad);
         panel.add(txtEdad);
@@ -46,63 +67,134 @@ public class VentanaSimuladorCostos extends JFrame {
         panel.add(lblDuracion);
         panel.add(cmbDuracion);
         panel.add(btnCalcular);
-        panel.add(new JLabel()); // Espacio vacío
         panel.add(lblResultado);
-        panel.add(btnMostrarGrafico); // Añadir el nuevo botón
 
+        
+        // Layout principal de la ventana
+        setLayout(new BorderLayout());
+        add(panel, BorderLayout.WEST);        // Panel de controles a la izquierda
+        add(chartPanel, BorderLayout.CENTER); // Gráfico al centro
+        add(lblRecomendacion, BorderLayout.SOUTH); // Recomendación en la parte inferior
+
+        
         // Acción del botón Calcular
-        btnCalcular.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // Obtener los valores ingresados
-                    int edad = Integer.parseInt(txtEdad.getText());
-                    String tipoSeguro = (String) cmbTipoSeguro.getSelectedItem();
-                    double monto = Double.parseDouble(txtMonto.getText());
-                    int duracion = (Integer) cmbDuracion.getSelectedItem();
+        btnCalcular.addActionListener(e -> actualizarDatosYGrafico());
 
-                    // Calcular el costo total
-                    double costo = calcularCosto(tipoSeguro, edad, monto, duracion);
-
-                    // Mostrar el resultado
-                    lblResultado.setText(String.format("Costo Total: $%.2f", costo));
-                } catch (Exception ex) {
-                    lblResultado.setText("Error en los datos ingresados.");
-                }
-            }
-        });
-
+        
         // Acción del botón Mostrar Gráfico
-        btnMostrarGrafico.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int edad = Integer.parseInt(txtEdad.getText());
-                    double monto = Double.parseDouble(txtMonto.getText());
-                    int duracion = (Integer) cmbDuracion.getSelectedItem();
-
-                    // Calcular costos para diferentes tipos de seguro
-                    double costoCoche = calcularCosto("Coche", edad, monto, duracion);
-                    double costoVida = calcularCosto("Vida", edad, monto, duracion);
-                    double costoHogar = calcularCosto("Hogar", edad, monto, duracion);
-
-                    // Crear y mostrar el gráfico
-                    VentanaGraficoCostos grafico = new VentanaGraficoCostos(costoCoche, costoVida, costoHogar);
-                    grafico.setVisible(true);
-
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(VentanaSimuladorCostos.this, "Error en los datos ingresados.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+        btnMostrarGrafico.addActionListener(e -> {
+            VentanaGraficoCostos grafico = new VentanaGraficoCostos(dataset);
+            grafico.setVisible(true);
         });
+    
 
-        // Añadir el panel a la ventana
-        add(panel);
+        
+     // Llamar a pruebaInicial() para cargar datos en el gráfico
+        pruebaInicial();
+    }
+    
+    
+    
+
+    // Método para actualizar los datos y el gráfico
+    private void actualizarDatosYGrafico() {
+        if (!validarEntradas()) {
+            return; // Detener el proceso si las entradas no son válidas
+        }
+
+        try {
+            // Obtener los valores ingresados
+            int edad = Integer.parseInt(txtEdad.getText());
+            double monto = Double.parseDouble(txtMonto.getText());
+            int duracion = (Integer) cmbDuracion.getSelectedItem();
+
+            
+            // Calcular los costos para diferentes tipos de seguros
+            double costoCoche = calcularCosto("Coche", edad, monto, duracion);
+            double costoVida = calcularCosto("Vida", edad, monto, duracion);
+            double costoHogar = calcularCosto("Hogar", edad, monto, duracion);
+
+            
+            // Validar que al menos uno de los costos sea válido
+            if (costoCoche <= 0 && costoVida <= 0 && costoHogar <= 0) {
+                JOptionPane.showMessageDialog(this, "Los valores calculados no son válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            
+            // Actualizar el dataset del gráfico
+            dataset.clear();
+            dataset.addValue(costoCoche, "Costo (€)", "Coche");
+            dataset.addValue(costoVida, "Costo (€)", "Vida");
+            dataset.addValue(costoHogar, "Costo (€)", "Hogar");
+
+            
+            // Redibujar el gráfico en la ventana principal
+            chartPanel.revalidate();
+            chartPanel.repaint();
+
+            // Actualizar la recomendación
+            actualizarRecomendacion(costoCoche, costoVida, costoHogar);
+
+            
+            // Mostrar el resultado en el lblResultado
+            lblResultado.setText(String.format("Costo Total (Coche): $%.2f", costoCoche));
+
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Mostrar el error en consola para depuración
+            JOptionPane.showMessageDialog(this, "Ocurrió un error al calcular los costos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
+
+
+
+    
+    
+    // Método para actualizar las recomendaciones
+    
+    private void actualizarRecomendacion(double costoCoche, double costoVida, double costoHogar) {
+        String recomendacion;
+        if (costoCoche <= costoVida && costoCoche <= costoHogar) {
+            recomendacion = "Recomendación: Contratar un seguro de Coche por ser el más económico.";
+        } else if (costoVida <= costoCoche && costoVida <= costoHogar) {
+            recomendacion = "Recomendación: Contratar un seguro de Vida por ser el más económico.";
+        } else {
+            recomendacion = "Recomendación: Contratar un seguro de Hogar por ser el más económico.";
+        }
+        lblRecomendacion.setText(recomendacion);
+    }
+
+
+    
+    
+    // Método para crear el gráfico inicial
+    private ChartPanel crearGraficoInicial() {
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Comparación de Costos por Tipo de Seguro",
+                "Tipo de Seguro",
+                "Costo (€)",
+                dataset
+        );
+        
+        
+
+        // Crear el ChartPanel con las opciones de interacción habilitadas
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setMouseWheelEnabled(true); // Permitir zoom con la rueda del ratón
+        chartPanel.setPreferredSize(new Dimension(400, 300));
+        return chartPanel;
+    }
+
+    
+    
     // Método para calcular el costo del seguro
     private double calcularCosto(String tipoSeguro, int edad, double monto, int duracion) {
         double base = obtenerCostoBase(tipoSeguro); // Obtener costo base según el tipo de seguro
+        if (base <= 0) {
+            return 0; // Si el costo base no es válido, devolver 0
+        }
+
         double ajusteEdad = (edad > 50) ? 1.2 : 1.0; // Aumentar 20% si la edad es mayor a 50
         double ajusteMonto = monto / 10000; // Ajustar por bloques de 10,000
         double ajusteDuracion;
@@ -117,8 +209,46 @@ public class VentanaSimuladorCostos extends JFrame {
         } else {
             ajusteDuracion = 1.0; // Sin descuento para valores fuera del rango
         }
-        return base * ajusteEdad * ajusteMonto * ajusteDuracion;
+
+        
+        double costoFinal = base * ajusteEdad * ajusteMonto * ajusteDuracion;
+        return Math.max(costoFinal, 0); // Asegurar que nunca devuelva un valor negativo
     }
+
+    
+    
+    private boolean validarEntradas() {
+        try {
+            // Verificar que la edad es un número válido
+            int edad = Integer.parseInt(txtEdad.getText());
+            if (edad <= 0) {
+                JOptionPane.showMessageDialog(this, "La edad debe ser un número positivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            
+            // Verificar que el monto asegurado es un número válido
+            double monto = Double.parseDouble(txtMonto.getText());
+            if (monto <= 0) {
+                JOptionPane.showMessageDialog(this, "El monto asegurado debe ser un número positivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            // Verificar que se selecciona una duración válida
+            if (cmbDuracion.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona una duración válida.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingresa valores numéricos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+
 
     // Método simulado para obtener el costo base según el tipo de seguro
     private double obtenerCostoBase(String tipoSeguro) {
@@ -133,15 +263,29 @@ public class VentanaSimuladorCostos extends JFrame {
                 return 0.0;
         }
     }
+    
+ 
+    // Método de prueba inicial para verificar el gráfico
+    private void pruebaInicial() {
+        dataset.clear();
+        dataset.addValue(400, "Costo (€)", "Coche");
+        dataset.addValue(300, "Costo (€)", "Vida");
+        dataset.addValue(200, "Costo (€)", "Hogar");
+    }
 
+    
 
-
-    // Método principal para ejecutar la aplicación
-  //  public static void main(String[] args) {
-    //    SwingUtilities.invokeLater(() -> {
-      //      VentanaSimuladorCostos ventana = new VentanaSimuladorCostos();
-        //    ventana.setVisible(true);
-      //  });
-   // }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            VentanaSimuladorCostos ventana = new VentanaSimuladorCostos();
+            ventana.setVisible(true);
+        });
+    }
 }
 
+
+// public static void main(String[] args) {
+//   SwingUtilities.invokeLater(() -> {
+//        VentanaSimuladorCostos ventana = new VentanaSimuladorCostos();
+//        ventana.setVisible(true);
+//

@@ -10,19 +10,18 @@ import java.awt.*;
 
 public class VentanaGraficoCostos extends JFrame {
 
-    public VentanaGraficoCostos(double costoCoche, double costoVida, double costoHogar) {
-        // Configuración de la ventana
+	
+    public VentanaGraficoCostos(DefaultCategoryDataset dataset) {
+        
+    	
+    	// Configuración de la ventana
         setTitle("Gráfico Comparativo de Costos");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null); // Centrar la ventana
 
-        // Crear el conjunto de datos para el gráfico
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(costoCoche, "Costo (€)", "Coche");
-        dataset.addValue(costoVida, "Costo (€)", "Vida");
-        dataset.addValue(costoHogar, "Costo (€)", "Hogar");
-
+        
+        
         // Crear el gráfico
         JFreeChart chart = ChartFactory.createBarChart(
                 "Comparación de Costos por Tipo de Seguro", // Título del gráfico
@@ -31,21 +30,16 @@ public class VentanaGraficoCostos extends JFrame {
                 dataset                                    // Datos del gráfico
         );
 
+        
+        
         // Crear un panel para mostrar el gráfico
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(800, 600));
         chartPanel.setMouseWheelEnabled(true); // Permitir zoom con la rueda del ratón
+        chartPanel.setPreferredSize(new Dimension(800, 600));
 
-        // Agregar el gráfico a la ventana
+        
+        // Añadir el gráfico al contenedor principal de la ventana
+        setLayout(new BorderLayout());
         add(chartPanel, BorderLayout.CENTER);
-    }
-
-    // Método principal para probar el gráfico
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Ejemplo de costos para probar
-            VentanaGraficoCostos ventana = new VentanaGraficoCostos(400.0, 300.0, 200.0);
-            ventana.setVisible(true);
-        });
     }
 }
