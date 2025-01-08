@@ -64,7 +64,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         listaClientes.setBorder(BorderFactory.createLineBorder(colorPrincipal, 2));
         listaClientes.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        // Campo de búsqueda
+     // Campo de búsqueda
         campoBusqueda = new JTextField(20);
         campoBusqueda.setBackground(Color.WHITE);
         campoBusqueda.setForeground(Color.BLACK);
@@ -76,12 +76,23 @@ public class VentanaPrincipalEmpleado extends JFrame {
             }
         });
 
+        // ComboBox para seleccionar criterio de orden
+        String[] opcionesOrden = {"Ordenar por Nombre", "Ordenar por DNI","Ordenar por Apellido"};
+        JComboBox<String> comboOrden = new JComboBox<>(opcionesOrden);
+        comboOrden.setBackground(Color.WHITE);
+        comboOrden.setForeground(Color.BLACK);
+        comboOrden.addActionListener(e -> {
+            String seleccion = (String) comboOrden.getSelectedItem();
+            ordenarClientes(seleccion); // Llama al método de ordenación
+        });
+
         JLabel etiquetaBuscar = new JLabel("Buscar cliente:");
         etiquetaBuscar.setForeground(colorContraste);
 
         JPanel panelBusqueda = new JPanel(new BorderLayout());
         panelBusqueda.add(etiquetaBuscar, BorderLayout.WEST);
         panelBusqueda.add(campoBusqueda, BorderLayout.CENTER);
+        panelBusqueda.add(comboOrden, BorderLayout.EAST); // Añade el ComboBox
         panelBusqueda.setBackground(colorPrincipal);
         panelBusqueda.setForeground(colorContraste);
 
@@ -392,6 +403,41 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         // Llamada recursiva al siguiente seguro
         return costoActual + calcularCostoTotal(seguros, indice + 1);
+    }
+    
+    private void ordenarClientes(String criterio) {
+        List<String> listaClientesTemp = new ArrayList<>();
+        for (int i = 0; i < modeloListaClientes.size(); i++) {
+            listaClientesTemp.add(modeloListaClientes.getElementAt(i));
+        }
+
+        // Ordenar la lista temporal según el criterio
+        if (criterio.equals("Ordenar por Nombre")) {
+            listaClientesTemp.sort((c1, c2) -> {
+                String nombre1 = c1.split(" - DNI: ")[0];
+                String nombre2 = c2.split(" - DNI: ")[0];
+                return nombre1.compareToIgnoreCase(nombre2);
+            });
+        } else if (criterio.equals("Ordenar por DNI")) {
+            listaClientesTemp.sort((c1, c2) -> {
+                String dni1 = c1.split(" - DNI: ")[1];
+                String dni2 = c2.split(" - DNI: ")[1];
+                return dni1.compareTo(dni2);
+            });
+        }
+        if (criterio.equals("Ordenar por Apellido")) {
+            listaClientesTemp.sort((c1, c2) -> {
+                String apellido1 = c1.split(" ")[1]; // Asume que el nombre completo está en formato "Nombre Apellido"
+                String apellido2 = c2.split(" ")[1];
+                return apellido1.compareToIgnoreCase(apellido2);
+            });
+        }
+       
+        // Actualizar el modelo de la lista con los datos ordenados
+        modeloListaClientes.clear();
+        for (String cliente : listaClientesTemp) {
+            modeloListaClientes.addElement(cliente);
+        }
     }
 
     

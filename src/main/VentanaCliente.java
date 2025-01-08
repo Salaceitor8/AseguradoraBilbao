@@ -50,6 +50,7 @@ public class VentanaCliente extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        String ultimoInicio = bd.obtenerUltimoInicioCliente(dni);
         
         addWindowListener(new WindowAdapter() {
             @Override
@@ -116,6 +117,15 @@ public class VentanaCliente extends JFrame {
         panelOpciones.setLayout(new BoxLayout(panelOpciones, BoxLayout.Y_AXIS));
         panelOpciones.setBorder(new EmptyBorder(10, 10, 10, 10));
         panelOpciones.setBackground(Color.WHITE);
+        
+        
+     // Etiqueta para mostrar el último inicio de sesión
+        JLabel lblUltimoInicio = new JLabel("Último inicio: " + ultimoInicio);
+        lblUltimoInicio.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 16)); // Fuente mejorada
+        lblUltimoInicio.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblUltimoInicio.setForeground(new Color(128, 0, 128)); // Color púrpura oscuro
+        panelOpciones.add(lblUltimoInicio);
+        panelOpciones.add(Box.createVerticalStrut(10)); // Espacio entre el label y los botones
         
         btnMiPerfil = new JButton("Mi perfil");
         btnModoOscuro = new JButton("Modo oscuro");
