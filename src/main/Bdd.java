@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -318,6 +319,32 @@ public class Bdd {
             e.printStackTrace();
         }
         return null;
+    }
+	public void actualizarUltimoInicioCliente(String dni) {
+        String sql = "UPDATE clientes SET ultimo_inicio = NOW() WHERE dni = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dni); // Establecer el DNI del cliente
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+	public String obtenerUltimoInicioCliente(String dni) {
+        String sql = "SELECT ultimo_inicio FROM clientes WHERE dni = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dni); 
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Timestamp timestamp = rs.getTimestamp("ultimo_inicio");
+                if (timestamp != null) {
+                    return timestamp.toString(); 
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Nunca";
     }
 
 

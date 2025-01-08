@@ -10,7 +10,11 @@ import domain.Notificacion;
 
 public class TablonNotificaciones extends JFrame {
 
-    private JTable tablaNotificaciones;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTable tablaNotificaciones;
     private DefaultTableModel modeloTabla;
 
     public TablonNotificaciones(String dniCliente, Bdd baseDeDatos) {
