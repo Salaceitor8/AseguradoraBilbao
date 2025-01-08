@@ -40,7 +40,7 @@ public class VentanaCliente extends JFrame {
 	private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro;
+    private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnPresupuestos;
     private boolean activado = false;
     
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero) {
@@ -125,9 +125,9 @@ public class VentanaCliente extends JFrame {
         btnOfertas = new JButton("Ver Ofertas");
         btnSolicitarEspecialista = new JButton("Solicitar Especialista");
         btnEncuesta = new JButton("Rellena la encuesta");
-
+        btnPresupuestos=new JButton("Presupuestos");
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones, btnPresupuestos};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -164,6 +164,16 @@ public class VentanaCliente extends JFrame {
         		activado = false;
         	}
         	
+        });
+        
+        btnPresupuestos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    VentanaSimuladorCostos simulador = new VentanaSimuladorCostos();
+                    simulador.setVisible(true);
+                });
+            }
         });
         
         
