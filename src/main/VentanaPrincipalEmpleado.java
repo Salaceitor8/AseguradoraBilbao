@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import main.ModoOscuroUtil;
 import domain.*;
 import gui.SeguroCellRenderer;
 
@@ -117,10 +117,6 @@ public class VentanaPrincipalEmpleado extends JFrame {
         btnModificarSeguro.setEnabled(false);
         btnModificarSeguro.addActionListener(e -> {
         	int filaSeleccionada = tablaSeguros.getSelectedRow();
-            if (filaSeleccionada == -1) {
-                JOptionPane.showMessageDialog(this, "Selecciona un seguro para dar de baja.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
             
             String clienteSeleccionado = listaClientes.getSelectedValue();
             if (clienteSeleccionado != null) {
@@ -207,9 +203,6 @@ public class VentanaPrincipalEmpleado extends JFrame {
         tablaSeguros.setRowHeight(25);
         tablaSeguros.setFillsViewportHeight(true);
         tablaSeguros.setDefaultRenderer(Object.class, new SeguroCellRenderer());
-        
-        
-        
 
         JPanel panelTablaSeguros = new JPanel(new BorderLayout());
         panelTablaSeguros.add(new JScrollPane(tablaSeguros), BorderLayout.CENTER);
@@ -227,21 +220,11 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JButton btnBajaSeguro = new JButton("Dar de Baja Seguro");
         btnBajaSeguro.setBackground(Color.RED);
         btnBajaSeguro.setForeground(Color.WHITE);
-        btnBajaSeguro.setEnabled(false);
 
         JPanel panelBotonesSeguros = new JPanel(new FlowLayout());
         panelBotonesSeguros.setBackground(colorPrincipal);
         panelBotonesSeguros.add(btnNuevoSeguro);
         panelBotonesSeguros.add(btnBajaSeguro);
-        tablaSeguros.getSelectionModel().addListSelectionListener(e -> {
-        	if(tablaSeguros.getSelectedRow() == -1) {
-        		btnModificarSeguro.setEnabled(false);
-            	btnBajaSeguro.setEnabled(false);
-        	}else {
-        		btnModificarSeguro.setEnabled(true);
-            	btnBajaSeguro.setEnabled(true);
-        	}
-        });
 
         panelInfoCliente.add(panelBotonesSeguros, BorderLayout.SOUTH);
 
@@ -253,16 +236,14 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         btnAltaCliente.addActionListener(e -> new VentanaAltaCliente(modeloListaClientes, baseDeDatos));
         btnBajaCliente.addActionListener(e -> darDeBajaCliente(baseDeDatos));
-        btnBajaCliente.setEnabled(false);
-        btnNuevoSeguro.setEnabled(false);
         listaClientes.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) { // Asegurarse de que la selección es definitiva
                 @SuppressWarnings("unused")
-				String clienteSeleccionado = listaClientes.getSelectedValue();
+				String ClienteSeleccionado = listaClientes.getSelectedValue();
                 cargarSegurosCliente(baseDeDatos);
-                btnNuevoSeguro.setEnabled(true);
-                btnBajaCliente.setEnabled(true);
+                btnModificarSeguro.setEnabled(false);
             }
+
             double costoTotal = 0;
             for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
             	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
@@ -271,16 +252,29 @@ public class VentanaPrincipalEmpleado extends JFrame {
 			}
             totalCostoSeguros.setText("Costo Total de Seguros: "+ costoTotal +" €");
         });
-        
+        tablaSeguros.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                btnModificarSeguro.setEnabled(true);
+            }
+        });
+
 
         btnNuevoSeguro.addActionListener(e -> {
-        	String dniCliente = listaClientes.getSelectedValue().split("- DNI: ")[1];
-            new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, baseDeDatos);
+            if (listaClientes.getSelectedValue() != null) {
+                String dniCliente = listaClientes.getSelectedValue().split("- DNI: ")[1];
+                new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, baseDeDatos);
+            } else {
+                JOptionPane.showMessageDialog(this, "Selecciona un cliente primero.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         btnBajaSeguro.addActionListener(e -> {
             int filaSeleccionada = tablaSeguros.getSelectedRow();
-            
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona un seguro para dar de baja.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             String clienteSeleccionado = listaClientes.getSelectedValue();
             if (clienteSeleccionado != null) {
                 String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
@@ -296,7 +290,6 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
                 System.out.println(estado);
                 String cobertura = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
-                
                 
                 int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado, cobertura);
                 System.out.println(Id);
@@ -325,12 +318,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
             	LocalDate fecha = LocalDate.parse(tablaSeguros.getValueAt(i, 1).toString());
             	double costo = Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
             	String estado = tablaSeguros.getValueAt(i, 3).toString();
-            	String cobertura;
-                if(tablaSeguros.getValueAt(filaSeleccionada, 4) == null) {
-                	cobertura = "";
-                }else {
-                	cobertura = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
-                }
+            	String cobertura = tablaSeguros.getValueAt(i, 4).toString();
             	Seguro s = new Seguro(tipo, fecha, costo, estado, cobertura);
             	seguros.add(s);
             }
@@ -418,7 +406,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
             ArrayList<Seguro> seguros = baseDeDatos.obtenerSeguros(dniCliente);
             
             for (Seguro s : seguros) {
-				modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), s.getCobertura()});
+				modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado()});
 			}
 
 
@@ -453,7 +441,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
     private void filtrarClientes(String filtro) {
         if (filtro.isEmpty()) {
             modeloListaClientes.clear();
-            cargarClientesDesdeBaseDeDatos(new Bdd("resources/db/aseguradora.db")); // Asegúrate de usar la base de datos correcta
+            cargarClientesDesdeBaseDeDatos(new Bdd("aseguradora.db")); // Asegúrate de usar la base de datos correcta
             return;
         }
 
@@ -517,5 +505,6 @@ public class VentanaPrincipalEmpleado extends JFrame {
     public static void main(String[] args) {
 		new VentanaPrincipalEmpleado(new Bdd("resources/db/aseguradora.db"), "Hola");
 	}
-  
+
+    
 }

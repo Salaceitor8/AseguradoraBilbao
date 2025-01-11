@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -28,7 +29,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import domain.Cliente;
-import main.ModoOscuroUtil;
 import domain.Seguro;
 import domain.TipoSeguro;
 
