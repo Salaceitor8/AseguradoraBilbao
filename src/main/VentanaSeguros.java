@@ -23,7 +23,7 @@ public class VentanaSeguros extends JFrame {
         panelPrincipal.add(panelCoche, "Coche");
 
         // Panel Seguro de Hogar
-        JPanel panelHogar = crearPanelConComboBox("Seguro de Hogar", new String[]{"Cobertura Estándar", "Cobertura Plus"});
+        JPanel panelHogar = crearPanelConComboBox("Seguro de Vivienda", new String[]{"Cobertura Estándar", "Cobertura Plus"});
         panelPrincipal.add(panelHogar, "Vivienda");
 
         // Panel de Selección
