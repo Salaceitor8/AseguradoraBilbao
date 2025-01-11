@@ -2,6 +2,7 @@ package main;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -46,6 +47,7 @@ public class InicioSesion extends JFrame {
 
         // Añadir tarjetas al panel central
         panelCentral.add(panelSeleccion, "Seleccion");
+        panelCentral.add(crearPanelSeleccion(), "Seleccion");
         panelCentral.add(panelLogin, "Login");
 
         add(panelCentral);
@@ -177,115 +179,120 @@ public class InicioSesion extends JFrame {
     }
 
     private JPanel crearPanelLogin() {
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panel.setBackground(COLOR_PRINCIPAL);
 
+        // Etiqueta y campo de usuario
         JLabel etiquetaUsuario = new JLabel("Usuario:");
         etiquetaUsuario.setForeground(COLOR_CONTRASTE);
         campoUsuario = new JTextField();
 
+        // Etiqueta y campo de contraseña
         JLabel etiquetaContraseña = new JLabel("Contraseña:");
         etiquetaContraseña.setForeground(COLOR_CONTRASTE);
         campoContraseña = new JPasswordField();
         campoUsuario.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    campoContraseña.requestFocus();
+                }
+            }
+        });
 
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					campoContraseña.requestFocus();
-				}
-			}
-        	
-		});
-     // Panel contenedor para el campo de contraseña y el botón
+        // Panel para la contraseña y botón de mostrar contraseña
         JPanel panelContraseña = new JPanel(new BorderLayout());
         panelContraseña.setBackground(COLOR_PRINCIPAL);
-
-        // Campo de contraseña
-        campoContraseña = new JPasswordField();
-        panelContraseña.add(campoContraseña, BorderLayout.CENTER);
-
-        // Botón para ver contraseña
-        JButton btnVerContraseña = new JButton("👁️");
+        JButton btnVerContraseña = new JButton("👁");
         btnVerContraseña.setPreferredSize(new Dimension(30, campoContraseña.getPreferredSize().height));
-        btnVerContraseña.setFocusPainted(false); 
-        btnVerContraseña.setMargin(new Insets(0, 0, 0, 0)); 
+        btnVerContraseña.setFocusPainted(false);
+        btnVerContraseña.setMargin(new Insets(0, 0, 0, 0));
         btnVerContraseña.addActionListener(e -> {
-            if (campoContraseña.getEchoChar() == '\u2022') { 
-                campoContraseña.setEchoChar((char) 0); 
+            if (campoContraseña.getEchoChar() == '\u2022') {
+                campoContraseña.setEchoChar((char) 0);
             } else {
                 campoContraseña.setEchoChar('\u2022');
             }
         });
+        panelContraseña.add(campoContraseña, BorderLayout.CENTER);
         panelContraseña.add(btnVerContraseña, BorderLayout.EAST);
-        
+
+        // Captcha
+        JLabel etiquetaCaptcha = new JLabel("Ingrese el Captcha:");
+        etiquetaCaptcha.setForeground(COLOR_CONTRASTE);
+        JTextField campoCaptcha = new JTextField();
+        JLabel labelCaptcha = new JLabel();
+        labelCaptcha.setHorizontalAlignment(SwingConstants.CENTER);
+        generarCaptcha(labelCaptcha);
+
+        JButton btnRecargarCaptcha = new JButton("⟳");
+        btnRecargarCaptcha.setPreferredSize(new Dimension(40, campoCaptcha.getPreferredSize().height));
+        btnRecargarCaptcha.addActionListener(e -> generarCaptcha(labelCaptcha));
+
+        JPanel panelCaptcha = new JPanel(new BorderLayout());
+        panelCaptcha.add(labelCaptcha, BorderLayout.CENTER);
+        panelCaptcha.add(btnRecargarCaptcha, BorderLayout.EAST);
+
+        // Botón de iniciar sesión
         JButton btnIniciarSesion = new JButton("Iniciar Sesión");
         btnIniciarSesion.setBackground(new Color(51, 153, 255));
         btnIniciarSesion.setForeground(COLOR_CONTRASTE);
-        btnIniciarSesion.addActionListener(e -> iniciarSesion());
-        campoContraseña.addKeyListener(new KeyAdapter() {
+        btnIniciarSesion.addActionListener(e -> {
+            if (verificarCaptcha(campoCaptcha, labelCaptcha.getText())) {
+                iniciarSesion();
+            } else {
+                JOptionPane.showMessageDialog(this, "Captcha incorrecto. Intente de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+                generarCaptcha(labelCaptcha);
+            }
+        });
 
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					btnIniciarSesion.doClick();
-				}
-			}
-        	
-		});
-     
+        campoContraseña.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnIniciarSesion.doClick();
+                }
+            }
+        });
+
+        // Botón de recuperar contraseña
         JButton btnRecuperarContraseña = new JButton("Recuperar Contraseña");
         btnRecuperarContraseña.setForeground(COLOR_CONTRASTE);
         btnRecuperarContraseña.setBackground(Color.GRAY);
         btnRecuperarContraseña.setFocusPainted(false);
         btnRecuperarContraseña.setMargin(new Insets(5, 15, 5, 15));
-        btnRecuperarContraseña.setPreferredSize(new Dimension(230, 30)); 
         btnRecuperarContraseña.addActionListener(e -> {
             VentanaRecuperarContraseña ventanaRecuperar = new VentanaRecuperarContraseña(baseDeDatos);
             ventanaRecuperar.setVisible(true);
         });
 
-        
-        
-
+        // Botón de regresar
         JButton btnRegresar = new JButton("Regresar");
         btnRegresar.setBackground(Color.RED);
         btnRegresar.setForeground(COLOR_CONTRASTE);
         btnRegresar.addActionListener(e -> cardLayout.show(panelCentral, "Seleccion"));
         campoContraseña.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    btnRegresar.doClick();
+                }
+            }
+        });
 
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					btnRegresar.doClick();
-				}
-			}
-        	
-        	
-		});
-        campoUsuario.addKeyListener(new KeyAdapter() {
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					btnRegresar.doClick();
-				}
-			}
-        	
-        	
-		});
-
+        // Añadir componentes al panel
         panel.add(etiquetaUsuario);
         panel.add(campoUsuario);
         panel.add(etiquetaContraseña);
         panel.add(panelContraseña);
+        panel.add(etiquetaCaptcha);
+        panel.add(panelCaptcha);
         panel.add(btnIniciarSesion);
         panel.add(btnRegresar);
         panel.add(btnRecuperarContraseña);
-        
-        
-                return panel;
+
+        return panel;
     }
 
     private void iniciarSesion() {
@@ -309,29 +316,45 @@ public class InicioSesion extends JFrame {
         	                	
         	                
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                        // Mostrar la barra de progreso
-        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
-        	                        progressBarDialog.setVisible(true); // Muestra la barra
-        	                        // Al completar, abrir la ventana principal
-        	                        SwingUtilities.invokeLater(() -> {
-            	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-        	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
-        	                        	});
-        	                        encontrado = true;
-            	                    break;
+        	                		// Mostrar ventana de Captcha
+        	                	    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
+        	                	    if (!ventanaCaptcha.isCaptchaResuelto()) {
+        	                	        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        	                	        return;
+        	                	    }
+        	                	    // Mostrar barra de progreso
+        	                	    BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                	    progressBarDialog.setVisible(true);
+        	                	    SwingUtilities.invokeLater(() -> {
+        	                	        JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+        	                	        dispose();
+        	                	        new VentanaPrincipalEmpleado(baseDeDatos, nombre);
+        	                	    });
+        	                	    encontrado = true;
+        	                	    break;
+            	                    
+
+            	                    
+            	                
         	                	}else {
-        	                        // Mostrar la barra de progreso
-        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
-        	                        progressBarDialog.setVisible(true); // Muestra la barra
-        	                        // Al completar, abrir la ventana principal
-        	                        SwingUtilities.invokeLater(() -> {
-            	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
-        	                        	dispose();
-        	                        	new VentanaPrincipalEmpleado(baseDeDatos, nombre);
-        	                        	});
-        	                        encontrado = true;
-            	                    break;
+        	                		// Mostrar ventana de Captcha
+        	                	    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
+        	                	    if (!ventanaCaptcha.isCaptchaResuelto()) {
+        	                	        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        	                	        return;
+        	                	    }
+        	                	 // Mostrar barra de progreso
+        	                	    BarraProgreso progressBarDialog = new BarraProgreso(this);
+        	                	    progressBarDialog.setVisible(true);
+        	                	    SwingUtilities.invokeLater(() -> {
+        	                	        JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
+        	                	        dispose();
+        	                	        new VentanaPrincipalEmpleado(baseDeDatos, nombre);
+        	                	    });
+        	                	    encontrado = true;
+        	                	    break;
+            	                    
+
         	                	}
         	                	
         	                }
@@ -451,23 +474,36 @@ public class InicioSesion extends JFrame {
                     	if (baseDeDatos.cargarUsuarioDesdeBDclientes(dni) == null) {
                     		if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                     			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
+                    				// Mostrar ventana de Captcha
+                    			    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
+                    			    if (!ventanaCaptcha.isCaptchaResuelto()) {
+                    			        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    			        return;
+                    			    }
         	                        // Mostrar la barra de progreso
-                    				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
-                    				baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
-        	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
-        	                        progressBarDialog.setVisible(true); // Muestra la barra
-        	                        // Al completar, abrir la ventana principal
-        	                        SwingUtilities.invokeLater(() -> {
-            	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
-//            	                		baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
-        	                        	dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", ultimoInicio);
-        	                        	});
-                                    encontrado = true;
+                    			    String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                    			    BarraProgreso progressBarDialog = new BarraProgreso(this);
+                    			    progressBarDialog.setVisible(true);
+                    			    SwingUtilities.invokeLater(() -> {
+                    			        baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
+                    			        JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+                    			        dispose();
+                    			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
+                    			    });
+                    			    encontrado = true;
+                    			    break;
+                    			
+                    			    
                                     
-                                    break;
+                                    
                     			}else {
                     				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                    				// Mostrar ventana de Captcha
+                    			    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
+                    			    if (!ventanaCaptcha.isCaptchaResuelto()) {
+                    			        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    			        return;
+                    			    }
         	                        // Mostrar la barra de progreso
         	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
         	                        progressBarDialog.setVisible(true); // Muestra la barra
@@ -476,7 +512,7 @@ public class InicioSesion extends JFrame {
         	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", ultimoInicio);
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
         	                        	});
                                     encontrado = true;
                                     break;
@@ -495,11 +531,17 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", ultimoInicio);
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
             	                        	});
                                         encontrado = true;
                                         break;
                         			}else {
+                        				// Mostrar ventana de Captcha
+                        			    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
+                        			    if (!ventanaCaptcha.isCaptchaResuelto()) {
+                        			        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        			        return;
+                        			    }
                         				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
             	                        // Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
@@ -509,7 +551,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", ultimoInicio);
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
             	                        	});
                                         encontrado = true;
                                         break;
@@ -531,7 +573,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", ultimoInicio);
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
             	                        	});
                                         encontrado = true;
                                         break;
@@ -545,7 +587,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", ultimoInicio);
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H");
             	                        	});
                                         encontrado = true;
                                         break;
@@ -602,6 +644,39 @@ public class InicioSesion extends JFrame {
         }).start();
     }
 
+
+   
+
+    private void generarCaptcha(JLabel labelCaptcha) {
+        String captcha = generarCodigoAleatorio(5);
+        BufferedImage imagenCaptcha = new BufferedImage(150, 50, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = imagenCaptcha.createGraphics();
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, 150, 50);
+        g2d.setFont(new Font("Verdana", Font.BOLD, 24));
+        g2d.setColor(Color.BLACK);
+        g2d.drawString(captcha, 20, 35);
+        g2d.dispose();
+        labelCaptcha.setIcon(new ImageIcon(imagenCaptcha));
+        labelCaptcha.setText(captcha); // Almacenar texto del captcha para verificación
+        labelCaptcha.setVisible(true); // Mostrar el Captcha
+    }
+
+
+    private String generarCodigoAleatorio(int longitud) {
+        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder captcha = new StringBuilder();
+        for (int i = 0; i < longitud; i++) {
+            captcha.append(caracteres.charAt(random.nextInt(caracteres.length())));
+        }
+        return captcha.toString();
+    }
+
+    private boolean verificarCaptcha(JTextField campoCaptcha, String captchaCorrecto) {
+        String captchaUsuario = campoCaptcha.getText().toUpperCase().trim();
+        return captchaUsuario.equals(captchaCorrecto);
+    }
 
 
 
