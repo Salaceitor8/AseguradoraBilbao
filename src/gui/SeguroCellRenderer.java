@@ -28,7 +28,7 @@ public class SeguroCellRenderer extends DefaultTableCellRenderer {
         }
 
         // Obtener el estado del seguro (asumiendo que está en la última columna de la tabla)
-        String estadoSeguro = table.getValueAt(row, table.getColumnCount() - 1).toString();
+        String estadoSeguro = table.getValueAt(row, table.getColumnCount() - 2).toString();
 
         // Si el estado es "Inactivo", poner el texto en rojo
         if (estadoSeguro.equalsIgnoreCase("Inactivo")) {

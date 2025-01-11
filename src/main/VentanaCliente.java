@@ -43,14 +43,14 @@ public class VentanaCliente extends JFrame {
     private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnPresupuestos;
     private boolean activado = false;
     
-    public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero) {
+    public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero, String fecha) {
         // Configuración básica de la ventana
         setTitle("Aseguradora Bilbao - Cliente");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        String ultimoInicio = bd.obtenerUltimoInicioCliente(dni);
+//        String ultimoInicio = bd.obtenerUltimoInicioCliente(dni);
         
         addWindowListener(new WindowAdapter() {
             @Override
@@ -89,7 +89,7 @@ public class VentanaCliente extends JFrame {
 
         // CENTRO (Tabla de seguros)
         JPanel panelCentro = new JPanel(new BorderLayout());
-        String[] columnas = {"Tipo de Seguro", "Fecha de Contratación", "Costo Anual (€)", "Estado"};
+        String[] columnas = {"Tipo de Seguro", "Fecha de Contratación", "Costo Anual (€)", "Estado", "Cobertura"};
         modeloTablaSeguros = new DefaultTableModel(columnas, 0);
         tablaSeguros = new JTable(modeloTablaSeguros);
         tablaSeguros.getTableHeader().setReorderingAllowed(false);
@@ -105,7 +105,8 @@ public class VentanaCliente extends JFrame {
         			s.getTipo().toString(),
         			s.getFechaContratacionFormato(),
         			s.getCostoMensual(),
-        			s.getEstado()
+        			s.getEstado(), 
+        			s.getCobertura()
         	};
             modeloTablaSeguros.addRow(o);;
         }
@@ -120,7 +121,7 @@ public class VentanaCliente extends JFrame {
         
         
      // Etiqueta para mostrar el último inicio de sesión
-        JLabel lblUltimoInicio = new JLabel("Último inicio: " + ultimoInicio);
+        JLabel lblUltimoInicio = new JLabel("Último inicio: " + fecha);
         lblUltimoInicio.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 16)); // Fuente mejorada
         lblUltimoInicio.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblUltimoInicio.setForeground(new Color(128, 0, 128)); // Color púrpura oscuro
@@ -281,10 +282,10 @@ public class VentanaCliente extends JFrame {
     public static void main(String[] args) {
     	List<Seguro> seguros = new ArrayList<Seguro>();
     	for (int i = 0; i < 3; i++) {
-			Seguro s = new Seguro(TipoSeguro.COCHE, LocalDate.now(), 100.0, "Activo");
+			Seguro s = new Seguro(TipoSeguro.COCHE, LocalDate.now(), 100.0, "Activo", "TERCEROS");
 			seguros.add(s);
 		}
     	
-		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C", "M");
+//		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C", "M");
 	}
 }

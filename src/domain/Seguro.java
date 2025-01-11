@@ -10,21 +10,31 @@ public class Seguro {
     private LocalDate fechaContratacion;
     private double costoMensual;
     private String estado;
+    private String cobertura;
 
     // Formato de fecha estándar (puede cambiar según las necesidades)
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     // Constructor
-    public Seguro(TipoSeguro tipo, LocalDate fechaContratacion, double costoMensual, String estado) {
+    public Seguro(TipoSeguro tipo, LocalDate fechaContratacion, double costoMensual, String estado, String cobertura) {
         this.idSeguro = contador;
         contador++;
         this.tipo = tipo;
         this.fechaContratacion = fechaContratacion;
         this.costoMensual = costoMensual;
         this.estado = estado;
+        this.cobertura = cobertura;
     }
 
-    // Getters y setters
+    public String getCobertura() {
+		return cobertura;
+	}
+
+	public void setCobertura(String cobertura) {
+		this.cobertura = cobertura;
+	}
+
+	// Getters y setters
     public int getIdSeguro() {
         return idSeguro;
     }
@@ -76,6 +86,6 @@ public class Seguro {
     @Override
     public String toString() {
         return "Seguro [idSeguro=" + idSeguro + ", tipo=" + tipo + ", fechaContratacion=" + fechaContratacion 
-                + ", costoMensual=" + costoMensual + ", estado=" + estado + "]";
+                + ", costoMensual=" + costoMensual + ", estado=" + estado +", cobertura= "+ cobertura +"]";
     }
 }

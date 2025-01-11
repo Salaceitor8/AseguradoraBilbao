@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 public class VentanaSeguros extends JFrame {
 
-    public VentanaSeguros() {
+    public VentanaSeguros(int id, String dniCliente,String tipo, String fecha, double costo, String estado, String cobertura, Bdd bd) {
         setTitle("Tipos de Seguros");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -24,7 +24,7 @@ public class VentanaSeguros extends JFrame {
 
         // Panel Seguro de Hogar
         JPanel panelHogar = crearPanelConComboBox("Seguro de Hogar", new String[]{"Cobertura Estándar", "Cobertura Plus"});
-        panelPrincipal.add(panelHogar, "Hogar");
+        panelPrincipal.add(panelHogar, "Vivienda");
 
         // Panel de Selección
         JPanel panelSeleccion = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -32,7 +32,7 @@ public class VentanaSeguros extends JFrame {
 
         JButton botonVida = crearBotonGrande("Vida", e -> mostrarPanel(panelPrincipal, "Vida"));
         JButton botonCoche = crearBotonGrande("Coche", e -> mostrarPanel(panelPrincipal, "Coche"));
-        JButton botonHogar = crearBotonGrande("Hogar", e -> mostrarPanel(panelPrincipal, "Hogar"));
+        JButton botonHogar = crearBotonGrande("Hogar", e -> mostrarPanel(panelPrincipal, "Vivienda"));
         
         // Panel para los botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -42,7 +42,7 @@ public class VentanaSeguros extends JFrame {
         btnGuardar.setBackground(new Color(51, 153, 255));
         btnGuardar.setForeground(Color.WHITE);
         btnGuardar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnGuardar.addActionListener(e -> JOptionPane.showMessageDialog(this, "Cambios guardados correctamente."));
+        btnGuardar.addActionListener(e -> bd.actualizarSeguro(id, tipo, fecha, costo, estado, cobertura));
 
         JButton btnCancelar = new JButton("Cancelar");
         btnCancelar.setBackground(Color.RED);
@@ -111,7 +111,7 @@ public class VentanaSeguros extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new VentanaSeguros().setVisible(true);
+//            new VentanaSeguros().setVisible(true);
         });
     }
 }

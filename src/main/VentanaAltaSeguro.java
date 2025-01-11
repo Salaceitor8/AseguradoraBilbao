@@ -3,6 +3,8 @@ package main;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
+
+import domain.Cobertura;
 import domain.TipoSeguro;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +19,7 @@ public class VentanaAltaSeguro extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JComboBox<TipoSeguro> comboTipoSeguro;
+	private JComboBox<Cobertura> comboCobertura;
     private JDateChooser campoFechaContratacion;
     private JTextField campoCostoAnual;
     private JComboBox<String> comboEstado;
@@ -36,7 +39,7 @@ public class VentanaAltaSeguro extends JFrame {
 
         // Configuración básica de la ventana
         setTitle("Alta de Seguro");
-        setSize(400, 300);
+        setSize(450, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null); // Centrar la ventana
         setResizable(false); // No se puede redimensionar
@@ -63,7 +66,7 @@ public class VentanaAltaSeguro extends JFrame {
         panelPrincipal.add(comboTipoSeguro, gbc);
 
         // Etiqueta y campo para la fecha de contratación
-        JLabel etiquetaFecha = new JLabel("Fecha de Contratación (dd/MM/yyyy):");
+        JLabel etiquetaFecha = new JLabel("Fecha de Contratación:");
         etiquetaFecha.setForeground(colorContraste);
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -97,6 +100,17 @@ public class VentanaAltaSeguro extends JFrame {
         comboEstado.setEnabled(false); // No se puede cambiar, siempre activo al crear
         gbc.gridx = 1;
         panelPrincipal.add(comboEstado, gbc);
+        
+        //Etiqueta para cobertura
+        JLabel etiquetaCobertura = new JLabel("Cobertura: ");
+        etiquetaCobertura.setForeground(colorContraste);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        panelPrincipal.add(etiquetaCobertura, gbc);
+        
+        comboCobertura = new JComboBox<>(Cobertura.values());
+        gbc.gridx = 1;
+        panelPrincipal.add(comboCobertura, gbc);
 
         // Botones de Guardar y Cancelar
         JPanel panelBotones = new JPanel();
@@ -114,7 +128,7 @@ public class VentanaAltaSeguro extends JFrame {
         panelBotones.add(btnCancelar);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         panelPrincipal.add(panelBotones, gbc);
 
@@ -133,6 +147,18 @@ public class VentanaAltaSeguro extends JFrame {
         add(panelPrincipal);
         setVisible(true);
     }
+    
+//    private JComboBox<Cobertura> crearPanelConComboBox(String titulo, String[] opciones) {
+//
+//
+//        JComboBox<String> comboBox = new JComboBox<>(opciones);
+//        comboBox.setBackground(Color.WHITE);
+//        comboBox.setForeground(new Color(0, 51, 102));
+//        comboBox.setFont(new Font("Arial", Font.PLAIN, 14));
+//        comboBox.setPreferredSize(new Dimension(200, 30)); 
+//
+//        return panel;
+//    }
 
     // Método para guardar el nuevo seguro
     private void guardarSeguro() {
@@ -141,9 +167,10 @@ public class VentanaAltaSeguro extends JFrame {
             String fechaContratacion = LocalDate.now().format(formatter); // Usar la fecha actual
             double costo = Double.parseDouble(campoCostoAnual.getText());
             String estado = "Activo"; // Siempre activo al crear el seguro
+            String cobertura = comboCobertura.getSelectedItem().toString();
 
             // Guardar el nuevo seguro en la base de datos
-            baseDeDatos.insertarSeguro(dniCliente, tipo.name(), fechaContratacion, costo, estado);
+            baseDeDatos.insertarSeguro(dniCliente, tipo.name(), fechaContratacion, costo, estado, cobertura);
 
             // Añadir el nuevo seguro al modelo de la tabla
             modeloTablaSeguros.addRow(new Object[]{

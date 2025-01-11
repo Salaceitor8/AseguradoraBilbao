@@ -116,7 +116,63 @@ public class VentanaPrincipalEmpleado extends JFrame {
         btnModificarSeguro.setForeground(Color.WHITE);
         btnModificarSeguro.setEnabled(false);
         btnModificarSeguro.addActionListener(e -> {
-            new VentanaSeguros().setVisible(true);
+        	int filaSeleccionada = tablaSeguros.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona un seguro para dar de baja.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String clienteSeleccionado = listaClientes.getSelectedValue();
+            if (clienteSeleccionado != null) {
+                String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
+                System.out.println(dniCliente);
+                String tipo = tablaSeguros.getValueAt(filaSeleccionada, 0).toString();
+                System.out.println(tipo);
+                String fecha = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+                Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+                System.out.println(o);
+                System.out.println(fecha);
+                double costo = Double.parseDouble(tablaSeguros.getValueAt(filaSeleccionada, 2).toString());
+                System.out.println(costo);
+                String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
+                System.out.println(estado);
+                String cobertura;
+                if(tablaSeguros.getValueAt(filaSeleccionada, 4) == null) {
+                	cobertura = "";
+                }else {
+                	cobertura = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
+                }
+                
+                int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado, cobertura);
+                System.out.println(Id);
+                System.out.println(dniCliente);
+                System.out.println(tipo);
+                System.out.println(fecha);
+                System.out.println(costo);
+                System.out.println(estado);
+                
+                new VentanaSeguros(Id, dniCliente, tipo, fecha, costo, estado, cobertura, baseDeDatos).setVisible(true);
+            }
+            List<Seguro> seguros = new ArrayList<>();
+            double costoTotal = 0;
+//            for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
+//            	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
+//            		costoTotal += Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
+//            	}
+//			}
+            for(int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
+            	TipoSeguro tipo = TipoSeguro.valueOf(tablaSeguros.getValueAt(i, 0).toString());
+            	LocalDate fecha = LocalDate.parse(tablaSeguros.getValueAt(i, 1).toString());
+            	double costo = Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
+            	String estado = tablaSeguros.getValueAt(i, 3).toString();
+            	String cobertura = tablaSeguros.getValueAt(i, 4).toString();
+            	Seguro s = new Seguro(tipo, fecha, costo, estado, cobertura);
+            	seguros.add(s);
+            }
+            costoTotal = calcularCostoTotal(seguros, 0);
+            totalCostoSeguros.setText("Costo Total de Seguros: "+ costoTotal +" €");
+        
+            
         });
 
         panelBotonesClientes.add(btnModificarSeguro);
@@ -136,7 +192,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 "Información del Cliente", 0, 0, new Font("Arial", Font.BOLD, 16), colorContraste));
         panelInfoCliente.setBackground(colorPrincipal);
 
-        String[] columnasSeguros = {"Tipo de seguro", "Fecha de contratación", "Costo anual", "Estado"};
+        String[] columnasSeguros = {"Tipo de seguro", "Fecha de contratación", "Costo anual", "Estado", "Cobertura"};
         modeloTablaSeguros = new DefaultTableModel(columnasSeguros, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -230,8 +286,9 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 System.out.println(costo);
                 String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
                 System.out.println(estado);
+                String cobertura = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
                 
-                int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado);
+                int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado, cobertura);
                 System.out.println(Id);
                 System.out.println(dniCliente);
                 System.out.println(tipo);
@@ -239,7 +296,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 System.out.println(costo);
                 System.out.println(estado);
                 try {
-                    baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo");
+                    baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", cobertura);
                     cargarSegurosCliente(baseDeDatos);
                     JOptionPane.showMessageDialog(this, "El seguro ha sido dado de baja.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -258,7 +315,8 @@ public class VentanaPrincipalEmpleado extends JFrame {
             	LocalDate fecha = LocalDate.parse(tablaSeguros.getValueAt(i, 1).toString());
             	double costo = Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
             	String estado = tablaSeguros.getValueAt(i, 3).toString();
-            	Seguro s = new Seguro(tipo, fecha, costo, estado);
+            	String cobertura = tablaSeguros.getValueAt(i, 4).toString();
+            	Seguro s = new Seguro(tipo, fecha, costo, estado, cobertura);
             	seguros.add(s);
             }
             costoTotal = calcularCostoTotal(seguros, 0);

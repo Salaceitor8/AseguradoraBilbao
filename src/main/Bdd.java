@@ -323,8 +323,8 @@ public class Bdd {
 	public void actualizarUltimoInicioCliente(String dni, String fecha) {
         String sql = "UPDATE clientes SET ultimo_inicio = ? WHERE dni = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, dni); // Establecer el DNI del cliente
-            stmt.setString(2, fecha);
+            stmt.setString(1, fecha); // Establecer el DNI del cliente
+            stmt.setString(2, dni);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -468,14 +468,15 @@ public class Bdd {
     }
 
     // Métodos CRUD para Seguros
-    public void insertarSeguro(String dniCliente, String tipoSeguro, String fechaInicio, double costo, String estado) {
-        String sql = "INSERT INTO seguros (dni_cliente, tipo_seguro, fecha_inicio, costo, estado) VALUES (?, ?, ?, ?, ?)";
+    public void insertarSeguro(String dniCliente, String tipoSeguro, String fechaInicio, double costo, String estado, String cobertura) {
+        String sql = "INSERT INTO seguros (dni_cliente, tipo_seguro, fecha_inicio, costo, estado, cobertura) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, dniCliente);
             pstmt.setString(2, tipoSeguro);
             pstmt.setString(3, fechaInicio);
             pstmt.setDouble(4, costo);
             pstmt.setString(5, estado);
+            pstmt.setString(6, cobertura);
             pstmt.executeUpdate();
             System.out.println("Seguro insertado correctamente.");
         } catch (SQLException e) {
@@ -618,7 +619,8 @@ public class Bdd {
                 LocalDate fecha = LocalDate.parse(rs.getString("fecha_inicio"), formatter);
                 double costo = rs.getDouble("costo");
                 String estado = rs.getString("estado");
-                Seguro seguro = new Seguro(tipo, fecha, costo, estado);
+                String cobertura = rs.getString("cobertura");
+                Seguro seguro = new Seguro(tipo, fecha, costo, estado, cobertura);
                 lista.add(seguro);
 
                
@@ -633,7 +635,7 @@ public class Bdd {
 
 
 
-    public void actualizarSeguro(int id, String tipoSeguro, String fechaInicio, double costo, String estado) {
+    public void actualizarSeguro(int id, String tipoSeguro, String fechaInicio, double costo, String estado, String cobertura) {
         String sql = "UPDATE seguros SET tipo_seguro = ?, fecha_inicio = ?, costo = ?, estado = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, tipoSeguro);
@@ -641,6 +643,7 @@ public class Bdd {
             pstmt.setDouble(3, costo);
             pstmt.setString(4, estado);
             pstmt.setInt(5, id);
+            pstmt.setString(6, cobertura);
             pstmt.executeUpdate();
             System.out.println("Seguro actualizado correctamente.");
         } catch (SQLException e) {
@@ -659,14 +662,15 @@ public class Bdd {
         }
     }
     
-    public int obtenerIdSeguro(String dniCliente, String tipoSeguro, String fechaInicio, double costo, String estado) {
-        String sql = "SELECT id FROM seguros WHERE dni_cliente = ? AND tipo_seguro = ? AND fecha_inicio = ? AND costo = ? AND estado = ?";
+    public int obtenerIdSeguro(String dniCliente, String tipoSeguro, String fechaInicio, double costo, String estado, String cobertura) {
+        String sql = "SELECT id FROM seguros WHERE dni_cliente = ? AND tipo_seguro = ? AND fecha_inicio = ? AND costo = ? AND estado = ? AND cobertura = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, dniCliente);
             pstmt.setString(2, tipoSeguro);
             pstmt.setString(3, fechaInicio);
             pstmt.setDouble(4, costo);
             pstmt.setString(5, estado);
+            pstmt.setString(6, cobertura);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
