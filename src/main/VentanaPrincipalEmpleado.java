@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import main.ModoOscuroUtil;
 import domain.*;
 import gui.SeguroCellRenderer;
 
@@ -118,7 +118,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         btnModificarSeguro.addActionListener(e -> {
         	int filaSeleccionada = tablaSeguros.getSelectedRow();
             if (filaSeleccionada == -1) {
-                JOptionPane.showMessageDialog(this, "Selecciona un seguro para dar de baja.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Selecciona un seguro para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
@@ -243,10 +243,11 @@ public class VentanaPrincipalEmpleado extends JFrame {
         listaClientes.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) { // Asegurarse de que la selección es definitiva
                 @SuppressWarnings("unused")
-				String clienteSeleccionado = listaClientes.getSelectedValue();
+				String ClienteSeleccionado = listaClientes.getSelectedValue();
                 cargarSegurosCliente(baseDeDatos);
-                btnModificarSeguro.setEnabled(true);
+                btnModificarSeguro.setEnabled(false);
             }
+
             double costoTotal = 0;
             for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
             	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
@@ -255,6 +256,14 @@ public class VentanaPrincipalEmpleado extends JFrame {
 			}
             totalCostoSeguros.setText("Costo Total de Seguros: "+ costoTotal +" €");
         });
+        tablaSeguros.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int filaSeleccionada = tablaSeguros.getSelectedRow();
+                // Habilita el botón solo si la fila seleccionada es distinta de -1
+                btnModificarSeguro.setEnabled(true);
+            }
+        });
+
 
         btnNuevoSeguro.addActionListener(e -> {
             if (listaClientes.getSelectedValue() != null) {
