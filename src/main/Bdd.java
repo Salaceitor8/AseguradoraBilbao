@@ -85,14 +85,15 @@ public class Bdd {
 
 
     // Métodos CRUD para Clientes
-    public void insertarCliente(String nombre, String apellidos, String dni, String telefono, String email) {
-        String sql = "INSERT INTO clientes (nombre, apellidos, dni, telefono, email) VALUES (?, ?, ?, ?, ?)";
+    public void insertarCliente(String nombre, String apellidos, String dni, String telefono, String email, String genero) {
+        String sql = "INSERT INTO clientes (nombre, apellidos, dni, telefono, email, genero) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, nombre);
             pstmt.setString(2, apellidos);
             pstmt.setString(3, dni);
             pstmt.setString(4, telefono);
             pstmt.setString(5, email);
+            pstmt.setString(6, genero);
             pstmt.executeUpdate();
             System.out.println("Cliente insertado correctamente.");
         } catch (SQLException e) {

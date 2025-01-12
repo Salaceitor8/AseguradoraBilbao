@@ -15,7 +15,7 @@ public class VentanaAltaCliente extends JFrame {
 
         // Configuración básica de la ventana
         setTitle("Dar de Alta Cliente");
-        setSize(400, 300);
+        setSize(450, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Solo cerrar esta ventana
         setLocationRelativeTo(null); // Centrar la ventana
 
@@ -36,6 +36,7 @@ public class VentanaAltaCliente extends JFrame {
         JTextField campoDNI = new JTextField(10);
         JTextField campoTelefono = new JTextField(10);
         JTextField campoEmail = new JTextField(15);
+        JComboBox<String> campoGenero = new JComboBox<String>(new String[]{"Hombre", "Mujer"});
 
         // Añadir los KeyListeners para mover el cursor con ENTER
         setNavigationWithEnter(campoNombre, campoApellidos);
@@ -97,10 +98,21 @@ public class VentanaAltaCliente extends JFrame {
 
         gbc.gridx = 1;
         panelAltaCliente.add(campoEmail, gbc);
+        
+        // Etiqueta y campo genero
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        JLabel etiquetaGenero = new JLabel("Genero:");
+        etiquetaGenero.setForeground(colorTexto);
+        etiquetaGenero.setFont(fuenteGeneral);
+        panelAltaCliente.add(etiquetaGenero, gbc);
+
+        gbc.gridx = 1;
+        panelAltaCliente.add(campoGenero, gbc);
 
         // Botón para guardar cliente
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         JButton btnGuardarCliente = new JButton("Guardar Cliente");
@@ -127,6 +139,7 @@ public class VentanaAltaCliente extends JFrame {
                 String dni = campoDNI.getText();
                 String telefono = campoTelefono.getText();
                 String email = campoEmail.getText();
+                String genero = campoGenero.getSelectedItem().toString();
 
                 // Validaciones básicas
                 if (nombre.isEmpty() || apellidos.isEmpty() || dni.isEmpty() || telefono.isEmpty() || email.isEmpty()) {
@@ -161,8 +174,8 @@ public class VentanaAltaCliente extends JFrame {
                 // Crear mensaje de confirmación con los datos del cliente
                 String mensajeConfirmacion = String.format(
                     "Por favor, confirma los datos del cliente:\n\n" +
-                    "Nombre: %s\nApellidos: %s\nDNI: %s\nTeléfono: %s\nEmail: %s\n\n¿Son estos datos correctos?",
-                    nombre, apellidos, dni, telefono, email
+                    "Nombre: %s\nApellidos: %s\nDNI: %s\nTeléfono: %s\nEmail: %s\nGenero: %s\n\n¿Son estos datos correctos?",
+                    nombre, apellidos, dni, telefono, email, genero
                 );
 
                 // Mostrar cuadro de diálogo de confirmación
@@ -174,10 +187,17 @@ public class VentanaAltaCliente extends JFrame {
                 if (confirmacion == JOptionPane.YES_OPTION) {
                     // Guardar el cliente en la base de datos
                     try {
-                        baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email);
+                    	if(genero.equals("Hombre")) {
+                    		baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email, genero);
+                            JOptionPane.showMessageDialog(panelAltaCliente, "Cliente guardado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                            modeloListaClientes.addElement(nombre + " " + apellidos + " - DNI: " + dni);
+                            dispose(); // Cerrar la ventana
+                    	}else {
+                        baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email, genero);
                         JOptionPane.showMessageDialog(panelAltaCliente, "Cliente guardado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
                         modeloListaClientes.addElement(nombre + " " + apellidos + " - DNI: " + dni);
                         dispose(); // Cerrar la ventana
+                    	}
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(panelAltaCliente, "Error al guardar el cliente: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }

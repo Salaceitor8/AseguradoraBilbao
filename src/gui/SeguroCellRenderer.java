@@ -48,6 +48,23 @@ public class SeguroCellRenderer extends DefaultTableCellRenderer {
                 cellComponent.setBackground(new Color(240, 240, 240)); // Fondo para filas impares
             }
         }
+        
+//        if(table.getValueAt(row, table.getColumnCount()-1).toString() == "ESTANDAR") {
+//        	System.out.println(table.getValueAt(row, table.getColumnCount()-1).toString());
+//        	table.setValueAt("Cobertura Estandar", row, table.getColumnCount()-1);
+//        }else if(table.getValueAt(row, table.getColumnCount()-1).toString() == "PLUS") {
+//        	table.setValueAt("Cobertura Plus", row, table.getColumnCount()-1);
+//        }else if(table.getValueAt(row, table.getColumnCount()-1).toString() == "FALLECIMIENTO") {
+//        	table.setValueAt("Fallecimiento", row, table.getColumnCount()-1);
+//        }else if(table.getValueAt(row, table.getColumnCount()-1).toString() == "FYINVALIDEZ") {
+//        	table.setValueAt("Fallecimiento y Invalidez", row, table.getColumnCount()-1);
+//        }else if(table.getValueAt(row, table.getColumnCount()-1).toString() == "TERCEROS") {
+//        	table.setValueAt("A Terceros", row, table.getColumnCount()-1);
+//        }else {
+//        	System.out.println(table.getValueAt(row, table.getColumnCount()-1).toString());
+//
+//        	table.setValueAt("A Todo Riesgo", row, table.getColumnCount()-1);
+//        }
 
         return cellComponent;
     }

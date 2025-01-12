@@ -286,6 +286,6 @@ public class VentanaCliente extends JFrame {
 			seguros.add(s);
 		}
     	
-//		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C", "M");
+		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C", "M", "07/09/2005");
 	}
 }

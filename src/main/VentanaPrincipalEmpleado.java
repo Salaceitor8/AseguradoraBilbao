@@ -1,7 +1,6 @@
 package main;
 
 import javax.swing.*;
-
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import main.ModoOscuroUtil;
 import domain.*;
 import gui.SeguroCellRenderer;
 
@@ -132,6 +132,15 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 System.out.println(costo);
                 String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
                 System.out.println(estado);
+                if(estado.equals("Inactivo")) {
+                	JOptionPane.showMessageDialog(
+                	        this, // Componente padre (la ventana actual)
+                	        "Solo se pueden modificar los seguros que estén activos.", // Mensaje
+                	        "Información", // Título del cuadro de diálogo
+                	        JOptionPane.INFORMATION_MESSAGE // Tipo de mensaje (información)
+                	    );
+                	return;
+                }
                 String cobertura;
                 if(tablaSeguros.getValueAt(filaSeleccionada, 4) == null) {
                 	cobertura = "";
@@ -203,6 +212,9 @@ public class VentanaPrincipalEmpleado extends JFrame {
         tablaSeguros.setRowHeight(25);
         tablaSeguros.setFillsViewportHeight(true);
         tablaSeguros.setDefaultRenderer(Object.class, new SeguroCellRenderer());
+        
+        
+        
 
         JPanel panelTablaSeguros = new JPanel(new BorderLayout());
         panelTablaSeguros.add(new JScrollPane(tablaSeguros), BorderLayout.CENTER);
@@ -220,11 +232,21 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JButton btnBajaSeguro = new JButton("Dar de Baja Seguro");
         btnBajaSeguro.setBackground(Color.RED);
         btnBajaSeguro.setForeground(Color.WHITE);
+        btnBajaSeguro.setEnabled(false);
 
         JPanel panelBotonesSeguros = new JPanel(new FlowLayout());
         panelBotonesSeguros.setBackground(colorPrincipal);
         panelBotonesSeguros.add(btnNuevoSeguro);
         panelBotonesSeguros.add(btnBajaSeguro);
+        tablaSeguros.getSelectionModel().addListSelectionListener(e -> {
+        	if(tablaSeguros.getSelectedRow() == -1) {
+        		btnModificarSeguro.setEnabled(false);
+            	btnBajaSeguro.setEnabled(false);
+        	}else {
+        		btnModificarSeguro.setEnabled(true);
+            	btnBajaSeguro.setEnabled(true);
+        	}
+        });
 
         panelInfoCliente.add(panelBotonesSeguros, BorderLayout.SOUTH);
 
@@ -236,14 +258,16 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         btnAltaCliente.addActionListener(e -> new VentanaAltaCliente(modeloListaClientes, baseDeDatos));
         btnBajaCliente.addActionListener(e -> darDeBajaCliente(baseDeDatos));
+        btnBajaCliente.setEnabled(false);
+        btnNuevoSeguro.setEnabled(false);
         listaClientes.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) { // Asegurarse de que la selección es definitiva
                 @SuppressWarnings("unused")
-				String ClienteSeleccionado = listaClientes.getSelectedValue();
+				String clienteSeleccionado = listaClientes.getSelectedValue();
                 cargarSegurosCliente(baseDeDatos);
-                btnModificarSeguro.setEnabled(false);
+                btnNuevoSeguro.setEnabled(true);
+                btnBajaCliente.setEnabled(true);
             }
-
             double costoTotal = 0;
             for (int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
             	if(tablaSeguros.getValueAt(i, 3).toString().equals("Activo")) {
@@ -252,59 +276,60 @@ public class VentanaPrincipalEmpleado extends JFrame {
 			}
             totalCostoSeguros.setText("Costo Total de Seguros: "+ costoTotal +" €");
         });
-        tablaSeguros.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                btnModificarSeguro.setEnabled(true);
-            }
-        });
-
+        
 
         btnNuevoSeguro.addActionListener(e -> {
-            if (listaClientes.getSelectedValue() != null) {
-                String dniCliente = listaClientes.getSelectedValue().split("- DNI: ")[1];
-                new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, baseDeDatos);
-            } else {
-                JOptionPane.showMessageDialog(this, "Selecciona un cliente primero.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        	String dniCliente = listaClientes.getSelectedValue().split("- DNI: ")[1];
+            new VentanaAltaSeguro(modeloTablaSeguros, dniCliente, baseDeDatos);
         });
 
         btnBajaSeguro.addActionListener(e -> {
             int filaSeleccionada = tablaSeguros.getSelectedRow();
-            if (filaSeleccionada == -1) {
-                JOptionPane.showMessageDialog(this, "Selecciona un seguro para dar de baja.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
+            
             String clienteSeleccionado = listaClientes.getSelectedValue();
-            if (clienteSeleccionado != null) {
-                String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
-                System.out.println(dniCliente);
-                String tipo = tablaSeguros.getValueAt(filaSeleccionada, 0).toString();
-                System.out.println(tipo);
-                String fecha = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
-                Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
-                System.out.println(o);
-                System.out.println(fecha);
-                double costo = Double.parseDouble(tablaSeguros.getValueAt(filaSeleccionada, 2).toString());
-                System.out.println(costo);
-                String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
-                System.out.println(estado);
-                String cobertura = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
-                
-                int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado, cobertura);
-                System.out.println(Id);
-                System.out.println(dniCliente);
-                System.out.println(tipo);
-                System.out.println(fecha);
-                System.out.println(costo);
-                System.out.println(estado);
-                try {
-                    baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", cobertura);
-                    cargarSegurosCliente(baseDeDatos);
-                    JOptionPane.showMessageDialog(this, "El seguro ha sido dado de baja.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Error al dar de baja el seguro: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
+            System.out.println(dniCliente);
+            String tipo = tablaSeguros.getValueAt(filaSeleccionada, 0).toString();
+            System.out.println(tipo);
+            String fecha = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+            Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+            System.out.println(o);
+            System.out.println(fecha);
+            double costo = Double.parseDouble(tablaSeguros.getValueAt(filaSeleccionada, 2).toString());
+            System.out.println(costo);
+            String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
+            System.out.println(estado);
+            String cobertura = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
+            
+            
+            
+            int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado, cobertura);
+            System.out.println(Id);
+            System.out.println(dniCliente);
+            System.out.println(tipo);
+            System.out.println(fecha);
+            System.out.println(costo);
+            System.out.println(estado);
+            try {
+            	if(cobertura.equals("Fallecimiento")) {
+            		baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", "FALLECIMIENTO");
+            	}else if(cobertura.equals("Fallecimiento y Invalidez")) {
+            		baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", "FYINVALIDEZ");
+            	}else if(cobertura.equals("Cobertura Plus")) {
+            		baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", "PLUS");
+            	}else if(cobertura.equals("Cobertura Estándar")) {
+            		baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", "ESTANDAR");
+            	}else if(cobertura.equals("A Terceros")) {
+            		baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", "TERCEROS");
+            	}else{
+            		baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", "TODO RIESGO");
+            		
+            	}
+                baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", cobertura);
+                cargarSegurosCliente(baseDeDatos);
+                JOptionPane.showMessageDialog(this, "El seguro ha sido dado de baja.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al dar de baja el seguro: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
             List<Seguro> seguros = new ArrayList<>();
             double costoTotal = 0;
@@ -314,12 +339,17 @@ public class VentanaPrincipalEmpleado extends JFrame {
 //            	}
 //			}
             for(int i = 0; i < modeloTablaSeguros.getRowCount(); i++) {
-            	TipoSeguro tipo = TipoSeguro.valueOf(tablaSeguros.getValueAt(i, 0).toString());
-            	LocalDate fecha = LocalDate.parse(tablaSeguros.getValueAt(i, 1).toString());
-            	double costo = Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
-            	String estado = tablaSeguros.getValueAt(i, 3).toString();
-            	String cobertura = tablaSeguros.getValueAt(i, 4).toString();
-            	Seguro s = new Seguro(tipo, fecha, costo, estado, cobertura);
+            	TipoSeguro tipo1 = TipoSeguro.valueOf(tablaSeguros.getValueAt(i, 0).toString());
+            	LocalDate fecha1 = LocalDate.parse(tablaSeguros.getValueAt(i, 1).toString());
+            	double costo1 = Double.parseDouble(tablaSeguros.getValueAt(i, 2).toString());
+            	String estado1 = tablaSeguros.getValueAt(i, 3).toString();
+            	String cobertura1;
+                if(tablaSeguros.getValueAt(filaSeleccionada, 4) == null) {
+                	cobertura1 = "";
+                }else {
+                	cobertura1 = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
+                }
+            	Seguro s = new Seguro(tipo1, fecha1, costo1, estado1, cobertura1);
             	seguros.add(s);
             }
             costoTotal = calcularCostoTotal(seguros, 0);
@@ -406,7 +436,22 @@ public class VentanaPrincipalEmpleado extends JFrame {
             ArrayList<Seguro> seguros = baseDeDatos.obtenerSeguros(dniCliente);
             
             for (Seguro s : seguros) {
-				modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado()});
+            	if(s.getCobertura().equals("FALLECIMIENTO")) {
+            		modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), "Fallecimiento"});
+            	}else if(s.getCobertura().equals("FYINVALIDEZ")) {
+            		modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), "Fallecimiento y Invalidez"});
+            	}else if(s.getCobertura().equals("ESTANDAR")) {
+            		modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), "Cobertura Estandar"});
+            	}else if(s.getCobertura().equals("PLUS")) {
+            		modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), "Cobertura Plus"});
+            	}else if(s.getCobertura().equals("TERCEROS")) {
+            		modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), "A Terceros"});
+            	}else if(s.getCobertura().equals("TODORIESGO")) {
+            		modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), "A Todo Riesgo"});
+            	}else {
+            		modeloTablaSeguros.addRow(new Object[] {s.getTipo(), s.getFechaContratacion(), s.getCostoMensual(), s.getEstado(), s.getCobertura()});
+            	}
+				
 			}
 
 
@@ -441,7 +486,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
     private void filtrarClientes(String filtro) {
         if (filtro.isEmpty()) {
             modeloListaClientes.clear();
-            cargarClientesDesdeBaseDeDatos(new Bdd("aseguradora.db")); // Asegúrate de usar la base de datos correcta
+            cargarClientesDesdeBaseDeDatos(new Bdd("resources/db/aseguradora.db")); // Asegúrate de usar la base de datos correcta
             return;
         }
 
@@ -505,6 +550,5 @@ public class VentanaPrincipalEmpleado extends JFrame {
     public static void main(String[] args) {
 		new VentanaPrincipalEmpleado(new Bdd("resources/db/aseguradora.db"), "Hola");
 	}
-
-    
+  
 }

@@ -11,19 +11,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class VentanaAltaSeguro extends JFrame {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JComboBox<TipoSeguro> comboTipoSeguro;
-	private JComboBox<Cobertura> comboCobertura;
+    private static final long serialVersionUID = 1L;
+    private JComboBox<String> comboTipoSeguro; // Cambiar a String para coincidir con el mapa
+    private JComboBox<String> comboCobertura; // Cambiar a String para manejar coberturas dinámicas
     private JDateChooser campoFechaContratacion;
     private JTextField campoCostoAnual;
     private JComboBox<String> comboEstado;
     private JButton btnGuardar, btnCancelar;
+    private Map<String, String[]> coberturasPorSeguro = new HashMap<>();
 
     private DefaultTableModel modeloTablaSeguros;
     private String dniCliente;
@@ -44,6 +44,11 @@ public class VentanaAltaSeguro extends JFrame {
         setLocationRelativeTo(null); // Centrar la ventana
         setResizable(false); // No se puede redimensionar
 
+        // Inicializar el mapa de coberturas
+        coberturasPorSeguro.put("COCHE", new String[]{"A Terceros", "A Todo Riesgo"});
+        coberturasPorSeguro.put("VIDA", new String[]{"Fallecimiento", "Fallecimiento e Invalidez"});
+        coberturasPorSeguro.put("VIVIENDA", new String[]{"Cobertura Estándar", "Cobertura Plus"});
+
         // Colores personalizados
         Color colorPrincipal = new Color(0, 51, 102); // Azul oscuro
         Color colorContraste = new Color(255, 255, 255); // Blanco
@@ -61,7 +66,7 @@ public class VentanaAltaSeguro extends JFrame {
         gbc.gridy = 0;
         panelPrincipal.add(etiquetaTipo, gbc);
 
-        comboTipoSeguro = new JComboBox<>(TipoSeguro.values());
+        comboTipoSeguro = new JComboBox<>(coberturasPorSeguro.keySet().toArray(new String[0]));
         gbc.gridx = 1;
         panelPrincipal.add(comboTipoSeguro, gbc);
 
@@ -100,17 +105,28 @@ public class VentanaAltaSeguro extends JFrame {
         comboEstado.setEnabled(false); // No se puede cambiar, siempre activo al crear
         gbc.gridx = 1;
         panelPrincipal.add(comboEstado, gbc);
-        
-        //Etiqueta para cobertura
-        JLabel etiquetaCobertura = new JLabel("Cobertura: ");
+
+        // Etiqueta para cobertura
+        JLabel etiquetaCobertura = new JLabel("Cobertura:");
         etiquetaCobertura.setForeground(colorContraste);
         gbc.gridx = 0;
         gbc.gridy = 4;
         panelPrincipal.add(etiquetaCobertura, gbc);
-        
-        comboCobertura = new JComboBox<>(Cobertura.values());
+
+        comboCobertura = new JComboBox<>();
         gbc.gridx = 1;
         panelPrincipal.add(comboCobertura, gbc);
+
+        // Actualizar comboCobertura según selección inicial
+        actualizarCobertura();
+
+        // Agregar ActionListener para actualizar cobertura al cambiar tipo de seguro
+        comboTipoSeguro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actualizarCobertura();
+            }
+        });
 
         // Botones de Guardar y Cancelar
         JPanel panelBotones = new JPanel();
@@ -147,37 +163,51 @@ public class VentanaAltaSeguro extends JFrame {
         add(panelPrincipal);
         setVisible(true);
     }
-    
-//    private JComboBox<Cobertura> crearPanelConComboBox(String titulo, String[] opciones) {
-//
-//
-//        JComboBox<String> comboBox = new JComboBox<>(opciones);
-//        comboBox.setBackground(Color.WHITE);
-//        comboBox.setForeground(new Color(0, 51, 102));
-//        comboBox.setFont(new Font("Arial", Font.PLAIN, 14));
-//        comboBox.setPreferredSize(new Dimension(200, 30)); 
-//
-//        return panel;
-//    }
+
+    /**
+     * Actualiza las opciones del comboCobertura según el tipo de seguro seleccionado.
+     */
+    private void actualizarCobertura() {
+        String tipoSeleccionado = (String) comboTipoSeguro.getSelectedItem();
+        comboCobertura.removeAllItems(); // Limpiar elementos actuales
+        if (tipoSeleccionado != null && coberturasPorSeguro.containsKey(tipoSeleccionado)) {
+            for (String cobertura : coberturasPorSeguro.get(tipoSeleccionado)) {
+                comboCobertura.addItem(cobertura); // Agregar nuevas coberturas
+            }
+        }
+    }
 
     // Método para guardar el nuevo seguro
     private void guardarSeguro() {
         try {
-            TipoSeguro tipo = (TipoSeguro) comboTipoSeguro.getSelectedItem();
+            String tipo = (String) comboTipoSeguro.getSelectedItem();
             String fechaContratacion = LocalDate.now().format(formatter); // Usar la fecha actual
             double costo = Double.parseDouble(campoCostoAnual.getText());
             String estado = "Activo"; // Siempre activo al crear el seguro
             String cobertura = comboCobertura.getSelectedItem().toString();
-
-            // Guardar el nuevo seguro en la base de datos
-            baseDeDatos.insertarSeguro(dniCliente, tipo.name(), fechaContratacion, costo, estado, cobertura);
+            
+            if(cobertura.equals("Fallecimiento")) {
+            	baseDeDatos.insertarSeguro(dniCliente, tipo, fechaContratacion, costo, estado, "FALLECIMIENTO");
+        	}else if(cobertura.equals("Fallecimiento y Invalidez")) {
+        		baseDeDatos.insertarSeguro(dniCliente, tipo, fechaContratacion, costo, estado, "FYINVALIDEZ");
+        	}else if(cobertura.equals("Cobertura Plus")) {
+        		baseDeDatos.insertarSeguro(dniCliente, tipo, fechaContratacion, costo, estado, "PLUS");
+        	}else if(cobertura.equals("Cobertura Estándar")) {
+        		baseDeDatos.insertarSeguro(dniCliente, tipo, fechaContratacion, costo, estado, "ESTANDAR");
+        	}else if(cobertura.equals("A Terceros")) {
+        		baseDeDatos.insertarSeguro(dniCliente, tipo, fechaContratacion, costo, estado, "TERCEROS");
+        	}else{
+        		baseDeDatos.insertarSeguro(dniCliente, tipo, fechaContratacion, costo, estado, "TODO RIESGO");
+        		
+        	}
 
             // Añadir el nuevo seguro al modelo de la tabla
             modeloTablaSeguros.addRow(new Object[]{
-                tipo.name(),
-                fechaContratacion.toString(),
+                tipo,
+                fechaContratacion,
                 costo,
-                estado
+                estado,
+                cobertura
             });
 
             JOptionPane.showMessageDialog(this, "Seguro guardado correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
