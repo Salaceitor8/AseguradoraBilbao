@@ -188,12 +188,12 @@ public class VentanaAltaCliente extends JFrame {
                     // Guardar el cliente en la base de datos
                     try {
                     	if(genero.equals("Hombre")) {
-                    		baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email, genero);
+                    		baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email, "H");
                             JOptionPane.showMessageDialog(panelAltaCliente, "Cliente guardado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
                             modeloListaClientes.addElement(nombre + " " + apellidos + " - DNI: " + dni);
                             dispose(); // Cerrar la ventana
                     	}else {
-                        baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email, genero);
+                        baseDeDatos.insertarCliente(nombre, apellidos, dni, telefono, email, "M");
                         JOptionPane.showMessageDialog(panelAltaCliente, "Cliente guardado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
                         modeloListaClientes.addElement(nombre + " " + apellidos + " - DNI: " + dni);
                         dispose(); // Cerrar la ventana
