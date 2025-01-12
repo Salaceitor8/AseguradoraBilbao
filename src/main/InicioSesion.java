@@ -32,7 +32,7 @@ public class InicioSesion extends JFrame {
         baseDeDatos = new Bdd("resources/db/aseguradora.db"); // Conecta a la base de datos SQLite
 
         setTitle("Inicio de Sesión - Aseguradoras Bilbaaaao");
-        setSize(400, 300);
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -179,7 +179,7 @@ public class InicioSesion extends JFrame {
     }
 
     private JPanel crearPanelLogin() {
-        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(6, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panel.setBackground(COLOR_PRINCIPAL);
 
@@ -221,18 +221,25 @@ public class InicioSesion extends JFrame {
         // Captcha
         JLabel etiquetaCaptcha = new JLabel("Ingrese el Captcha:");
         etiquetaCaptcha.setForeground(COLOR_CONTRASTE);
-        JTextField campoCaptcha = new JTextField();
+
         JLabel labelCaptcha = new JLabel();
         labelCaptcha.setHorizontalAlignment(SwingConstants.CENTER);
-        generarCaptcha(labelCaptcha);
+        generarCaptcha(labelCaptcha); // Generar el Captcha
+
+        JTextField campoCaptcha = new JTextField();
 
         JButton btnRecargarCaptcha = new JButton("⟳");
         btnRecargarCaptcha.setPreferredSize(new Dimension(40, campoCaptcha.getPreferredSize().height));
         btnRecargarCaptcha.addActionListener(e -> generarCaptcha(labelCaptcha));
 
-        JPanel panelCaptcha = new JPanel(new BorderLayout());
-        panelCaptcha.add(labelCaptcha, BorderLayout.CENTER);
-        panelCaptcha.add(btnRecargarCaptcha, BorderLayout.EAST);
+        JPanel panelCaptchaInput = new JPanel(new BorderLayout());
+        panelCaptchaInput.add(campoCaptcha, BorderLayout.CENTER); // Campo de texto
+        panelCaptchaInput.add(btnRecargarCaptcha, BorderLayout.EAST); // Botón de recarga
+
+        // Panel para la imagen del captcha
+        JPanel panelImagenCaptcha = new JPanel();
+        panelImagenCaptcha.setBackground(COLOR_PRINCIPAL);
+        panelImagenCaptcha.add(labelCaptcha);
 
         // Botón de iniciar sesión
         JButton btnIniciarSesion = new JButton("Iniciar Sesión");
@@ -287,7 +294,9 @@ public class InicioSesion extends JFrame {
         panel.add(etiquetaContraseña);
         panel.add(panelContraseña);
         panel.add(etiquetaCaptcha);
-        panel.add(panelCaptcha);
+        panel.add(panelCaptchaInput);
+        panel.add(new JLabel(""));
+        panel.add(panelImagenCaptcha); // Añadir campo de texto y botón
         panel.add(btnIniciarSesion);
         panel.add(btnRegresar);
         panel.add(btnRecuperarContraseña);
@@ -522,6 +531,7 @@ public class InicioSesion extends JFrame {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && dni.equals(contraseña)) {
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
                         				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                        				 
             	                        // Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
             	                        progressBarDialog.setVisible(true); // Muestra la barra
@@ -600,6 +610,7 @@ public class InicioSesion extends JFrame {
                 }
                 if (!encontrado) {
                     JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }} catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
