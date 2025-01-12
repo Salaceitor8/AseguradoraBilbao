@@ -29,7 +29,9 @@ public class InicioSesion extends JFrame {
     final Color COLOR_RESALTADO = new Color(51, 102, 204); // Azul más claro
 
     public InicioSesion() {
+
         baseDeDatos = new Bdd("resources/db/aseguradora.db"); // Conecta a la base de datos SQLite
+    	System.out.println(baseDeDatos.obtenerCLienteInfo());
 
         setTitle("Inicio de Sesión - Aseguradoras Bilbaaaao");
         setSize(600, 400);
@@ -325,12 +327,7 @@ public class InicioSesion extends JFrame {
         	                	
         	                
         	                	if(baseDeDatos.obtenerGeneroEmpleado(dni).equals("H")) {
-        	                		// Mostrar ventana de Captcha
-        	                	    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
-        	                	    if (!ventanaCaptcha.isCaptchaResuelto()) {
-        	                	        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        	                	        return;
-        	                	    }
+        	                		
         	                	    // Mostrar barra de progreso
         	                	    BarraProgreso progressBarDialog = new BarraProgreso(this);
         	                	    progressBarDialog.setVisible(true);
@@ -479,16 +476,28 @@ public class InicioSesion extends JFrame {
                     String dni = rs.getString("dni");
                     String nombre = rs.getString("nombre");
                     String apellidos = rs.getString("apellidos");
+                    System.out.println(baseDeDatos.cargarContraseñaDesdeBDclientes(dni));
+                    System.out.println(baseDeDatos.cargarUsuarioDesdeBDclientes(dni));
+                    
+//                    if(baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña) && baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario)) {
+//                    	// Mostrar la barra de progreso
+//        			    String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+//        			    BarraProgreso progressBarDialog = new BarraProgreso(this);
+//        			    progressBarDialog.setVisible(true);
+//        			    SwingUtilities.invokeLater(() -> {
+//        			        baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
+//        			        JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
+//        			        dispose();
+//        			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, baseDeDatos.obtenerGeneroCliente(dni), "11/01/2025");
+//        			    });
+//        			    encontrado = true;
+//        			    break;
+//                    }
                     if(baseDeDatos.cargarContraseñaDesdeBDclientes(dni) == null) {
                     	if (baseDeDatos.cargarUsuarioDesdeBDclientes(dni) == null) {
                     		if ((nombre + "_" + apellidos).equals(usuario) && dni.equals(contraseña)) {
                     			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
-                    				// Mostrar ventana de Captcha
-                    			    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
-                    			    if (!ventanaCaptcha.isCaptchaResuelto()) {
-                    			        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                    			        return;
-                    			    }
+                    			   
         	                        // Mostrar la barra de progreso
                     			    String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
                     			    BarraProgreso progressBarDialog = new BarraProgreso(this);
@@ -497,7 +506,7 @@ public class InicioSesion extends JFrame {
                     			        baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                     			        JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
                     			        dispose();
-                    			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", "11/01/2025");
+                    			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, baseDeDatos.obtenerGeneroCliente(dni), "11/01/2025");
                     			    });
                     			    encontrado = true;
                     			    break;
@@ -571,7 +580,7 @@ public class InicioSesion extends JFrame {
                     }else {
                     	if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni) != null) {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
-                    		if((nombre + "_" + apellidos).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
+                    		
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
                         				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
                         				// Mostrar la barra de progreso
@@ -601,22 +610,26 @@ public class InicioSesion extends JFrame {
                                         encontrado = true;
                                         break;
                         			}
-                    		}
+                    		
                     	}
                     	
                     	
                     }
                     
                 }
+                
+                
+            }
                 if (!encontrado) {
                     JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-            }} catch (SQLException e) {
+                } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
+        
 
     private void limpiarCampos() {
         campoUsuario.setText("");

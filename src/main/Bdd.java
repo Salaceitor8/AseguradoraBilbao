@@ -35,7 +35,7 @@ public class Bdd {
     // Constructor para inicializar la conexión
     public Bdd(String dbName) {
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+            connection = DriverManager.getConnection("jdbc:sqlite:resources/db/aseguradora.db");
             System.out.println("Conexión establecida con la base de datos: " + dbName);
 
             crearTablas();
@@ -165,6 +165,30 @@ public class Bdd {
 
     	
     }
+    public String obtenerCLienteInfo() {
+    	String sql = "SELECT * FROM clientes";
+    	Cliente c = null;
+    	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+    	    ResultSet rs = pstmt.executeQuery();
+    	    while (rs.next()) {
+    	        String nombre = rs.getString("nombre");
+    	        String apellidos = rs.getString("apellidos");
+    	        int telefono = rs.getInt("telefono");
+    	        String email = rs.getString("email");
+    	        String dni = rs.getString("dni");
+    	        String contr = rs.getString("contraseña");
+    	        String usuario = rs.getString("usuario");
+    	        System.out.println(nombre + " " + apellidos + " " + telefono + " " +email + " " +dni + " " +usuario + " " +contr);
+    	        return"";
+    	    }
+    	    
+    	} catch (SQLException e) {
+    	    e.printStackTrace();
+    	}
+		return "";
+
+    	
+    }
     
     public String obtenerGeneroCliente(String dni) {
     	String sql = "SELECT genero FROM clientes WHERE dni = ?";
@@ -245,6 +269,8 @@ public class Bdd {
         return null; // Devuelve null si no se encontró el cliente o hubo un error
     }
     
+    
+    
     public String cargarContraseñaDesdeBDclientes(String dni) {
         String sql = "SELECT contraseña FROM clientes WHERE dni = ?";
 
@@ -252,6 +278,7 @@ public class Bdd {
             stmt.setString(1, dni);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
+                	System.out.println(rs.getString("contraseña"));
                     return rs.getString("contraseña"); // Devuelve la contraseña
                 }
             }
