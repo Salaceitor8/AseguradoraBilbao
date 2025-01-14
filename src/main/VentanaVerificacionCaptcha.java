@@ -129,7 +129,8 @@ public class VentanaVerificacionCaptcha extends JFrame {
     
     
 
-    private void iniciarTemporizador() {
+    @SuppressWarnings("unused")
+	private void iniciarTemporizador() {
         timer = new Timer(1000, new ActionListener() {
             private int tiempoRestante = 10;
 
@@ -150,7 +151,8 @@ public class VentanaVerificacionCaptcha extends JFrame {
         timer.start();
     }
 
-    private void iniciarBloqueo(int segundos) {
+    @SuppressWarnings("unused")
+	private void iniciarBloqueo(int segundos) {
         Timer bloqueoTimer = new Timer(1000, new ActionListener() {
             private int tiempoRestante = segundos;
 

@@ -13,7 +13,11 @@ import java.awt.*;
 public class VentanaSimuladorCostos extends JFrame {
 
 	
-    private JTextField txtEdad, txtMonto;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtEdad, txtMonto;
     private JComboBox<String> cmbTipoSeguro;
     private JComboBox<Integer> cmbDuracion;
     private JLabel lblResultado, lblRecomendacion;

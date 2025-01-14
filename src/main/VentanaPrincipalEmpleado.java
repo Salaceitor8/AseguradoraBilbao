@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import main.ModoOscuroUtil;
 import domain.*;
 import gui.SeguroCellRenderer;
 
@@ -31,7 +30,6 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
 
     // Constructor
-    @SuppressWarnings("serial")
 	public VentanaPrincipalEmpleado(Bdd baseDeDatos, String nombre) {
         setTitle("Aseguradoras Bilbao - Panel de Empleado");
         setSize(1000, 600);
@@ -199,7 +197,12 @@ public class VentanaPrincipalEmpleado extends JFrame {
 
         String[] columnasSeguros = {"Tipo de seguro", "Fecha de contratación", "Costo anual", "Estado", "Cobertura"};
         modeloTablaSeguros = new DefaultTableModel(columnasSeguros, 0) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }

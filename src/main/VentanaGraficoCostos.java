@@ -11,7 +11,12 @@ import java.awt.*;
 public class VentanaGraficoCostos extends JFrame {
 
 	
-    public VentanaGraficoCostos(DefaultCategoryDataset dataset) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public VentanaGraficoCostos(DefaultCategoryDataset dataset) {
         
     	
     	// Configuración de la ventana

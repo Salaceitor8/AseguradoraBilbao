@@ -306,7 +306,7 @@ public class InicioSesion extends JFrame {
         return panel;
     }
 
-    private void iniciarSesion() {
+	private void iniciarSesion() {
         String usuario = campoUsuario.getText();
         String contraseña = new String(campoContraseña.getPassword());
         
@@ -499,14 +499,15 @@ public class InicioSesion extends JFrame {
                     			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
                     			   
         	                        // Mostrar la barra de progreso
-                    			    String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                    			    @SuppressWarnings("unused")
+									String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
                     			    BarraProgreso progressBarDialog = new BarraProgreso(this);
                     			    progressBarDialog.setVisible(true);
                     			    SwingUtilities.invokeLater(() -> {
                     			        baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                     			        JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
                     			        dispose();
-                    			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, baseDeDatos.obtenerGeneroCliente(dni), "11/01/2025");
+                    			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, baseDeDatos.obtenerGeneroCliente(dni), "11/01/2025");
                     			    });
                     			    encontrado = true;
                     			    break;
@@ -515,7 +516,8 @@ public class InicioSesion extends JFrame {
                                     
                                     
                     			}else {
-                    				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                    				@SuppressWarnings("unused")
+									String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
                     				// Mostrar ventana de Captcha
                     			    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
                     			    if (!ventanaCaptcha.isCaptchaResuelto()) {
@@ -530,7 +532,7 @@ public class InicioSesion extends JFrame {
         	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", "11/01/2025");
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
         	                        	});
                                     encontrado = true;
                                     break;
@@ -539,7 +541,8 @@ public class InicioSesion extends JFrame {
                     	}else {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && dni.equals(contraseña)) {
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
-                        				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                        				@SuppressWarnings("unused")
+										String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
                         				 
             	                        // Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
@@ -549,7 +552,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
             	                        	});
                                         encontrado = true;
                                         break;
@@ -560,7 +563,8 @@ public class InicioSesion extends JFrame {
                         			        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                         			        return;
                         			    }
-                        				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                        				@SuppressWarnings("unused")
+										String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
             	                        // Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
             	                        progressBarDialog.setVisible(true); // Muestra la barra
@@ -569,7 +573,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
             	                        	});
                                         encontrado = true;
                                         break;
@@ -582,7 +586,8 @@ public class InicioSesion extends JFrame {
                     		if(baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario) && baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña)) {
                     		
                         			if(baseDeDatos.obtenerGeneroCliente(dni).equals("H")) {
-                        				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                        				@SuppressWarnings("unused")
+										String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
                         				// Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
             	                        progressBarDialog.setVisible(true); // Muestra la barra
@@ -591,12 +596,13 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
             	                        	});
                                         encontrado = true;
                                         break;
                         			}else {
-                        				String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
+                        				@SuppressWarnings("unused")
+										String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
                         				// Mostrar la barra de progreso
             	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
             	                        progressBarDialog.setVisible(true); // Muestra la barra
@@ -605,7 +611,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(contraseña), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
             	                        	});
                                         encontrado = true;
                                         break;

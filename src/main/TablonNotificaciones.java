@@ -42,7 +42,12 @@ public class TablonNotificaciones extends JFrame {
         // Modelo y tabla de notificaciones
         String[] columnas = {"Resumen"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false; // No permitir edición de las celdas
             }
@@ -92,7 +97,12 @@ public class TablonNotificaciones extends JFrame {
 
     // Renderizador personalizado para celdas con múltiples líneas
     static class MultiLineCellRenderer extends DefaultTableCellRenderer {
-        @Override
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             JTextArea textArea = new JTextArea(value != null ? value.toString() : "");
             textArea.setWrapStyleWord(true);

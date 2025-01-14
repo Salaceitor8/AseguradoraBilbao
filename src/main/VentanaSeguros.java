@@ -2,17 +2,17 @@
 package main;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-import domain.Seguro;
-
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class VentanaSeguros extends JFrame {
 
-    public VentanaSeguros(int id, String dniCliente,String tipo, String fecha, double costo, String estado, String cobertura, Bdd bd) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	public VentanaSeguros(int id, String dniCliente,String tipo, String fecha, double costo, String estado, String cobertura, Bdd bd) {
         setTitle("Tipos de Seguros");
 
         // Configurar el CardLayout
@@ -142,7 +142,8 @@ public class VentanaSeguros extends JFrame {
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
     }
 
-    private JPanel crearPanelConComboBox(String titulo, String[] opciones) {
+    @SuppressWarnings("unused")
+	private JPanel crearPanelConComboBox(String titulo, String[] opciones) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(0, 51, 102));
 
@@ -165,17 +166,20 @@ public class VentanaSeguros extends JFrame {
         return panel;
     }
 
-    private JButton crearBotonGrande(String texto, ActionListener accion) {
-        JButton boton = new JButton(texto);
-        boton.setBackground(Color.WHITE);
-        boton.setForeground(new Color(0, 51, 102));
-        boton.setFont(new Font("Arial", Font.BOLD, 18)); 
-        boton.setPreferredSize(new Dimension(150, 50)); 
-        boton.addActionListener(accion);
-        return boton;
-    }
 
-    private void mostrarPanel(JPanel panelPrincipal, String nombrePanel) {
+//	@SuppressWarnings("unused")
+//	private JButton crearBotonGrande(String texto, ActionListener accion) {
+//        JButton boton = new JButton(texto);
+//        boton.setBackground(Color.WHITE);
+//        boton.setForeground(new Color(0, 51, 102));
+//        boton.setFont(new Font("Arial", Font.BOLD, 18)); 
+//        boton.setPreferredSize(new Dimension(150, 50)); 
+//        boton.addActionListener(accion);
+//        return boton;
+//    }
+
+    @SuppressWarnings("unused")
+	private void mostrarPanel(JPanel panelPrincipal, String nombrePanel) {
         CardLayout cl = (CardLayout) panelPrincipal.getLayout();
         cl.show(panelPrincipal, nombrePanel);
         pack(); // Ajustar la ventana al contenido del panel actual
