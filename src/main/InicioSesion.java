@@ -27,6 +27,11 @@ public class InicioSesion extends JFrame {
     private final Bdd baseDeDatos; // Instancia de la base de datos
     final Color COLOR_NORMAL = COLOR_PRINCIPAL;
     final Color COLOR_RESALTADO = new Color(51, 102, 204); // Azul más claro
+    private int intentosFallidos = 0;
+    private static final int MAX_INTENTOS = 3;
+    private boolean estaBloqueado = false;
+    private JProgressBar barraProgreso2;
+    private boolean credencialesValidas;
 
     public InicioSesion() {
 
@@ -54,6 +59,9 @@ public class InicioSesion extends JFrame {
 
         add(panelCentral);
         setVisible(true);
+        barraProgreso2 = new JProgressBar(0, 30);
+        barraProgreso2.setStringPainted(true);
+        barraProgreso2.setVisible(false);
     }
 
     private JPanel crearPanelSeleccion() {
@@ -312,6 +320,11 @@ public class InicioSesion extends JFrame {
         
         if (esEmpleado) {
         	try {
+        		 if (estaBloqueado) {
+        	            JOptionPane.showMessageDialog(this, "El sistema está bloqueado. Espere a que termine el temporizador.");
+        	            return;
+        	        }
+        	
         	    ResultSet rs = baseDeDatos.obtenerEmpleados();
         	    boolean encontrado = false;
         	    while (rs.next()) {
@@ -461,15 +474,34 @@ public class InicioSesion extends JFrame {
         	    }
 
         	    if (!encontrado) {
-        	        JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+        	    	if (!credencialesValidas) {
+                        intentosFallidos++;
+                        if (intentosFallidos >= MAX_INTENTOS) {
+                            bloquearSistema();
+                            mostrarVentanaBloqueo();
+
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Credenciales incorrectas. Intentos restantes: " + (MAX_INTENTOS - intentosFallidos));
+                        }
+                    } else {
+                        intentosFallidos = 0; // Restablecer intentos fallidos
+                        
+                    
+                    return;
+                
         	    }
-        	} catch (SQLException e) {
+        	    }} catch (SQLException e) {
         	    JOptionPane.showMessageDialog(this, "Error al validar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         	    e.printStackTrace();
         	}
 
         } else {
             try {
+            	 if (estaBloqueado) {
+                     JOptionPane.showMessageDialog(this, "El sistema está bloqueado. Espere a que termine el temporizador.");
+                     return;
+                 }
+            
                 ResultSet rs = baseDeDatos.obtenerClientes();
                 boolean encontrado = false;
                 while (rs.next()) {
@@ -627,10 +659,21 @@ public class InicioSesion extends JFrame {
                 
             }
                 if (!encontrado) {
-                    JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+                	if (!credencialesValidas) {
+                        intentosFallidos++;
+                        if (intentosFallidos >= MAX_INTENTOS) {
+                            bloquearSistema();
+                            mostrarVentanaBloqueo();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Credenciales incorrectas. Intentos restantes: " + (MAX_INTENTOS - intentosFallidos));
+                        }
+                    } else {
+                        intentosFallidos = 0; // Restablecer intentos fallidos
+                        
+                    
                     return;
                 }
-                } catch (SQLException e) {
+                }} catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -706,6 +749,80 @@ public class InicioSesion extends JFrame {
         String captchaUsuario = campoCaptcha.getText().toUpperCase().trim();
         return captchaUsuario.equals(captchaCorrecto);
     }
+    private void bloquearSistema() {
+        estaBloqueado = true;
+        
+        barraProgreso2.setVisible(true);
+
+        new Thread(() -> {
+            for (int i = 0; i <= 30; i++) {
+                final int progreso = i;
+                SwingUtilities.invokeLater(() -> {
+                    barraProgreso2.setValue(progreso);
+                    barraProgreso2.setString("Tiempo restante: " + (30 - progreso) + "s");
+                });
+                try {
+                    Thread.sleep(1000); // 1 segundo por unidad de progreso
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            SwingUtilities.invokeLater(() -> {
+                estaBloqueado = false;
+                barraProgreso2.setVisible(false);
+                intentosFallidos = 0; // Restablecer intentos fallidos
+            });
+        }).start();
+    }
+    private void mostrarVentanaBloqueo() {
+        estaBloqueado = true;
+        
+
+        // Crear una nueva ventana para el bloqueo
+        JDialog ventanaBloqueo = new JDialog(this, "Bloqueo de Sistema", true);
+        ventanaBloqueo.setSize(400, 250);
+        ventanaBloqueo.setLayout(new BorderLayout());
+        ventanaBloqueo.setLocationRelativeTo(this);
+        ventanaBloqueo.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+        JLabel mensaje = new JLabel("El sistema está bloqueado. Espere a que termine el temporizador.", SwingConstants.CENTER);
+        mensaje.setFont(new Font("Arial", Font.BOLD, 12));
+        mensaje.setForeground(new Color(128, 0, 0)); // Color rojo oscuro
+
+        JProgressBar barraProgreso = new JProgressBar(0, 30);
+        barraProgreso.setStringPainted(true);
+        barraProgreso.setFont(new Font("Arial", Font.BOLD, 12));
+        barraProgreso.setForeground(new Color(0, 102, 204)); // Azul vibrante
+        barraProgreso.setBackground(new Color(230, 230, 230)); // Gris claro
+        barraProgreso.setBorder(BorderFactory.createLineBorder(new Color(0, 102, 204), 2));
+
+        ventanaBloqueo.add(mensaje, BorderLayout.NORTH);
+        ventanaBloqueo.add(barraProgreso, BorderLayout.CENTER);
+
+        // Hilo para manejar el temporizador
+        new Thread(() -> {
+            for (int i = 0; i <= 30; i++) {
+                final int progreso = i;
+                SwingUtilities.invokeLater(() -> {
+                    barraProgreso.setValue(progreso);
+                    barraProgreso.setString("Tiempo restante: " + (30 - progreso) + "s");
+                });
+                try {
+                    Thread.sleep(1000); // 1 segundo por unidad de progreso
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            SwingUtilities.invokeLater(() -> {
+                estaBloqueado = false;
+                ventanaBloqueo.dispose(); // Cerrar la ventana de bloqueo
+                intentosFallidos = 0; // Restablecer intentos fallidos
+            });
+        }).start();
+
+        ventanaBloqueo.setVisible(true);
+    }
+
 
 
 
