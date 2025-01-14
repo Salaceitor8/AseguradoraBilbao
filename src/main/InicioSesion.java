@@ -832,21 +832,3 @@ public class InicioSesion extends JFrame {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
