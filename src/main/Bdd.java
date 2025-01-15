@@ -27,7 +27,7 @@ import domain.Notificacion;
 
 public class Bdd {
 
-    private Connection connection;
+    public Connection connection;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -61,15 +61,16 @@ public class Bdd {
                                 "fecha_hora DATETIME NOT NULL, " +
                                 "FOREIGN KEY (dni_cliente) REFERENCES clientes(dni));";
 
-        String createSeguros = "CREATE TABLE IF NOT EXISTS seguros (" +
-                               "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                               "dni_cliente TEXT NOT NULL, " +
-                               "tipo_seguro TEXT NOT NULL, " +
-                               "fecha_inicio DATE NOT NULL, " +
-                               "costo REAL NOT NULL, " +
-                               "estado TEXT CHECK(estado IN ('Activo', 'Inactivo')), " +
-                               "FOREIGN KEY (dni_cliente) REFERENCES clientes(dni));";
-        
+        String createSeguros =  "CREATE TABLE IF NOT EXISTS seguros (" +
+                				"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                				"dni_cliente TEXT NOT NULL, " +
+                				"tipo_seguro TEXT NOT NULL, " +
+                				"fecha_inicio DATE NOT NULL, " +
+                				"costo REAL NOT NULL, " +
+                				"estado TEXT CHECK(estado IN ('Activo', 'Inactivo')), " +
+                				"gratuito BOOLEAN DEFAULT 0, " + // Nuevo campo para seguros gratuitos
+                				"FOREIGN KEY (dni_cliente) REFERENCES clientes(dni));";
+
         String createSorteos =  "CREATE TABLE IF NOT EXISTS sorteos (" +	
         						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
         						"dni_cliente TEXT NOT NULL, " +
@@ -983,13 +984,20 @@ public class Bdd {
     
     public ResultSet obtenerResultadosSorteos(String dniCliente) throws Exception {
         String query = "SELECT premio, fecha FROM sorteos WHERE dni_cliente = ?";
-        PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query); // Usa connection directamente
         stmt.setString(1, dniCliente);
         return stmt.executeQuery();
     }
+
     
     
-    
+    public ResultSet obtenerSegurosGratuitos(String dniCliente) throws Exception {
+        String query = "SELECT * FROM seguros WHERE dni_cliente = ? AND gratuito = 1";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, dniCliente); // Filtra por el DNI del cliente
+        return stmt.executeQuery();   // Devuelve el resultado
+    }
+
 
     
     public void insertarEncuesta(String dniCliente, String fecha, String satisfecho, String aspectoFavorito, int valoracion, String comentario) {

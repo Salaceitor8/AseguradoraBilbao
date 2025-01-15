@@ -41,7 +41,7 @@ public class VentanaCliente extends JFrame {
 	private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnPresupuestos, btnResultadosSorteos;
+    private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnPresupuestos, btnResultadosSorteos, btnSegurosGratuitos;
     private boolean activado = false;
     private Bdd baseDeDatos; // Conexión a la base de datos
     private String dniCliente; // DNI del cliente actual
@@ -145,8 +145,9 @@ public class VentanaCliente extends JFrame {
         btnEncuesta = new JButton("Rellena la encuesta");
         btnPresupuestos=new JButton("Presupuestos");
         btnResultadosSorteos = new JButton("Resultados de sorteos");
+        btnSegurosGratuitos = new JButton("Seguros Gratuitos");
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones, btnPresupuestos, btnResultadosSorteos};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones, btnPresupuestos, btnResultadosSorteos, btnSegurosGratuitos};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -184,6 +185,14 @@ public class VentanaCliente extends JFrame {
         	}
         	
         });
+        
+        btnSegurosGratuitos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mostrarSegurosGratuitos(); // Llama al método
+            }
+        });
+
         
         btnResultadosSorteos.addActionListener(new ActionListener() {
             @Override
@@ -309,6 +318,13 @@ public class VentanaCliente extends JFrame {
                 String fecha = rs.getString("fecha");
                 mensaje.append("- Ganaste un ").append(premio).append(" el ").append(fecha).append("\n");
                 tieneResultados = true;
+
+                // Abrir ventana de selección para convertir el seguro básico
+                if (premio.equalsIgnoreCase("Seguro Básico")) {
+                    SwingUtilities.invokeLater(() -> {
+                        new VentanaSeleccionSeguro(this, dniCliente, baseDeDatos);
+                    });
+                }
             }
 
             if (!tieneResultados) {
@@ -323,7 +339,34 @@ public class VentanaCliente extends JFrame {
         }
     }
 
+
     
+    private void mostrarSegurosGratuitos() {
+        try {
+            ResultSet rs = baseDeDatos.obtenerSegurosGratuitos(dniCliente); // Llamada al método de Bdd
+
+            StringBuilder mensaje = new StringBuilder("Tus seguros gratuitos:\n");
+            boolean tieneSegurosGratuitos = false;
+
+            while (rs.next()) {
+                String tipoSeguro = rs.getString("tipo_seguro");
+                String fechaInicio = rs.getString("fecha_inicio");
+                mensaje.append("- ").append(tipoSeguro).append(" (desde ").append(fechaInicio).append(")\n");
+                tieneSegurosGratuitos = true;
+            }
+
+            if (!tieneSegurosGratuitos) {
+                mensaje.append("No tienes seguros gratuitos.");
+            }
+
+            // Mostrar los seguros gratuitos en un cuadro de diálogo
+            JOptionPane.showMessageDialog(this, mensaje.toString(), "Seguros Gratuitos", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al obtener los seguros gratuitos: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
 
 
