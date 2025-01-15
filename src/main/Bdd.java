@@ -68,7 +68,6 @@ public class Bdd {
                 				"fecha_inicio DATE NOT NULL, " +
                 				"costo REAL NOT NULL, " +
                 				"estado TEXT CHECK(estado IN ('Activo', 'Inactivo')), " +
-                				"gratuito BOOLEAN DEFAULT 0, " + // Nuevo campo para seguros gratuitos
                 				"FOREIGN KEY (dni_cliente) REFERENCES clientes(dni));";
 
         String createSorteos =  "CREATE TABLE IF NOT EXISTS sorteos (" +	
@@ -992,7 +991,7 @@ public class Bdd {
     
     
     public ResultSet obtenerSegurosGratuitos(String dniCliente) throws Exception {
-        String query = "SELECT * FROM seguros WHERE dni_cliente = ? AND gratuito = 1";
+        String query = "SELECT * FROM seguros WHERE dni_cliente = ? AND costo = 0";
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setString(1, dniCliente); // Filtra por el DNI del cliente
         return stmt.executeQuery();   // Devuelve el resultado

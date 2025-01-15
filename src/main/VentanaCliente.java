@@ -145,9 +145,8 @@ public class VentanaCliente extends JFrame {
         btnEncuesta = new JButton("Rellena la encuesta");
         btnPresupuestos=new JButton("Presupuestos");
         btnResultadosSorteos = new JButton("Resultados de sorteos");
-        btnSegurosGratuitos = new JButton("Seguros Gratuitos");
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones, btnPresupuestos, btnResultadosSorteos, btnSegurosGratuitos};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones, btnPresupuestos, btnResultadosSorteos};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -186,12 +185,7 @@ public class VentanaCliente extends JFrame {
         	
         });
         
-        btnSegurosGratuitos.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mostrarSegurosGratuitos(); // Llama al método
-            }
-        });
+
 
         
         btnResultadosSorteos.addActionListener(new ActionListener() {
@@ -312,6 +306,7 @@ public class VentanaCliente extends JFrame {
 
             StringBuilder mensaje = new StringBuilder("Tus resultados de sorteos:\n");
             boolean tieneResultados = false;
+            
 
             while (rs.next()) {
                 String premio = rs.getString("premio");
@@ -322,7 +317,7 @@ public class VentanaCliente extends JFrame {
                 // Abrir ventana de selección para convertir el seguro básico
                 if (premio.equalsIgnoreCase("Seguro Básico")) {
                     SwingUtilities.invokeLater(() -> {
-                        new VentanaSeleccionSeguro(this, dniCliente, baseDeDatos);
+                        new VentanaSeleccionSeguro(this, dniCliente, baseDeDatos, modeloTablaSeguros);
                     });
                 }
             }
@@ -341,35 +336,6 @@ public class VentanaCliente extends JFrame {
 
 
     
-    private void mostrarSegurosGratuitos() {
-        try {
-            ResultSet rs = baseDeDatos.obtenerSegurosGratuitos(dniCliente); // Llamada al método de Bdd
-
-            StringBuilder mensaje = new StringBuilder("Tus seguros gratuitos:\n");
-            boolean tieneSegurosGratuitos = false;
-
-            while (rs.next()) {
-                String tipoSeguro = rs.getString("tipo_seguro");
-                String fechaInicio = rs.getString("fecha_inicio");
-                mensaje.append("- ").append(tipoSeguro).append(" (desde ").append(fechaInicio).append(")\n");
-                tieneSegurosGratuitos = true;
-            }
-
-            if (!tieneSegurosGratuitos) {
-                mensaje.append("No tienes seguros gratuitos.");
-            }
-
-            // Mostrar los seguros gratuitos en un cuadro de diálogo
-            JOptionPane.showMessageDialog(this, mensaje.toString(), "Seguros Gratuitos", JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al obtener los seguros gratuitos: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-
-
 
     private void actualizarCostoTotal(List<Seguro> segurosCliente) {
         double totalCosto = 0;

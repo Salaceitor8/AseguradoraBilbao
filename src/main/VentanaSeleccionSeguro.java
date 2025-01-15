@@ -1,15 +1,20 @@
 package main;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class VentanaSeleccionSeguro extends JDialog {
     private String seguroSeleccionado;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public VentanaSeleccionSeguro(VentanaCliente parent, String dniCliente, Bdd baseDeDatos) {
+    public VentanaSeleccionSeguro(VentanaCliente parent, String dniCliente, Bdd baseDeDatos, DefaultTableModel t) {
         super(parent, "Seleccionar Seguro", true); // Llama al constructor de JDialog
         setSize(400, 250);
         setLocationRelativeTo(parent);
@@ -41,10 +46,11 @@ public class VentanaSeleccionSeguro extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 seguroSeleccionado = (String) comboSeguros.getSelectedItem();
-                guardarSeguroGratis(dniCliente, seguroSeleccionado, baseDeDatos);
+                guardarSeguroGratis(dniCliente, seguroSeleccionado, baseDeDatos, t);
                 JOptionPane.showMessageDialog(VentanaSeleccionSeguro.this,
                         "Has seleccionado: " + seguroSeleccionado + "\nEste seguro será completamente gratuito.",
                         "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+                
                 dispose();
             }
         });
@@ -58,17 +64,33 @@ public class VentanaSeleccionSeguro extends JDialog {
 
     
     
-    private void guardarSeguroGratis(String dniCliente, String seguroSeleccionado, Bdd baseDeDatos) {
+    private void guardarSeguroGratis(String dniCliente, String seguroSeleccionado, Bdd baseDeDatos, DefaultTableModel t) {
         try {
-            String query = "INSERT INTO seguros (dni_cliente, tipo_seguro, fecha_inicio, costo, estado, gratuito) " +
-                           "VALUES (?, ?, CURRENT_DATE, ?, ?, ?)";
+            String query = "INSERT INTO seguros (dni_cliente, tipo_seguro, fecha_inicio, costo, estado, cobertura) " +
+                           "VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = baseDeDatos.connection.prepareStatement(query); // Usa connection directamente
+            if(seguroSeleccionado.equals("Seguro de Vida")) {
+            	seguroSeleccionado = "VIDA";
+            }else if(seguroSeleccionado.equals("Seguro de Coche")) {
+            	seguroSeleccionado = "COCHE";
+            }else {
+            	seguroSeleccionado = "VIVIENDA";
+            }
             stmt.setString(1, dniCliente);
             stmt.setString(2, seguroSeleccionado);
-            stmt.setDouble(3, 0.0); // Precio gratuito
-            stmt.setString(4, "Activo");
-            stmt.setBoolean(5, true); // Marcar como gratuito
+            stmt.setString(3, LocalDate.now().format(formatter));          
+            stmt.setDouble(4, 0.0); // Precio gratuito
+            stmt.setString(5, "Activo");
+            stmt.setString(6, "BASICO");
             stmt.executeUpdate();
+            Object[] o = new Object[] {
+        			seguroSeleccionado,
+        			LocalDate.now().format(formatter),
+        			0.0,
+        			"Activo", 
+        			"BASICO"
+        	};
+            t.addRow(o);;
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                     "Error al guardar el seguro seleccionado: " + ex.getMessage(),
