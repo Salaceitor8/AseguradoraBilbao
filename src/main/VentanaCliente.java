@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -39,10 +41,16 @@ public class VentanaCliente extends JFrame {
 	private JTable tablaSeguros;
     private DefaultTableModel modeloTablaSeguros;
     private JLabel lblCostoTotal;
-    private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnPresupuestos;
+    private JButton  btnReportarSiniestro, btnTablonNotificaciones, btnChatAtencion, btnMiPerfil, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnPresupuestos, btnResultadosSorteos;
     private boolean activado = false;
+    private Bdd baseDeDatos; // Conexión a la base de datos
+    private String dniCliente; // DNI del cliente actual
     
     public VentanaCliente(String nombreCliente, List<Seguro> segurosCliente, Bdd bd, String dni, String genero, String fecha) {
+        this.baseDeDatos = bd; // Asignar la base de datos
+        this.dniCliente = dni; // Asignar el DNI del cliente
+
+        
         // Configuración básica de la ventana
         setTitle("Aseguradora Bilbao - Cliente");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -136,8 +144,9 @@ public class VentanaCliente extends JFrame {
         btnSolicitarEspecialista = new JButton("Solicitar Especialista");
         btnEncuesta = new JButton("Rellena la encuesta");
         btnPresupuestos=new JButton("Presupuestos");
+        btnResultadosSorteos = new JButton("Resultados de sorteos");
         // Estilo de los botones
-        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones, btnPresupuestos};
+        JButton[] botones = {btnMiPerfil, btnReportarSiniestro, btnChatAtencion, btnOfertas, btnSolicitarEspecialista, btnEncuesta, btnModoOscuro, btnTablonNotificaciones, btnPresupuestos, btnResultadosSorteos};
         for (JButton boton : botones) {
             boton.setFont(new Font("Arial", Font.PLAIN, 14));
             boton.setBackground(new Color(0, 102, 204)); // Azul
@@ -176,6 +185,17 @@ public class VentanaCliente extends JFrame {
         	
         });
         
+        btnResultadosSorteos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    mostrarResultadosSorteos(baseDeDatos, dniCliente); // Llamada al método
+                });
+            }
+        });
+
+        
+         
         btnPresupuestos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -267,6 +287,46 @@ public class VentanaCliente extends JFrame {
 
         setVisible(true);
     }
+    
+    public VentanaCliente(Bdd baseDeDatos, String dniCliente) {
+        this.baseDeDatos = baseDeDatos; // Inicializa la variable con el valor recibido
+        this.dniCliente = dniCliente;   // Inicializa el DNI del cliente
+
+        // Configuración de la ventana y componentes
+    }
+
+    
+    private void mostrarResultadosSorteos(Bdd baseDeDatos, String dniCliente) {
+        try {
+            // Consulta para verificar si el cliente tiene resultados de sorteos
+            ResultSet rs = baseDeDatos.obtenerResultadosSorteos(dniCliente);
+
+            StringBuilder mensaje = new StringBuilder("Tus resultados de sorteos:\n");
+            boolean tieneResultados = false;
+
+            while (rs.next()) {
+                String premio = rs.getString("premio");
+                String fecha = rs.getString("fecha");
+                mensaje.append("- Ganaste un ").append(premio).append(" el ").append(fecha).append("\n");
+                tieneResultados = true;
+            }
+
+            if (!tieneResultados) {
+                mensaje.append("No tienes resultados de sorteos pendientes.");
+            }
+
+            // Mostrar resultados en un cuadro de diálogo
+            JOptionPane.showMessageDialog(this, mensaje.toString(), "Resultados de Sorteos", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los resultados de sorteos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    
+
+
+
 
     private void actualizarCostoTotal(List<Seguro> segurosCliente) {
         double totalCosto = 0;

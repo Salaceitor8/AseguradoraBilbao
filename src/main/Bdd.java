@@ -980,6 +980,18 @@ public class Bdd {
         stmt.executeUpdate();
     }
     
+    
+    public ResultSet obtenerResultadosSorteos(String dniCliente) throws Exception {
+        String query = "SELECT premio, fecha FROM sorteos WHERE dni_cliente = ?";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, dniCliente);
+        return stmt.executeQuery();
+    }
+    
+    
+    
+
+    
     public void insertarEncuesta(String dniCliente, String fecha, String satisfecho, String aspectoFavorito, int valoracion, String comentario) {
         String sql = "INSERT INTO encuestas (dni_cliente, fecha, satisfecho, aspecto_favorito, valoracion, comentario) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
