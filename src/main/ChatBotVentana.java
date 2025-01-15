@@ -74,7 +74,7 @@ public class ChatBotVentana extends JFrame {
 
         // Botones de navegación
         btnArriba = new JButton();
-        Image izquierda = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/Izquierda.png")).getImage().getScaledInstance(25, 25, DO_NOTHING_ON_CLOSE);
+        Image izquierda = (new ImageIcon("fotos/Izquierda.png")).getImage().getScaledInstance(25, 25, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoIzquierda = new ImageIcon(izquierda);
         btnArriba.setIcon(iconoIzquierda);
         btnArriba.setFont(new Font("Arial", Font.BOLD, 18));
@@ -83,7 +83,7 @@ public class ChatBotVentana extends JFrame {
         btnArriba.addActionListener(e -> cambiarPagina(-1)); // Ir a la página anterior
 
         btnAbajo = new JButton();
-        Image derecha = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/Derecha.png")).getImage().getScaledInstance(25, 25, DO_NOTHING_ON_CLOSE);
+        Image derecha = (new ImageIcon("fotos/Derecha.png")).getImage().getScaledInstance(25, 25, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoDerecha = new ImageIcon(derecha);
         btnAbajo.setIcon(iconoDerecha);
         btnAbajo.setFont(new Font("Arial", Font.BOLD, 18));

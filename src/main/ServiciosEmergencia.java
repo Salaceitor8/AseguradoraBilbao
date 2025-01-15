@@ -51,7 +51,7 @@ public class ServiciosEmergencia extends JFrame {
         btnFontanero.setBackground(new Color(0, 51, 102));
         btnFontanero.setForeground(Color.WHITE);
         btnFontanero.setBorder(null);
-        Image fontanero = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/fontanero.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image fontanero = (new ImageIcon("fotos/fontanero.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoFontanero = new ImageIcon(fontanero);
         btnFontanero.setIcon(iconoFontanero);
         btnFontanero.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -97,7 +97,7 @@ public class ServiciosEmergencia extends JFrame {
         btnCerrajero.setBackground(new Color(0, 51, 102));
         btnCerrajero.setForeground(Color.WHITE);
         btnCerrajero.setBorder(null);
-        Image cerrajero = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/cerrajero.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image cerrajero = (new ImageIcon("fotos/cerrajero.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoCerrajero = new ImageIcon(cerrajero);
         btnCerrajero.setIcon(iconoCerrajero);
         btnCerrajero.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -143,7 +143,7 @@ public class ServiciosEmergencia extends JFrame {
         btnElectricista.setBackground(new Color(0, 51, 102));
         btnElectricista.setForeground(Color.WHITE);
         btnElectricista.setBorder(null);
-        Image electricista = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/electricista.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image electricista = (new ImageIcon("fotos/electricista.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoElectricista = new ImageIcon(electricista);
         btnElectricista.setIcon(iconoElectricista);
         btnElectricista.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -189,7 +189,7 @@ public class ServiciosEmergencia extends JFrame {
         btnGrua.setBackground(new Color(0, 51, 102));
         btnGrua.setForeground(Color.WHITE);
         btnGrua.setBorder(null);
-        Image grua = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/grua.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image grua = (new ImageIcon("fotos/grua.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoGrua = new ImageIcon(grua);
         btnGrua.setIcon(iconoGrua);
         btnGrua.addMouseListener(new java.awt.event.MouseAdapter() {

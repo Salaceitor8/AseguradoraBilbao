@@ -55,7 +55,7 @@ public class VentanaSimulacionAtencion extends JFrame {
 
             try {
                 // Cargar y redimensionar la imagen
-                ImageIcon iconoOriginal = new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/trabajar.png");
+                ImageIcon iconoOriginal = new ImageIcon("fotos/trabajar.png");
                 Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH); // Ajusta el tamaño
                 JLabel empleadoIcono = new JLabel(new ImageIcon(imagenEscalada));
                 empleadoIcono.setHorizontalAlignment(SwingConstants.CENTER);

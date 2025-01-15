@@ -148,7 +148,7 @@ public class VentanaCliente extends JFrame {
             panelOpciones.add(boton);
             panelOpciones.add(Box.createVerticalStrut(10)); // Espacio entre botones
         }
-        Image usuario = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/users.png")).getImage().getScaledInstance(35, 35, DO_NOTHING_ON_CLOSE);
+        Image usuario = (new ImageIcon("fotos/users.png")).getImage().getScaledInstance(35, 35, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoUsuario = new ImageIcon(usuario);
         btnMiPerfil.setIcon(iconoUsuario);
         add(panelOpciones, BorderLayout.EAST);

@@ -120,7 +120,7 @@ public class InicioSesion extends JFrame {
                 }).start();
             }
         });
-        Image empleado = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image empleado = (new ImageIcon("fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoEmpleado = new ImageIcon(empleado);
         btnEmpleado.setIcon(iconoEmpleado);
         btnEmpleado.setBorderPainted(false);
@@ -172,7 +172,7 @@ public class InicioSesion extends JFrame {
                 }).start();
             }
         });
-        Image cliente = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image cliente = (new ImageIcon("fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoCliente = new ImageIcon(cliente);
         btnCliente.setIcon(iconoCliente);
         btnCliente.setBorderPainted(false);
@@ -534,7 +534,7 @@ public class InicioSesion extends JFrame {
                     			        baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                     			        JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
                     			        dispose();
-                    			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, baseDeDatos.obtenerGeneroCliente(dni), "11/01/2025");
+                    			        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, baseDeDatos.obtenerGeneroCliente(dni), baseDeDatos.obtenerUltimoInicioCliente(dni));
                     			    });
                     			    encontrado = true;
                     			    break;
@@ -553,7 +553,7 @@ public class InicioSesion extends JFrame {
         	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
             	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
         	                        	dispose();
-                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
+                                        new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", baseDeDatos.obtenerUltimoInicioCliente(dni));
         	                        	});
                                     encontrado = true;
                                     break;
@@ -573,7 +573,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", baseDeDatos.obtenerUltimoInicioCliente(dni));
             	                        	});
                                         encontrado = true;
                                         break;
@@ -588,7 +588,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", baseDeDatos.obtenerUltimoInicioCliente(dni));
             	                        	});
                                         encontrado = true;
                                         break;
@@ -611,7 +611,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenido, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", baseDeDatos.obtenerUltimoInicioCliente(dni));
             	                        	});
                                         encontrado = true;
                                         break;
@@ -626,7 +626,7 @@ public class InicioSesion extends JFrame {
             	                        	baseDeDatos.actualizarUltimoInicioCliente(dni, LocalDate.now().toString());
                 	                		JOptionPane.showMessageDialog(this, "Bienvenida, " + nombre + ".");
             	                        	dispose();
-                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", "11/01/2025");
+                                            new VentanaCliente(nombre, (ArrayList<Seguro>) baseDeDatos.obtenerSeguros(dni), baseDeDatos, dni, "H", baseDeDatos.obtenerUltimoInicioCliente(dni));
             	                        	});
                                         encontrado = true;
                                         break;
