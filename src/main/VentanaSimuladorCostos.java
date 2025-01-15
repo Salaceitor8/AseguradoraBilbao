@@ -159,15 +159,55 @@ public class VentanaSimuladorCostos extends JFrame {
     
     private void actualizarRecomendacion(double costoCoche, double costoVida, double costoHogar) {
         String recomendacion;
-        if (costoCoche <= costoVida && costoCoche <= costoHogar) {
-            recomendacion = "Recomendación: Contratar un seguro de Coche por ser el más económico.";
-        } else if (costoVida <= costoCoche && costoVida <= costoHogar) {
-            recomendacion = "Recomendación: Contratar un seguro de Vida por ser el más económico.";
-        } else {
-            recomendacion = "Recomendación: Contratar un seguro de Hogar por ser el más económico.";
+
+        // Introducir una lógica aleatoria para diversificar recomendaciones
+        double[] costos = {costoCoche, costoVida, costoHogar};
+        String[] tipos = {"Coche", "Vida", "Hogar"};
+
+        int indiceRecomendado = obtenerIndiceRecomendacion(costos, tipos);
+
+        switch (indiceRecomendado) {
+            case 0:
+                recomendacion = "Recomendación: Contratar un seguro de Coche por ser económico y útil para conductores frecuentes.";
+                break;
+            case 1:
+                recomendacion = "Recomendación: Contratar un seguro de Vida por ofrecer protección financiera a largo plazo.";
+                break;
+            case 2:
+                recomendacion = "Recomendación: Contratar un seguro de Hogar por brindar seguridad al patrimonio familiar.";
+                break;
+            default:
+                recomendacion = "Recomendación: Evalúa las opciones disponibles para encontrar la mejor cobertura.";
+                break;
         }
+
         lblRecomendacion.setText(recomendacion);
     }
+
+    private int obtenerIndiceRecomendacion(double[] costos, String[] tipos) {
+        // Lógica para decidir la recomendación
+
+        // Por ejemplo, elegir una recomendación aleatoria entre los costos más bajos
+        double costoMinimo = Double.MAX_VALUE;
+        int indiceMinimo = -1;
+
+        for (int i = 0; i < costos.length; i++) {
+            if (costos[i] < costoMinimo && costos[i] > 0) {
+                costoMinimo = costos[i];
+                indiceMinimo = i;
+            }
+        }
+
+        // Si tienes más criterios, puedes introducirlos aquí
+        // Por ejemplo, aleatorizar entre seguros con costos similares
+        if (indiceMinimo != -1) {
+            return indiceMinimo; // Retorna el índice del más barato como fallback
+        }
+
+        // Valor predeterminado si no hay una recomendación clara
+        return (int) (Math.random() * costos.length);
+    }
+
 
 
     
