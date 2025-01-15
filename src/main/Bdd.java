@@ -34,7 +34,7 @@ public class Bdd {
     // Constructor para inicializar la conexión
     public Bdd(String dbName) {
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/Users/salazar.inigo/git/AseguradoraBilbao/resources/db/aseguradora.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:resources/db/aseguradora.db");
 //            System.out.println("Conexión establecida con la base de datos: " + dbName);
 
             crearTablas();
@@ -69,11 +69,20 @@ public class Bdd {
                                "costo REAL NOT NULL, " +
                                "estado TEXT CHECK(estado IN ('Activo', 'Inactivo')), " +
                                "FOREIGN KEY (dni_cliente) REFERENCES clientes(dni));";
+        
+        String createSorteos =  "CREATE TABLE IF NOT EXISTS sorteos (" +	
+        						"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        						"dni_cliente TEXT NOT NULL, " +
+        						"premio TEXT NOT NULL, " +
+        						"fecha DATE DEFAULT CURRENT_DATE, " +
+        						"FOREIGN KEY (dni_cliente) REFERENCES clientes(dni));";
 
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(createClientes);
             stmt.execute(createMensajes);
             stmt.execute(createSeguros);
+            stmt.executeUpdate(createSorteos);
+            
 //            System.out.println("Tablas creadas correctamente.");
         } catch (SQLException e) {
 //            System.err.println("Error al crear las tablas: " + e.getMessage());
@@ -955,6 +964,20 @@ public class Bdd {
         }
         
         return nombresEmpleados;
+    }
+    
+    
+    public void guardarSorteo(String dniCliente, String premio) throws Exception {
+        // Consulta SQL para insertar el sorteo
+        String query = "INSERT INTO sorteos (dni_cliente, premio) VALUES (?, ?)";
+        
+        // Preparar la consulta y establecer los valores
+        PreparedStatement stmt = connection.prepareStatement(query); // Asegúrate de que 'conexion' sea tu Connection
+        stmt.setString(1, dniCliente); // Primer parámetro (dni del cliente)
+        stmt.setString(2, premio);    // Segundo parámetro (premio del sorteo)
+
+        // Ejecutar la consulta
+        stmt.executeUpdate();
     }
     
     public void insertarEncuesta(String dniCliente, String fecha, String satisfecho, String aspectoFavorito, int valoracion, String comentario) {

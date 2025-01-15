@@ -372,6 +372,10 @@ public class VentanaPrincipalEmpleado extends JFrame {
         JMenuItem itemEnc= new JMenuItem("Resultados");
         JMenu menuConfiguracion = new JMenu("Configuración");
         JCheckBoxMenuItem modoOscuroItem = new JCheckBoxMenuItem("Modo oscuro");
+        JMenu menuHerramientas = new JMenu("Herramientas");
+        JMenuItem itemSorteo = new JMenuItem("Generar Sorteo");
+
+
         
         itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
         itemSin.addActionListener(e -> {new VentanaSiniestrosPendientes(baseDeDatos);});
@@ -387,6 +391,15 @@ public class VentanaPrincipalEmpleado extends JFrame {
         	}
         });
         itemEnc.addActionListener(e -> {new VentanaResultadosEncuestas(baseDeDatos);});
+        
+        itemSorteo.addActionListener(e -> realizarSorteo(baseDeDatos)); // Llama al método del sorteo
+
+        
+     // Añade el ítem al menú de herramientas
+        menuHerramientas.add(itemSorteo); 
+        
+     // Añade el menú al menú principal
+        menuBar.add(menuHerramientas); 
         
      // Añadir funcionalidad al botón
         modoOscuroItem.addActionListener(e -> {
@@ -550,6 +563,40 @@ public class VentanaPrincipalEmpleado extends JFrame {
             modeloListaClientes.addElement(cliente);
         }
     }
+    
+    private void realizarSorteo(Bdd baseDeDatos) {
+        try {
+            // Obtener todos los clientes de la base de datos
+            ResultSet rs = baseDeDatos.obtenerClientes();
+            List<String> clientes = new ArrayList<>();
+            while (rs.next()) {
+                String cliente = rs.getString("nombre") + " " + rs.getString("apellidos") + " - DNI: " + rs.getString("dni");
+                clientes.add(cliente);
+            }
+
+            if (clientes.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay clientes disponibles para el sorteo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            // Seleccionar un cliente al azar
+            int indiceGanador = (int) (Math.random() * clientes.size());
+            String clienteGanador = clientes.get(indiceGanador);
+
+            // Asignar un premio
+            String premio = "Seguro Básico";
+
+            // Guardar el sorteo en la base de datos (tabla 'sorteos')
+            String dniGanador = clienteGanador.split("- DNI: ")[1];
+            baseDeDatos.guardarSorteo(dniGanador, premio);
+
+            // Mostrar el ganador
+            JOptionPane.showMessageDialog(this, "Ganador del sorteo:\n" + clienteGanador + "\nPremio: " + premio, "Sorteo", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al realizar el sorteo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 
     
 
