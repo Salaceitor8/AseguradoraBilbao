@@ -137,9 +137,5 @@ public class VentanaSolicitarPregunta extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        // Prueba: Simular conexión y cliente
-        Bdd baseDeDatos = new Bdd("resources/db/aseguradora.db"); // Reemplazar con una instancia real de Bdd
-        new VentanaSolicitarPregunta(baseDeDatos, "79000259C");
-    }
+
 }

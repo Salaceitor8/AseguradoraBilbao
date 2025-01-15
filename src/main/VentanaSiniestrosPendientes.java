@@ -200,7 +200,5 @@ public class VentanaSiniestrosPendientes extends JFrame {
         cargarSiniestrosPendientes(bd);
     }
 
-    public static void main(String[] args) {
-        new VentanaSiniestrosPendientes(new Bdd("resources/db/aseguradora.db"));
-    }
+
 }

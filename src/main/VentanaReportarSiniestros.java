@@ -207,22 +207,5 @@ public class VentanaReportarSiniestros extends JFrame {
     }
 
 
-    public static void main(String[] args) {
-        // Ejemplo de inicialización
-        HashMap<TipoSeguro, ArrayList<Double>> preciosPorSeguro = new HashMap<>();
-        ArrayList<Double> precios = new ArrayList<Double>();
-        ArrayList<Double> precios1 = new ArrayList<Double>();
-        ArrayList<Double> precios2 = new ArrayList<Double>();
-        precios.add(100.0);
-        precios1.add(90.0);
-        precios2.add(80.0);
-        preciosPorSeguro.put(TipoSeguro.VIDA, precios);
-        preciosPorSeguro.put(TipoSeguro.COCHE, precios1);
-        preciosPorSeguro.put(TipoSeguro.VIVIENDA, precios2);
 
-        SwingUtilities.invokeLater(() -> {
-            VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro, new Bdd("resources/db/aseguradora.db"), "79000259C");
-            ventana.setVisible(true);
-        });
-    }
 }

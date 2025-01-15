@@ -68,12 +68,12 @@ public class VentanaSeguros extends JFrame {
         btnGuardar.setForeground(Color.WHITE);
         btnGuardar.setFont(new Font("Arial", Font.BOLD, 14));
         btnGuardar.addActionListener(e -> {
-        	System.out.println(id);
-        	System.out.println(tipo);
-        	System.out.println(fecha);
-        	System.out.println(costo);
-        	System.out.println(estado);
-        	System.out.println(comboBox.getSelectedItem());
+//        	System.out.println(id);
+//        	System.out.println(tipo);
+//        	System.out.println(fecha);
+//        	System.out.println(costo);
+//        	System.out.println(estado);
+//        	System.out.println(comboBox.getSelectedItem());
         	
         	String mensajeConfirmacion = String.format(
                     "Por favor, confirma que quieres hacer el cambio"
@@ -186,9 +186,5 @@ public class VentanaSeguros extends JFrame {
     }
     
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-//            new VentanaSeguros().setVisible(true);
-        });
-    }
+
 }

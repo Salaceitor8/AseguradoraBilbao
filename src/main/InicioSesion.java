@@ -35,8 +35,8 @@ public class InicioSesion extends JFrame {
 
     public InicioSesion() {
 
-        baseDeDatos = new Bdd("resources/db/aseguradora.db"); // Conecta a la base de datos SQLite
-    	System.out.println(baseDeDatos.obtenerCLienteInfo());
+        baseDeDatos = new Bdd("jdbc:sqlite:C:/Users/salazar.inigo/git/AseguradoraBilbao/resources/db/aseguradora.db"); // Conecta a la base de datos SQLite
+//    	System.out.println(baseDeDatos.obtenerCLienteInfo());
 
         setTitle("Inicio de Sesión - Aseguradoras Bilbaaaao");
         setSize(600, 400);
@@ -120,7 +120,7 @@ public class InicioSesion extends JFrame {
                 }).start();
             }
         });
-        Image empleado = (new ImageIcon("fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image empleado = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/empleado.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoEmpleado = new ImageIcon(empleado);
         btnEmpleado.setIcon(iconoEmpleado);
         btnEmpleado.setBorderPainted(false);
@@ -172,7 +172,7 @@ public class InicioSesion extends JFrame {
                 }).start();
             }
         });
-        Image cliente = (new ImageIcon("fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
+        Image cliente = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/cliente.png")).getImage().getScaledInstance(50, 50, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoCliente = new ImageIcon(cliente);
         btnCliente.setIcon(iconoCliente);
         btnCliente.setBorderPainted(false);
@@ -356,12 +356,7 @@ public class InicioSesion extends JFrame {
             	                    
             	                
         	                	}else {
-        	                		// Mostrar ventana de Captcha
-        	                	    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
-        	                	    if (!ventanaCaptcha.isCaptchaResuelto()) {
-        	                	        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        	                	        return;
-        	                	    }
+        	                		
         	                	 // Mostrar barra de progreso
         	                	    BarraProgreso progressBarDialog = new BarraProgreso(this);
         	                	    progressBarDialog.setVisible(true);
@@ -508,8 +503,8 @@ public class InicioSesion extends JFrame {
                     String dni = rs.getString("dni");
                     String nombre = rs.getString("nombre");
                     String apellidos = rs.getString("apellidos");
-                    System.out.println(baseDeDatos.cargarContraseñaDesdeBDclientes(dni));
-                    System.out.println(baseDeDatos.cargarUsuarioDesdeBDclientes(dni));
+//                    System.out.println(baseDeDatos.cargarContraseñaDesdeBDclientes(dni));
+//                    System.out.println(baseDeDatos.cargarUsuarioDesdeBDclientes(dni));
                     
 //                    if(baseDeDatos.cargarContraseñaDesdeBDclientes(dni).equals(contraseña) && baseDeDatos.cargarUsuarioDesdeBDclientes(dni).equals(usuario)) {
 //                    	// Mostrar la barra de progreso
@@ -550,12 +545,6 @@ public class InicioSesion extends JFrame {
                     			}else {
                     				@SuppressWarnings("unused")
 									String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
-                    				// Mostrar ventana de Captcha
-                    			    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
-                    			    if (!ventanaCaptcha.isCaptchaResuelto()) {
-                    			        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                    			        return;
-                    			    }
         	                        // Mostrar la barra de progreso
         	                		BarraProgreso progressBarDialog = new BarraProgreso(this);
         	                        progressBarDialog.setVisible(true); // Muestra la barra
@@ -589,12 +578,6 @@ public class InicioSesion extends JFrame {
                                         encontrado = true;
                                         break;
                         			}else {
-                        				// Mostrar ventana de Captcha
-                        			    VentanaVerificacionCaptcha ventanaCaptcha = new VentanaVerificacionCaptcha();
-                        			    if (!ventanaCaptcha.isCaptchaResuelto()) {
-                        			        JOptionPane.showMessageDialog(this, "Debe resolver el Captcha para continuar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                        			        return;
-                        			    }
                         				@SuppressWarnings("unused")
 										String ultimoInicio = baseDeDatos.obtenerUltimoInicioCliente(dni);
             	                        // Mostrar la barra de progreso

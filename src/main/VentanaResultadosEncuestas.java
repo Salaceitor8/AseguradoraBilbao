@@ -259,8 +259,5 @@ public class VentanaResultadosEncuestas extends JFrame {
         return panel;
     }
 
-    public static void main(String[] args) {
-        Bdd bd = new Bdd("resources/db/aseguradora.db");
-        SwingUtilities.invokeLater(() -> new VentanaResultadosEncuestas(bd));
-    }
+
 }

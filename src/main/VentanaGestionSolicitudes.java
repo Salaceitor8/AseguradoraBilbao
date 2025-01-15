@@ -215,7 +215,5 @@ public class VentanaGestionSolicitudes extends JFrame {
         cargarSolicitudesPendientes(bd);
     }
 
-    public static void main(String[] args) {
-        new VentanaGestionSolicitudes(new Bdd("aseguradora.db"));
-    }
+
 }

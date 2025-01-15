@@ -177,7 +177,5 @@ public class VentanaVerificacionCaptcha extends JFrame {
         return captchaResuelto;
     }
 
-    public static void main(String[] args) {
-        new VentanaVerificacionCaptcha();
-    }
+
 }

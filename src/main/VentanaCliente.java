@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -149,7 +148,7 @@ public class VentanaCliente extends JFrame {
             panelOpciones.add(boton);
             panelOpciones.add(Box.createVerticalStrut(10)); // Espacio entre botones
         }
-        Image usuario = (new ImageIcon("fotos/users.png")).getImage().getScaledInstance(35, 35, DO_NOTHING_ON_CLOSE);
+        Image usuario = (new ImageIcon("C:/Users/salazar.inigo/git/AseguradoraBilbao/fotos/users.png")).getImage().getScaledInstance(35, 35, DO_NOTHING_ON_CLOSE);
         ImageIcon iconoUsuario = new ImageIcon(usuario);
         btnMiPerfil.setIcon(iconoUsuario);
         add(panelOpciones, BorderLayout.EAST);
@@ -237,7 +236,7 @@ public class VentanaCliente extends JFrame {
 					}
 					
 				}
-				System.out.println(preciosPorSeguro);
+//				System.out.println(preciosPorSeguro);
 				SwingUtilities.invokeLater(() -> {
 					VentanaReportarSiniestros ventana = new VentanaReportarSiniestros(preciosPorSeguro, bd, dni);
 		            ventana.setVisible(true);
@@ -278,14 +277,5 @@ public class VentanaCliente extends JFrame {
         }
         lblCostoTotal.setText("Costo Total: " + totalCosto + " €");
     }
-    
-    public static void main(String[] args) {
-    	List<Seguro> seguros = new ArrayList<Seguro>();
-    	for (int i = 0; i < 3; i++) {
-			Seguro s = new Seguro(TipoSeguro.COCHE, LocalDate.now(), 100.0, "Activo", "TERCEROS");
-			seguros.add(s);
-		}
-    	
-		new VentanaCliente("Nerea Ramirez Mendez", seguros, new Bdd("resources/db/aseguradora.db"), "79000259C", "M", "07/09/2005");
-	}
+
 }

@@ -142,8 +142,5 @@ public class VentanaEncuesta extends JFrame {
         dispose();
     }
 
-    public static void main(String[] args) {
-        Bdd bd = new Bdd("resources/db/aseguradora.db");
-        SwingUtilities.invokeLater(() -> new VentanaEncuesta(bd, "79000259C"));
-    }
+
 }

@@ -279,17 +279,5 @@ public class VentanaSimuladorCostos extends JFrame {
 
     
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VentanaSimuladorCostos ventana = new VentanaSimuladorCostos();
-            ventana.setVisible(true);
-        });
-    }
+
 }
-
-
-// public static void main(String[] args) {
-//   SwingUtilities.invokeLater(() -> {
-//        VentanaSimuladorCostos ventana = new VentanaSimuladorCostos();
-//        ventana.setVisible(true);
-//

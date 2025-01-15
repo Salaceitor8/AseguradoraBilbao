@@ -121,9 +121,4 @@ public class TablonNotificaciones extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        // Ejemplo de ejecución (necesitarás ajustar la conexión a tu base de datos)
-        Bdd baseDeDatos = new Bdd("resources/db/aseguradora.db");
-        new TablonNotificaciones("10000001A", baseDeDatos);
-    }
 }

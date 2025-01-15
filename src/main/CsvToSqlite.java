@@ -18,7 +18,7 @@ public class CsvToSqlite {
 
     public static void main(String[] args) {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME)) {
-            System.out.println("Conexión establecida con SQLite.");
+//            System.out.println("Conexión establecida con SQLite.");
 
             // Crear tablas si no existen
             crearTablas(connection);
@@ -28,9 +28,9 @@ public class CsvToSqlite {
             importarMensajes(connection, MENSAJES_CSV);
             importarSeguros(connection, SEGUROS_CSV);
 
-            System.out.println("Importación completada.");
+//            System.out.println("Importación completada.");
         } catch (SQLException e) {
-            System.err.println("Error al conectar con la base de datos: " + e.getMessage());
+//            System.err.println("Error al conectar con la base de datos: " + e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class CsvToSqlite {
             stmt.executeUpdate();
         }
 
-        System.out.println("Tablas creadas correctamente.");
+//        System.out.println("Tablas creadas correctamente.");
     }
 
     private static void importarClientes(Connection connection, String csvFile) {
@@ -94,9 +94,9 @@ public class CsvToSqlite {
                 }
             }
 
-            System.out.println("Clientes importados correctamente.");
+//            System.out.println("Clientes importados correctamente.");
         } catch (IOException | SQLException e) {
-            System.err.println("Error al importar clientes: " + e.getMessage());
+//            System.err.println("Error al importar clientes: " + e.getMessage());
         }
     }
 
@@ -124,9 +124,9 @@ public class CsvToSqlite {
                 }
             }
 
-            System.out.println("Mensajes importados correctamente.");
+//            System.out.println("Mensajes importados correctamente.");
         } catch (IOException | SQLException e) {
-            System.err.println("Error al importar mensajes: " + e.getMessage());
+//            System.err.println("Error al importar mensajes: " + e.getMessage());
         }
     }
 
@@ -149,9 +149,9 @@ public class CsvToSqlite {
                 }
             }
 
-            System.out.println("Seguros importados correctamente.");
+//            System.out.println("Seguros importados correctamente.");
         } catch (IOException | SQLException e) {
-            System.err.println("Error al importar seguros: " + e.getMessage());
+//            System.err.println("Error al importar seguros: " + e.getMessage());
         }
     }
 }

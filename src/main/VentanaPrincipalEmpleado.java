@@ -119,17 +119,18 @@ public class VentanaPrincipalEmpleado extends JFrame {
             String clienteSeleccionado = listaClientes.getSelectedValue();
             if (clienteSeleccionado != null) {
                 String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
-                System.out.println(dniCliente);
+//                System.out.println(dniCliente);
                 String tipo = tablaSeguros.getValueAt(filaSeleccionada, 0).toString();
-                System.out.println(tipo);
+//                System.out.println(tipo);
                 String fecha = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
-                Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
-                System.out.println(o);
-                System.out.println(fecha);
+                @SuppressWarnings("unused")
+				Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+//                System.out.println(o);
+//                System.out.println(fecha);
                 double costo = Double.parseDouble(tablaSeguros.getValueAt(filaSeleccionada, 2).toString());
-                System.out.println(costo);
+//                System.out.println(costo);
                 String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
-                System.out.println(estado);
+//                System.out.println(estado);
                 if(estado.equals("Inactivo")) {
                 	JOptionPane.showMessageDialog(
                 	        this, // Componente padre (la ventana actual)
@@ -147,12 +148,12 @@ public class VentanaPrincipalEmpleado extends JFrame {
                 }
                 
                 int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado, cobertura);
-                System.out.println(Id);
-                System.out.println(dniCliente);
-                System.out.println(tipo);
-                System.out.println(fecha);
-                System.out.println(costo);
-                System.out.println(estado);
+//                System.out.println(Id);
+//                System.out.println(dniCliente);
+//                System.out.println(tipo);
+//                System.out.println(fecha);
+//                System.out.println(costo);
+//                System.out.println(estado);
                 
                 new VentanaSeguros(Id, dniCliente, tipo, fecha, costo, estado, cobertura, baseDeDatos).setVisible(true);
             }
@@ -291,28 +292,29 @@ public class VentanaPrincipalEmpleado extends JFrame {
             
             String clienteSeleccionado = listaClientes.getSelectedValue();
             String dniCliente = clienteSeleccionado.split("- DNI: ")[1];
-            System.out.println(dniCliente);
+//            System.out.println(dniCliente);
             String tipo = tablaSeguros.getValueAt(filaSeleccionada, 0).toString();
-            System.out.println(tipo);
+//            System.out.println(tipo);
             String fecha = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
-            Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
-            System.out.println(o);
-            System.out.println(fecha);
+            @SuppressWarnings("unused")
+			Object o = ((LocalDate)tablaSeguros.getValueAt(filaSeleccionada, 1)).format(formatter);
+//            System.out.println(o);
+//            System.out.println(fecha);
             double costo = Double.parseDouble(tablaSeguros.getValueAt(filaSeleccionada, 2).toString());
-            System.out.println(costo);
+//            System.out.println(costo);
             String estado = tablaSeguros.getValueAt(filaSeleccionada, 3).toString();
-            System.out.println(estado);
+//            System.out.println(estado);
             String cobertura = tablaSeguros.getValueAt(filaSeleccionada, 4).toString();
             
             
             
             int Id = baseDeDatos.obtenerIdSeguro(dniCliente, tipo, fecha, costo, estado, cobertura);
-            System.out.println(Id);
-            System.out.println(dniCliente);
-            System.out.println(tipo);
-            System.out.println(fecha);
-            System.out.println(costo);
-            System.out.println(estado);
+//            System.out.println(Id);
+//            System.out.println(dniCliente);
+//            System.out.println(tipo);
+//            System.out.println(fecha);
+//            System.out.println(costo);
+//            System.out.println(estado);
             try {
             	if(cobertura.equals("Fallecimiento")) {
             		baseDeDatos.actualizarSeguro(Id, tipo, fecha, costo, "Inactivo", "FALLECIMIENTO");
@@ -374,7 +376,7 @@ public class VentanaPrincipalEmpleado extends JFrame {
         itemChat.addActionListener(e -> {new VentanaGestionSolicitudes(baseDeDatos);});
         itemSin.addActionListener(e -> {new VentanaSiniestrosPendientes(baseDeDatos);});
         itemSim.addActionListener(e -> {
-        	System.out.println(nombre);
+//        	System.out.println(nombre);
         	if(nombre.equals("Mikel")) {
         		SwingUtilities.invokeLater(() -> {
                     VentanaSimulacionAtencion ventana = new VentanaSimulacionAtencion(baseDeDatos);
@@ -550,8 +552,6 @@ public class VentanaPrincipalEmpleado extends JFrame {
     }
 
     
-    public static void main(String[] args) {
-		new VentanaPrincipalEmpleado(new Bdd("resources/db/aseguradora.db"), "Hola");
-	}
+
   
 }

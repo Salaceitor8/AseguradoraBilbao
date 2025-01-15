@@ -146,8 +146,6 @@ public class VentanaChatEmpleado extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new VentanaChatEmpleado("localhost", 12345));
-    }
+
 }
 

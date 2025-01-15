@@ -66,6 +66,7 @@ public class VentanaPerfilCliente extends JFrame {
 
         // Cargar la foto desde la base de datos
         String rutaFoto = bd.cargarRutaFotoDesdeBD(dni);
+        System.out.println(rutaFoto);
         if (rutaFoto != null && !rutaFoto.isEmpty()) {
             lblFotoPerfil.setText("");
             lblFotoPerfil.setIcon(new ImageIcon(new ImageIcon(rutaFoto).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
@@ -332,7 +333,7 @@ public class VentanaPerfilCliente extends JFrame {
                 java.nio.file.Files.createDirectories(java.nio.file.Paths.get("resources/imagenes"));
 
                 // Copiar el archivo a la carpeta de destino
-                String destino = "resources/imagenes/" + archivoSeleccionado.getName();
+                String destino = "C:/Users/salazar.inigo/git/AseguradoraBilbao/resources/imagenes/" + archivoSeleccionado.getName();
                 java.nio.file.Files.copy(archivoSeleccionado.toPath(), java.nio.file.Paths.get(destino), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
                 // Actualizar la etiqueta de la foto

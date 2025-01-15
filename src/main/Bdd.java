@@ -34,12 +34,12 @@ public class Bdd {
     // Constructor para inicializar la conexión
     public Bdd(String dbName) {
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:resources/db/aseguradora.db");
-            System.out.println("Conexión establecida con la base de datos: " + dbName);
+            connection = DriverManager.getConnection("jdbc:sqlite:C:/Users/salazar.inigo/git/AseguradoraBilbao/resources/db/aseguradora.db");
+//            System.out.println("Conexión establecida con la base de datos: " + dbName);
 
             crearTablas();
         } catch (SQLException e) {
-            System.err.println("Error al conectar con la base de datos: " + e.getMessage());
+//            System.err.println("Error al conectar con la base de datos: " + e.getMessage());
         }
     }
 
@@ -74,9 +74,9 @@ public class Bdd {
             stmt.execute(createClientes);
             stmt.execute(createMensajes);
             stmt.execute(createSeguros);
-            System.out.println("Tablas creadas correctamente.");
+//            System.out.println("Tablas creadas correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al crear las tablas: " + e.getMessage());
+//            System.err.println("Error al crear las tablas: " + e.getMessage());
         }
     }
     
@@ -94,9 +94,9 @@ public class Bdd {
             pstmt.setString(5, email);
             pstmt.setString(6, genero);
             pstmt.executeUpdate();
-            System.out.println("Cliente insertado correctamente.");
+//            System.out.println("Cliente insertado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al insertar cliente: " + e.getMessage());
+//            System.err.println("Error al insertar cliente: " + e.getMessage());
         }
     }
     
@@ -105,7 +105,7 @@ public class Bdd {
         try {
             return connection.createStatement().executeQuery(sql);
         } catch (SQLException e) {
-            System.err.println("Error al obtener empleados: " + e.getMessage());
+//            System.err.println("Error al obtener empleados: " + e.getMessage());
             return null;
         }
     }
@@ -116,7 +116,7 @@ public class Bdd {
         try {
             return connection.createStatement().executeQuery(sql);
         } catch (SQLException e) {
-            System.err.println("Error al obtener clientes: " + e.getMessage());
+//            System.err.println("Error al obtener clientes: " + e.getMessage());
             return null;
         }
     }
@@ -136,7 +136,7 @@ public class Bdd {
             }
             return lista; // Ejecutar la consulta
         } catch (SQLException e) {
-            System.err.println("Error al obtener notificaciones: " + e.getMessage());
+//            System.err.println("Error al obtener notificaciones: " + e.getMessage());
             return null;
         }
     }
@@ -164,31 +164,31 @@ public class Bdd {
 
     	
     }
-    public String obtenerCLienteInfo() {
-    	String sql = "SELECT * FROM clientes";
-    	@SuppressWarnings("unused")
-		Cliente c = null;
-    	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-    	    ResultSet rs = pstmt.executeQuery();
-    	    while (rs.next()) {
-    	        String nombre = rs.getString("nombre");
-    	        String apellidos = rs.getString("apellidos");
-    	        int telefono = rs.getInt("telefono");
-    	        String email = rs.getString("email");
-    	        String dni = rs.getString("dni");
-    	        String contr = rs.getString("contraseña");
-    	        String usuario = rs.getString("usuario");
-    	        System.out.println(nombre + " " + apellidos + " " + telefono + " " +email + " " +dni + " " +usuario + " " +contr);
-    	        return"";
-    	    }
-    	    
-    	} catch (SQLException e) {
-    	    e.printStackTrace();
-    	}
-		return "";
-
-    	
-    }
+//    public String obtenerCLienteInfo() {
+//    	String sql = "SELECT * FROM clientes";
+//    	@SuppressWarnings("unused")
+//		Cliente c = null;
+//    	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+//    	    ResultSet rs = pstmt.executeQuery();
+//    	    while (rs.next()) {
+//    	        String nombre = rs.getString("nombre");
+//    	        String apellidos = rs.getString("apellidos");
+//    	        int telefono = rs.getInt("telefono");
+//    	        String email = rs.getString("email");
+//    	        String dni = rs.getString("dni");
+//    	        String contr = rs.getString("contraseña");
+//    	        String usuario = rs.getString("usuario");
+////    	        System.out.println(nombre + " " + apellidos + " " + telefono + " " +email + " " +dni + " " +usuario + " " +contr);
+//    	        return"";
+//    	    }
+//    	    
+//    	} catch (SQLException e) {
+//    	    e.printStackTrace();
+//    	}
+//		return "";
+//
+//    	
+//    }
     
     public String obtenerGeneroCliente(String dni) {
     	String sql = "SELECT genero FROM clientes WHERE dni = ?";
@@ -278,7 +278,7 @@ public class Bdd {
             stmt.setString(1, dni);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                	System.out.println(rs.getString("contraseña"));
+//                	System.out.println(rs.getString("contraseña"));
                     return rs.getString("contraseña"); // Devuelve la contraseña
                 }
             }
@@ -405,24 +405,24 @@ public class Bdd {
             pstmt.setString(4, email);
             pstmt.setString(5, dni);
             pstmt.executeUpdate();
-            System.out.println("Cliente actualizado correctamente.");
+//            System.out.println("Cliente actualizado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al actualizar cliente: " + e.getMessage());
+//            System.err.println("Error al actualizar cliente: " + e.getMessage());
         }
     }
     
     public void guardarRutaFotoEnBD(String dni, String rutaFoto) {
     	String sql = "UPDATE clientes SET foto = ? WHERE dni = ?";
-        
+        String rutaFoto1 = rutaFoto;
             
     	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-    		pstmt.setString(1, rutaFoto);
+    		pstmt.setString(1, rutaFoto1);
     		pstmt.setString(2, dni);
     		pstmt.executeUpdate();
             pstmt.executeUpdate();
-            System.out.println("foto actualizado");
+//            System.out.println("foto actualizado");
         } catch (Exception e) {
-        	System.err.println("Error al actualizar: " + e.getMessage());
+//        	System.err.println("Error al actualizar: " + e.getMessage());
         }
     }
     
@@ -433,9 +433,9 @@ public class Bdd {
             pstmt.setString(2, telefono);
             pstmt.setString(3, dni);
             pstmt.executeUpdate();
-            System.out.println("cliente actualizado");
+//            System.out.println("cliente actualizado");
         } catch (Exception e) {
-        	System.err.println("Error al actualizar: " + e.getMessage());
+//        	System.err.println("Error al actualizar: " + e.getMessage());
         }
     }
 
@@ -444,9 +444,9 @@ public class Bdd {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, dni);
             pstmt.executeUpdate();
-            System.out.println("Cliente eliminado correctamente.");
+//            System.out.println("Cliente eliminado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al eliminar cliente: " + e.getMessage());
+//            System.err.println("Error al eliminar cliente: " + e.getMessage());
         }
     }
 
@@ -459,9 +459,9 @@ public class Bdd {
             pstmt.setString(3, mensaje);
             pstmt.setString(4, fechaHora);
             pstmt.executeUpdate();
-            System.out.println("Mensaje insertado correctamente.");
+//            System.out.println("Mensaje insertado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al insertar mensaje: " + e.getMessage());
+//            System.err.println("Error al insertar mensaje: " + e.getMessage());
         }
     }
 
@@ -479,7 +479,7 @@ public class Bdd {
             }
             return mensajes;
         } catch (SQLException e) {
-            System.err.println("Error al obtener mensajes: " + e.getMessage());
+//            System.err.println("Error al obtener mensajes: " + e.getMessage());
             return null;
         }
     }
@@ -489,9 +489,9 @@ public class Bdd {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
-            System.out.println("Mensaje eliminado correctamente.");
+//            System.out.println("Mensaje eliminado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al eliminar mensaje: " + e.getMessage());
+//            System.err.println("Error al eliminar mensaje: " + e.getMessage());
         }
     }
 
@@ -506,9 +506,9 @@ public class Bdd {
             pstmt.setString(5, estado);
             pstmt.setString(6, cobertura);
             pstmt.executeUpdate();
-            System.out.println("Seguro insertado correctamente.");
+//            System.out.println("Seguro insertado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al insertar seguro: " + e.getMessage());
+//            System.err.println("Error al insertar seguro: " + e.getMessage());
         }
     }
     public void insertarSiniestro(String dniCliente, String resumen, TipoSeguro tipoSeguro, String estado) {
@@ -520,9 +520,9 @@ public class Bdd {
             pstmt.setString(4, estado); // Estado del siniestro
 
             pstmt.executeUpdate();
-            System.out.println("Siniestro insertado correctamente.");
+//            System.out.println("Siniestro insertado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al insertar siniestro: " + e.getMessage());
+//            System.err.println("Error al insertar siniestro: " + e.getMessage());
         }
     }
     
@@ -569,7 +569,7 @@ public class Bdd {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener siniestros: " + e.getMessage());
+//            System.err.println("Error al obtener siniestros: " + e.getMessage());
         }
         return siniestros;
     }
@@ -582,12 +582,12 @@ public class Bdd {
 
             int filasActualizadas = pstmt.executeUpdate();
             if (filasActualizadas > 0) {
-                System.out.println("Siniestro marcado como PENDIENTE.");
+//                System.out.println("Siniestro marcado como PENDIENTE.");
             } else {
-                System.out.println("No se encontró ningún siniestro para dejar en pendiente.");
+//                System.out.println("No se encontró ningún siniestro para dejar en pendiente.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al dejar siniestro en pendiente: " + e.getMessage());
+//            System.err.println("Error al dejar siniestro en pendiente: " + e.getMessage());
         }
     }
 
@@ -600,12 +600,12 @@ public class Bdd {
 
             int filasActualizadas = pstmt.executeUpdate();
             if (filasActualizadas > 0) {
-                System.out.println("Siniestro marcado como RECHAZADO.");
+//                System.out.println("Siniestro marcado como RECHAZADO.");
             } else {
-                System.out.println("No se encontró ningún siniestro para rechazar.");
+//                System.out.println("No se encontró ningún siniestro para rechazar.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al rechazar siniestro: " + e.getMessage());
+//            System.err.println("Error al rechazar siniestro: " + e.getMessage());
         }
     }
 
@@ -618,12 +618,12 @@ public class Bdd {
 
             int filasActualizadas = pstmt.executeUpdate();
             if (filasActualizadas > 0) {
-                System.out.println("Siniestro marcado como RESUELTO.");
+//                System.out.println("Siniestro marcado como RESUELTO.");
             } else {
-                System.out.println("No se encontró ningún siniestro para resolver.");
+//                System.out.println("No se encontró ningún siniestro para resolver.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al resolver siniestro: " + e.getMessage());
+//            System.err.println("Error al resolver siniestro: " + e.getMessage());
         }
     }
 
@@ -655,7 +655,7 @@ public class Bdd {
             }
             return lista;
         } catch (SQLException e) {
-            System.err.println("Error al obtener seguros (consulta directa): " + e.getMessage());
+//            System.err.println("Error al obtener seguros (consulta directa): " + e.getMessage());
             return null;
         }
     }
@@ -673,9 +673,9 @@ public class Bdd {
             pstmt.setString(5, cobertura);
             pstmt.setInt(6, id);
             pstmt.executeUpdate();
-            System.out.println("Seguro actualizado correctamente.");
+//            System.out.println("Seguro actualizado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al actualizar seguro: " + e.getMessage());
+//            System.err.println("Error al actualizar seguro: " + e.getMessage());
         }
     }
 
@@ -684,9 +684,9 @@ public class Bdd {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
-            System.out.println("Seguro eliminado correctamente.");
+//            System.out.println("Seguro eliminado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al eliminar seguro: " + e.getMessage());
+//            System.err.println("Error al eliminar seguro: " + e.getMessage());
         }
     }
     
@@ -704,11 +704,11 @@ public class Bdd {
             if (rs.next()) {
                 return rs.getInt("id"); // Devuelve el ID si existe
             } else {
-                System.out.println("No se encontró ningún seguro que coincida con los criterios.");
+//                System.out.println("No se encontró ningún seguro que coincida con los criterios.");
                 return -1; // ID no encontrado
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener ID del seguro: " + e.getMessage());
+//            System.err.println("Error al obtener ID del seguro: " + e.getMessage());
             return -1;
         }
     }
@@ -722,9 +722,9 @@ public class Bdd {
             pstmt.setInt(2, filaSeleccionada);
             pstmt.setString(3, dniCliente);
             pstmt.executeUpdate();
-            System.out.println("Estado del seguro actualizado correctamente.");
+//            System.out.println("Estado del seguro actualizado correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al actualizar el estado del seguro: " + e.getMessage());
+//            System.err.println("Error al actualizar el estado del seguro: " + e.getMessage());
         }
     }
     
@@ -736,9 +736,9 @@ public class Bdd {
             pstmt.setString(1, dniCliente);
             pstmt.setString(2, pregunta);
             pstmt.executeUpdate();
-            System.out.println("Solicitud añadida correctamente.");
+//            System.out.println("Solicitud añadida correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al añadir solicitud: " + e.getMessage());
+//            System.err.println("Error al añadir solicitud: " + e.getMessage());
         }
     }
 
@@ -758,7 +758,7 @@ public class Bdd {
                 solicitudes.add(solicitud);
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener solicitudes pendientes: " + e.getMessage());
+//            System.err.println("Error al obtener solicitudes pendientes: " + e.getMessage());
         }
         return solicitudes;
     }
@@ -770,9 +770,9 @@ public class Bdd {
             pstmt.setString(1, respuesta);
             pstmt.setInt(2, id);
             pstmt.executeUpdate();
-            System.out.println("Solicitud aceptada correctamente.");
+//            System.out.println("Solicitud aceptada correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al aceptar solicitud: " + e.getMessage());
+//            System.err.println("Error al aceptar solicitud: " + e.getMessage());
         }
     }
 
@@ -782,14 +782,14 @@ public class Bdd {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
-            System.out.println("Solicitud rechazada correctamente.");
+//            System.out.println("Solicitud rechazada correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al rechazar solicitud: " + e.getMessage());
+//            System.err.println("Error al rechazar solicitud: " + e.getMessage());
         }
     }
     
     public List<Solicitud> obtenerSolicitudesPorFiltro(String estado, String dniFiltro) {
-    	System.out.println(dniFiltro);
+//    	System.out.println(dniFiltro);
         List<Solicitud> solicitudes = new ArrayList<>();
         String sql = "SELECT * FROM solicitudes_preguntas WHERE 1=1";
         if (!estado.equals("TODAS")) {
@@ -824,7 +824,7 @@ public class Bdd {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener solicitudes filtradas: " + e.getMessage());
+//            System.err.println("Error al obtener solicitudes filtradas: " + e.getMessage());
         }
 
         return solicitudes;
@@ -844,7 +844,7 @@ public class Bdd {
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al obtener solicitudes aceptadas: " + e.getMessage());
+//            System.err.println("Error al obtener solicitudes aceptadas: " + e.getMessage());
         }
 
         return solicitudesAceptadas;
@@ -864,7 +864,7 @@ public class Bdd {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener ID de la solicitud: " + e.getMessage());
+//            System.err.println("Error al obtener ID de la solicitud: " + e.getMessage());
         }
         return -1; // Retorna -1 si no se encuentra el ID
     }
@@ -875,14 +875,14 @@ public class Bdd {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
-            System.out.println("Solicitud cambiada a pendiente correctamente.");
+//            System.out.println("Solicitud cambiada a pendiente correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al cambiar solicitud a pendiente: " + e.getMessage());
+//            System.err.println("Error al cambiar solicitud a pendiente: " + e.getMessage());
         }
     }
     
     public List<Siniestro> obtenerSiniestrosPorFiltro(String estado, String dniFiltro) {
-        System.out.println("Filtro DNI: " + dniFiltro);
+//        System.out.println("Filtro DNI: " + dniFiltro);
         List<Siniestro> siniestros = new ArrayList<>();
         String sql = "SELECT * FROM siniestros WHERE 1=1";
         
@@ -916,7 +916,7 @@ public class Bdd {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener siniestros filtrados: " + e.getMessage());
+//            System.err.println("Error al obtener siniestros filtrados: " + e.getMessage());
         }
 
         return siniestros;
@@ -937,7 +937,7 @@ public class Bdd {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener solicitudes pendientes: " + e.getMessage());
+//            System.err.println("Error al obtener solicitudes pendientes: " + e.getMessage());
         }
         return siniestros;
     }
@@ -951,7 +951,7 @@ public class Bdd {
                 nombresEmpleados.add(rs.getString("nombre"));
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener nombres de empleados: " + e.getMessage());
+//            System.err.println("Error al obtener nombres de empleados: " + e.getMessage());
         }
         
         return nombresEmpleados;
@@ -967,9 +967,9 @@ public class Bdd {
             pstmt.setInt(5, valoracion);
             pstmt.setString(6, comentario);
             pstmt.executeUpdate();
-            System.out.println("Encuesta insertada correctamente.");
+//            System.out.println("Encuesta insertada correctamente.");
         } catch (SQLException e) {
-            System.err.println("Error al insertar encuesta: " + e.getMessage());
+//            System.err.println("Error al insertar encuesta: " + e.getMessage());
         }
     }
     
@@ -990,7 +990,7 @@ public class Bdd {
                 encuestas.add(encuesta);
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener encuestas: " + e.getMessage());
+//            System.err.println("Error al obtener encuestas: " + e.getMessage());
         }
         return encuestas;
     }
@@ -1006,10 +1006,10 @@ public class Bdd {
         try {
             if (connection != null) {
                 connection.close();
-                System.out.println("Conexión cerrada correctamente.");
+//                System.out.println("Conexión cerrada correctamente.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al cerrar la conexión: " + e.getMessage());
+//            System.err.println("Error al cerrar la conexión: " + e.getMessage());
         }
     }
 
